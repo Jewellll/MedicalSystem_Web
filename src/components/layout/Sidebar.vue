@@ -100,7 +100,16 @@ export default {
                     index: 'dictionary',
                     title: '字典管理'
                 },
-
+                {
+                    icon: 'el-icon-set-up',
+                    index: 'caseDetail',
+                    title: '案例详情'
+                },
+                {
+                    icon: 'el-icon-set-up',
+                    index: 'replyCase',
+                    title: '回复案例'
+                },
                 {
                     icon: 'el-icon-set-up',
                     index: 'systemManage',

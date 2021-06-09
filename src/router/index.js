@@ -19,6 +19,8 @@ import PhoneLogin from '../components/page/PhoneLogin'
 import Test from '../components/page/Test'
 import RoleManage from '../components/page/RoleManage'
 import AddDictionary from '../components/page/AddDictionary'
+import CaseDetail from '../components/page/CaseDetail'
+import ReplyCase from '../components/page/ReplyCase'
 
 Vue.use(Router)
 
@@ -161,6 +163,24 @@ export default new Router({
                     component: error,
                     meta:{
                         title:'页面走丢了'
+                    }
+                },
+                {
+                    path: '/caseDetail',
+                    name: 'caseDetail',
+                    component: CaseDetail,
+                    meta: {
+                        title:'案例详情',
+                        requireAuth: true
+                    }
+                },
+                {
+                    path: '/replyCase',
+                    name: 'replyCase',
+                    component: ReplyCase,
+                    meta: {
+                        title:'回复案例',
+                        requireAuth: true
                     }
                 }
             ]
