@@ -18,6 +18,7 @@ const Users = [];
 const Teacher =[];
 const Dictionary =[];
 const Parameter =[];
+const Case = [];
 
 //用户
 for (let i = 0; i < 20; i++) {
@@ -71,4 +72,14 @@ const index = [{id: Mock.Random.guid(), parameter: '验证码时间', value: '60
 for (let i = 0;i<3;i++) {
     Parameter.push(Mock.mock(index[i]));
 }
-export { LoginUsers, Users,Teacher,Dictionary,Parameter };
+//案例
+for (let i = 0; i < 20; i++) {
+    Case.push(Mock.mock({
+        case_id: /^0[0-9]{6}$/,
+        'casename|1':['呼吸内科','耳鼻喉','骨科'],
+        teacher_id:Mock.Random.cname(),
+        'createtime': '@datetime()',//随机时间
+        'desc|1': ['是','否']
+    }));
+}
+export { LoginUsers, Users,Teacher,Dictionary,Parameter,Case };

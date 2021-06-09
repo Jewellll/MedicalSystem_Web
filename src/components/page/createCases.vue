@@ -1,0 +1,107 @@
+<template>
+    <div>
+        <div align="center" style="font-size: 40px;">创建案例</div>
+        <div class="left">
+            <el-form :model="caseForm"  label-width="100px">
+                <el-form-item label="案例名:" prop="casename">
+                    <el-col :span="8">
+                        <el-input placeholder="请输入内容" v-model="caseForm.casename" ></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="案例描述:" prop="desc">
+                    <el-col :span="15">
+                        <el-input  type="textarea"
+                                   :rows="5"
+                                   placeholder="请输入内容"
+                                   v-model="caseForm.desc"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="思考:" prop="question">
+                    <el-col :span="15">
+                        <el-input  type="textarea"
+                                   :rows="5"
+                                   placeholder="请输入内容"
+                                   v-model="caseForm.question"></el-input>
+                    </el-col>
+                </el-form-item>
+            </el-form>
+            <div style="margin-top: 100px; margin-right: 65px" >
+                <el-button type="primary">提交</el-button>
+                <el-button type="primary">删除</el-button>
+            </div>
+
+        </div>
+
+        <div class="right">
+            <el-upload
+                class="upload-demo"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList"
+                list-type="picture">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+            <br>
+            <el-upload
+                class="upload-demo"
+                drag
+                action="https://jsonplaceholder.typicode.com/posts/"
+                multiple
+                :file-list="fileList"
+            >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'createCases',
+  data () {
+    return {
+      caseForm: {
+        casename: '',
+        desc: '',
+        question: ''
+      },
+      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},
+        {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+
+    }
+  },
+  methods: {
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    }
+  }
+}
+</script>
+
+<style scoped>
+    .left{
+        margin-left: 100px;
+        margin-top: 20px;
+        position: absolute;
+        width: 40%;
+        height: 500px;
+    }
+    .right{
+        margin-top: 20px;
+        width: 45%;
+        margin-left: 600px;
+        height: 550px;
+
+    }
+    .footer{
+        border: solid #2E9AFE;
+        height: 40px;
+        margin-top: 10px;
+    }
+</style>

@@ -84,3 +84,13 @@ export const removePara = params => { return http.get(`${base}/systemManage/remo
 
 export const batchRemovePara = params => { return http.get(`${base}/systemManage/batchremove`, { params: params }); };
 
+//案例管理
+
+export const getCaseListPage = params => { return http.get(`${base}/case/listpage`, { params: params }); };
+
+// export const editTeacher = params => { return http.get(`${base}/teacher/edit`, { params: params }); };
+// export const addTeacher = params => { return http.get(`${base}/teacher/add`, { params: params }); };
+// export const removeTeacher = params => { return http.get(`${base}/teacher/remove`, { params: params }); };
+// export const batchRemoveTeacher = params => { return http.get(`${base}/teacher/batchremove`, { params: params }); };
+
+//创建案例

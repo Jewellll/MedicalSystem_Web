@@ -58,104 +58,114 @@
 
 <script>
 export default {
-    name: "Main",
-    data() {
-        return {
-            isCollapse: true, //导航栏默认为折叠
-            toggle: false, //第二个图标默认隐藏
-            block: true, //默认显示第一个图标
-            items: [
-                {
-                    icon: 'el-icon-house',
-                    index: 'manage',
-                    title: '系统首页'
-                },
-                {
-                    icon: 'el-icon-collection',
-                    index: 'teacherManage',
-                    title: '教师管理'
-                },
-                {
-                    icon: 'el-icon-notebook-1',
-                    index: 'studentManage',
-                    title: '学生管理'
-                },
-                {
-                    icon: 'el-icon-data-analysis',
-                    index: 'courseManage',
-                    title: '课程管理'
-                },
-                {
-                    icon: 'el-icon-user',
-                    index: 'userManage',
-                    title: '用户管理'
-                },
-                {
-                    icon: 'el-icon-lock',
-                    index: 'roleManage',
-                    title: '角色管理'
-                },
-                {
-                    icon: 'el-icon-reading',
-                    index: 'dictionary',
-                    title: '字典管理'
-                },
-
-                {
-                    icon: 'el-icon-set-up',
-                    index: 'systemManage',
-                    title: '参数管理'
-                },
-                {
-                    icon: 'el-icon-paperclip',
-                    index: '3',
-                    title: '相关页面',
-                    subs: [
-                        {
-                            index: 'test',
-                            title: '测试页面'
-                        },{
-                            index: '3-2',
-                            title: '异常管理',
-                            subs: [
-                                {
-                                    index: '500',
-                                    title: '500异常页面'
-                                },
-                                {
-                                    index: '404',
-                                    title: '404异常页面'
-                                },
-                                {
-                                    index: '403',
-                                    title: '403异常页面'
-                                },
-                                {
-                                    index: 'diyError',
-                                    title: '自定义异常页面'
-                                }
-                            ]
-                        }
-
-                    ]
-                }
-            ]
-        };
-    },
-    methods: {
-        // 动态控制展开与收起和切换对应图标
-        isC() {
-            this.isCollapse = !this.isCollapse;
-            this.toggle = !this.toggle;
-            this.block = !this.block;
+  name: 'Main',
+  data () {
+    return {
+      isCollapse: true, // 导航栏默认为折叠
+      toggle: false, // 第二个图标默认隐藏
+      block: true, // 默认显示第一个图标
+      items: [
+        {
+          icon: 'el-icon-house',
+          index: 'manage',
+          title: '系统首页'
         },
-    },
-    computed: {
-        onRoutes() {
-            return this.$route.path.replace('/', '/manage');
+        {
+          icon: 'el-icon-collection',
+          index: 'teacherManage',
+          title: '教师管理'
+        },
+        {
+          icon: 'el-icon-notebook-1',
+          index: 'studentManage',
+          title: '学生管理'
+        },
+        {
+          icon: 'el-icon-data-analysis',
+          index: 'courseManage',
+          title: '课程管理'
+        },
+        {
+          icon: 'el-icon-data-analysis',
+          index: 'caseManage',
+          title: '案例管理'
+        },
+          {
+              icon: 'el-icon-data-analysis',
+              index: 'createCases',
+              title: '创建案例'
+          },
+        {
+          icon: 'el-icon-user',
+          index: 'userManage',
+          title: '用户管理'
+        },
+        {
+          icon: 'el-icon-lock',
+          index: 'roleManage',
+          title: '角色管理'
+        },
+        {
+          icon: 'el-icon-reading',
+          index: 'dictionary',
+          title: '字典管理'
+        },
+
+        {
+          icon: 'el-icon-set-up',
+          index: 'systemManage',
+          title: '参数管理'
+        },
+        {
+          icon: 'el-icon-paperclip',
+          index: '3',
+          title: '相关页面',
+          subs: [
+            {
+              index: 'test',
+              title: '测试页面'
+            }, {
+              index: '3-2',
+              title: '异常管理',
+              subs: [
+                {
+                  index: '500',
+                  title: '500异常页面'
+                },
+                {
+                  index: '404',
+                  title: '404异常页面'
+                },
+                {
+                  index: '403',
+                  title: '403异常页面'
+                },
+                {
+                  index: 'diyError',
+                  title: '自定义异常页面'
+                }
+              ]
+            }
+
+          ]
         }
-    },
-};
+      ]
+    }
+  },
+  methods: {
+    // 动态控制展开与收起和切换对应图标
+    isC () {
+      this.isCollapse = !this.isCollapse
+      this.toggle = !this.toggle
+      this.block = !this.block
+    }
+  },
+  computed: {
+    onRoutes () {
+      return this.$route.path.replace('/', '/manage')
+    }
+  }
+}
 </script>
 
 <style scoped>
