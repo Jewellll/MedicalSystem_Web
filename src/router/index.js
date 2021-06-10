@@ -175,6 +175,15 @@ export default new Router({
                     }
                 },
                 {
+                    path: '/comment',
+                    name: 'comment',
+                    component: Comment,
+                    meta: {
+                        title:'案例详情',
+                        requireAuth: true
+                    }
+                },
+                {
                     path: '/replyCase',
                     name: 'replyCase',
                     component: ReplyCase,

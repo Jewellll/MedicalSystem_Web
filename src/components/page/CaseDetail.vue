@@ -77,7 +77,6 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                <Comment :comments="commentData"></Comment>
                 评论
             </div>
             <div class="file1 layout">
@@ -113,6 +112,12 @@
             <div class="question layout">
                 <el-divider class="divider1"></el-divider>
                 <h2 style="position: relative;left: -40%">思考</h2>
+                <div class="think">
+                    <el-scrollbar>
+                    <p>我国《商标法》规则，商标注册人享有牌号专一使用权，受司法关心。企业要求商标最大的代价等于关切自身的品牌，担保本人的品牌产品、效劳畸形地在市场上发展发卖、广告，制止别人的使用。</p>
+                    <p>一方面，牌号注册依照在先申请轨制，企业如果不有注册商标，很容易被一些分工对手和牌号投契份子恶意抢注。另外一方面，商标承载着品牌的商誉，是企业品牌价值的法律载体。</p>
+                    </el-scrollbar>
+                </div>
             </div>
             <div class="submit layout">
                 <el-divider></el-divider>
@@ -165,11 +170,7 @@
 //     getTeacherListPage,
 //     removeTeacher
 // } from '../../api/api'
-import Comment from './Comment'
 export default {
-    components: {
-        Comment
-    },
     data () {
         return {
             imgPreview: {
@@ -328,6 +329,20 @@ img {
     width: 110%;
     height: 120%;
 }
+/*.think {*/
+/*    border-radius: 2px;*/
+/*    position: relative;*/
+/*    left: 10%;*/
+/*    width: 80%;*/
+/*    height: 70%;*/
+/*    border: 1px solid #c1c1c1;*/
+/*    background: #f6f4f4;*/
+/*}*/
+/*.think >>> .el-scrollbar__wrap {*/
+/*    overflow: scroll;*/
+/*    width: 110%;*/
+/*    height: 120%;*/
+/*}*/
 
 /*上传*/
 .upload1 {
@@ -337,12 +352,19 @@ img {
 .upload2 {
     margin-top: 50px;
 }
-
+.think p{
+    position: relative;
+    left: 10%;
+    width: 80%;
+    text-align: justify;
+    text-indent: 2em;
+    font-size: 16px;
+}
 /*布局*/
-el-divider{
+.el-divider{
     margin: 8px 0;
     background: 0 0;
-    border-top: 1px solid #E6EBF5;
+    border-top: 2px solid #E6EBF5;
 }
 .divider1{
     margin: 8px 0;
