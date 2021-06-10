@@ -33,7 +33,7 @@
                 <el-table-column prop="class" label="班课" width="300" sortable>
                 </el-table-column>
                 <el-table-column label="操作" width="150">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -99,192 +99,192 @@
 
 <script>
 import {
-    addStudent,
-    batchRemoveStudent,
-    editStudent,
-    getStudentListPage,
-    removeStudent
+  addStudent,
+  batchRemoveStudent,
+  editStudent,
+  getStudentListPage,
+  removeStudent
 } from '../../api/api'
 import util from '../../common/js/util'
 
 export default {
-    name: 'StudentManage',
-    data () {
-        return {
-            filters: {
-                name: ''                           //需要查询的名字
-            },
-            users: [],
-            total: 0,
-            page: 1,
-            listLoading: false,
-            sels: [],//列表选中列
+  name: 'StudentManage',
+  data () {
+    return {
+      filters: {
+        name: '' // 需要查询的名字
+      },
+      users: [],
+      total: 0,
+      page: 1,
+      listLoading: false,
+      sels: [], // 列表选中列
 
-            editFormVisible: false,//编辑界面是否显示
-            editLoading: false,
-            editFormRules: {
-                name: [
-                    {required: true, message: '请输入姓名', trigger: 'blur'}
-                ]
-            },
-            //编辑界面数据
-            editForm: {
-                id: 0,
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
-            },
+      editFormVisible: false, // 编辑界面是否显示
+      editLoading: false,
+      editFormRules: {
+        name: [
+          {required: true, message: '请输入姓名', trigger: 'blur'}
+        ]
+      },
+      // 编辑界面数据
+      editForm: {
+        id: 0,
+        name: '',
+        sex: -1,
+        age: 0,
+        birth: '',
+        addr: ''
+      },
 
-            addFormVisible: false,//新增界面是否显示
-            addLoading: false,
-            addFormRules: {
-                name: [
-                    {required: true, message: '请输入姓名', trigger: 'blur'}
-                ]
-            },
-            //新增界面数据
-            addForm: {
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
-            }
+      addFormVisible: false, // 新增界面是否显示
+      addLoading: false,
+      addFormRules: {
+        name: [
+          {required: true, message: '请输入姓名', trigger: 'blur'}
+        ]
+      },
+      // 新增界面数据
+      addForm: {
+        name: '',
+        sex: -1,
+        age: 0,
+        birth: '',
+        addr: ''
+      }
 
-        }
-    },
-    methods: {
-        //翻页
-        handleCurrentChange (val) {
-            this.page = val
-            this.getUsers()
-        },
-        //获取用户列表
-        getUsers () {
-            let para = {
-                page: this.page,
-                name: this.filters.name
-            }
-            this.listLoading = true
-            getStudentListPage(para).then((res) => {
-                this.total = res.data.total
-                this.users = res.data.users
-                this.listLoading = false
-                //NProgress.done();
-            })
-        },
-        //删除
-        handleDel: function (index, row) {
-            this.$confirm('确认删除该记录吗?', '提示', {
-                type: 'warning'
-            }).then(() => {
-                this.listLoading = true
-                let para = {id: row.id}
-                removeStudent(para).then((res) => {
-                    this.listLoading = false
-                    //NProgress.done();
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    })
-                    this.getUsers()
-                })
-            }).catch(() => {
-
-            })
-        },
-        //显示编辑界面
-        handleEdit: function (index, row) {
-            this.editFormVisible = true
-            this.editForm = Object.assign({}, row)
-        },
-        //显示新增界面
-        handleAdd: function () {
-            this.addFormVisible = true
-            this.addForm = {
-                name: '',
-                sex: -1,
-                age: 0,
-                birth: '',
-                addr: ''
-            }
-        },
-        //编辑
-        editSubmit: function () {
-            this.$refs.editForm.validate((valid) => {
-                if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.editLoading = true
-                        //NProgress.start();
-                        let para = Object.assign({}, this.editForm)
-                        para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
-                        editStudent(para).then((res) => {
-                            this.editLoading = false
-                            //NProgress.done();
-                            this.$message({
-                                message: '编辑成功',
-                                type: 'success'
-                            })
-                            this.$refs['editForm'].resetFields()
-                            this.editFormVisible = false
-                            this.getUsers()
-                        })
-                    })
-                }
-            })
-        },
-        //新增
-        addSubmit: function () {
-            this.$refs.addForm.validate((valid) => {
-                if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.addLoading = true
-                        let para = Object.assign({}, this.addForm)
-                        para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
-                        addStudent(para).then((res) => {
-                            this.addLoading = false
-                            this.$message({
-                                message: '新增成功',
-                                type: 'success'
-                            })
-                            this.$refs['addForm'].resetFields()
-                            this.addFormVisible = false
-                            this.getUsers()
-                        })
-                    })
-                }
-            })
-        },
-        selsChange: function (sels) {
-            this.sels = sels
-        },
-        //批量删除
-        batchRemove: function () {
-            var ids = this.sels.map(item => item.id).toString()
-            this.$confirm('确认删除选中记录吗？', '提示', {
-                type: 'warning'
-            }).then(() => {
-                this.listLoading = true
-                let para = {ids: ids}
-                batchRemoveStudent(para).then((res) => {
-                    this.listLoading = false
-                    //NProgress.done();
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    })
-                    this.getUsers()
-                })
-            }).catch(() => {
-
-            })
-        }
-    },
-    mounted () {
-        this.getUsers()
     }
+  },
+  methods: {
+    // 翻页
+    handleCurrentChange (val) {
+      this.page = val
+      this.getUsers()
+    },
+    // 获取用户列表
+    getUsers () {
+      let para = {
+        page: this.page,
+        name: this.filters.name
+      }
+      this.listLoading = true
+      getStudentListPage(para).then((res) => {
+        this.total = res.data.total
+        this.users = res.data.users
+        this.listLoading = false
+        // NProgress.done();
+      })
+    },
+    // 删除
+    handleDel: function (index, row) {
+      this.$confirm('确认删除该记录吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        let para = {id: row.id}
+        removeStudent(para).then((res) => {
+          this.listLoading = false
+          // NProgress.done();
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getUsers()
+        })
+      }).catch(() => {
+
+      })
+    },
+    // 显示编辑界面
+    handleEdit: function (index, row) {
+      this.editFormVisible = true
+      this.editForm = Object.assign({}, row)
+    },
+    // 显示新增界面
+    handleAdd: function () {
+      this.addFormVisible = true
+      this.addForm = {
+        name: '',
+        sex: -1,
+        age: 0,
+        birth: '',
+        addr: ''
+      }
+    },
+    // 编辑
+    editSubmit: function () {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.editLoading = true
+            // NProgress.start();
+            let para = Object.assign({}, this.editForm)
+            para.birth = (!para.birth || para.birth === '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
+            editStudent(para).then((res) => {
+              this.editLoading = false
+              // NProgress.done();
+              this.$message({
+                message: '编辑成功',
+                type: 'success'
+              })
+              this.$refs['editForm'].resetFields()
+              this.editFormVisible = false
+              this.getUsers()
+            })
+          })
+        }
+      })
+    },
+    // 新增
+    addSubmit: function () {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.addLoading = true
+            let para = Object.assign({}, this.addForm)
+            para.birth = (!para.birth || para.birth === '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
+            addStudent(para).then((res) => {
+              this.addLoading = false
+              this.$message({
+                message: '新增成功',
+                type: 'success'
+              })
+              this.$refs['addForm'].resetFields()
+              this.addFormVisible = false
+              this.getUsers()
+            })
+          })
+        }
+      })
+    },
+    selsChange: function (sels) {
+      this.sels = sels
+    },
+    // 批量删除
+    batchRemove: function () {
+      var ids = this.sels.map(item => item.id).toString()
+      this.$confirm('确认删除选中记录吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        let para = {ids: ids}
+        batchRemoveStudent(para).then((res) => {
+          this.listLoading = false
+          // NProgress.done();
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getUsers()
+        })
+      }).catch(() => {
+
+      })
+    }
+  },
+  mounted () {
+    this.getUsers()
+  }
 }
 </script>
 

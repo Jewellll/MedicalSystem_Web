@@ -160,142 +160,144 @@
 import {getParaListPage} from '../../api/api'
 
 export default {
-    data() {
-        return {
-            // 获取用户列表的参数对象
-            queryInfo: {
-                //查询类型
-                select: '',
-                // 查询参数
-                query: '',
-                // 当前的页码数
-                pagenum: 1,
-                // 每页显示多少条数据
-                pagesize: 5
-            },
-            listLoading: false,
-            multipleSelection: [],
-            // 总数
-            total: 0,
-            rules: {
-                name: [
-                    { required: true, message: '请输入名称', trigger: 'blur' }
-                ],
-                permission: [
-                    { required: true, message: '请输入权限', trigger: 'blur' }
-                ]
-            },
-            formLabelWidth: '120px',
-            dialogFormVisible: false,
-            dateScopes: [
-                '全部',
-                '本级',
-                '自定义'
-            ],
-            editForm: {
-                name: '',
-                dataScope: '',
-                level: '',
-                remark: ''
-            },
-            TableData: [],
-            menus: [
-                {
-                    id: 1,
-                    label: '教师管理'
-                },
-                {
-                    id: 2,
-                    label: '学生管理'
-                },
-                {
-                    id: 3,
-                    label: '课程管理'
-                },
-                {
-                    id: 4,
-                    label: '用户管理',
-                },
-                {
-                    id: 5,
-                    label: '角色管理',
-                },
-                {
-                    id: 6,
-                    label: '数据字典管理',
-                },
-                {
-                    id: 7,
-                    label: '系统参数管理',
-                },
-                {
-                    id: 8,
-                    label: '测试页面',
-                },
-                {
-                    id: 9,
-                    label: '相关页面',
-                    children: [
-                        {
-                            id: 1,
-                            label: '测试页面',
-                        }
-                    ]
-                }
-            ],
-            currentId: 0,
-            menuLoading: false,
-            showButton: false,
-            defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
-            menuIds: [], depts: [], deptDatas: [], // 多选时使用
+  data () {
+    return {
+      // 获取用户列表的参数对象
+      queryInfo: {
+        // 查询类型
+        select: '',
+        // 查询参数
+        query: '',
+        // 当前的页码数
+        pagenum: 1,
+        // 每页显示多少条数据
+        pagesize: 5
+      },
+      listLoading: false,
+      multipleSelection: [],
+      // 总数
+      total: 0,
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        permission: [
+          { required: true, message: '请输入权限', trigger: 'blur' }
+        ]
+      },
+      formLabelWidth: '120px',
+      dialogFormVisible: false,
+      dateScopes: [
+        '全部',
+        '本级',
+        '自定义'
+      ],
+      editForm: {
+        name: '',
+        dataScope: '',
+        level: '',
+        remark: ''
+      },
+      TableData: [],
+      menus: [
+        {
+          id: 1,
+          label: '教师管理'
+        },
+        {
+          id: 2,
+          label: '学生管理'
+        },
+        {
+          id: 3,
+          label: '课程管理'
+        },
+        {
+          id: 4,
+          label: '用户管理'
+        },
+        {
+          id: 5,
+          label: '角色管理'
+        },
+        {
+          id: 6,
+          label: '数据字典管理'
+        },
+        {
+          id: 7,
+          label: '系统参数管理'
+        },
+        {
+          id: 8,
+          label: '测试页面'
+        },
+        {
+          id: 9,
+          label: '相关页面',
+          children: [
+            {
+              id: 1,
+              label: '测试页面'
+            }
+          ]
         }
-    },
-    created () {
-        this.getUserList()
-    },
-    methods: {
-        async getUserList () {
-            this.listLoading = true
-            getParaListPage(this.queryInfo).then((res) => {
-                console.log(res)
-                this.total = res.data.total
-                this.TableData = res.data.users
-                this.listLoading = false
-            })
-        },
-        // 监听 pageSize 改变的事件
-        handleSizeChange (newSize) {
-            //   console.log(newSize)
-            //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
-            this.queryInfo.pagesize = newSize
-            //  修改完以后，重新发起请求获取一次数据
-            this.getUserList()
-        },
-        // 监听 页码值  改变的事件
-        handleCurrentChange (newPage) {
-            //   console.log(newPage)
-            //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
-            this.queryInfo.pagenum = newPage
-            //  修改完以后，重新发起请求获取一次数据
-            this.getUserList()
-        },
-
-        deleteSelected() {
-        },
-        addItem () {
-        },
-        menuChange() {},
-        saveMenu() {},
-        getMenuDatas: function () {},
-        handleEdit: function (index, row){
-            this.dialogFormVisible = true
-            this.editForm = Object.assign({}, row)
-        },
-        handleDelete: function (){},
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        }
+      ],
+      currentId: 0,
+      menuLoading: false,
+      showButton: false,
+      defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
+      menuIds: [],
+      depts: [],
+      deptDatas: [] // 多选时使用
     }
+  },
+  created () {
+    this.getUserList()
+  },
+  methods: {
+    async getUserList () {
+      this.listLoading = true
+      getParaListPage(this.queryInfo).then((res) => {
+        console.log(res)
+        this.total = res.data.total
+        this.TableData = res.data.users
+        this.listLoading = false
+      })
+    },
+    // 监听 pageSize 改变的事件
+    handleSizeChange (newSize) {
+      //   console.log(newSize)
+      //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
+      this.queryInfo.pagesize = newSize
+      //  修改完以后，重新发起请求获取一次数据
+      this.getUserList()
+    },
+    // 监听 页码值  改变的事件
+    handleCurrentChange (newPage) {
+      //   console.log(newPage)
+      //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
+      this.queryInfo.pagenum = newPage
+      //  修改完以后，重新发起请求获取一次数据
+      this.getUserList()
+    },
+
+    deleteSelected () {
+    },
+    addItem () {
+    },
+    menuChange () {},
+    saveMenu () {},
+    getMenuDatas: function () {},
+    handleEdit: function (index, row) {
+      this.dialogFormVisible = true
+      this.editForm = Object.assign({}, row)
+    },
+    handleDelete: function () {},
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    }
+  }
 }
 </script>
 

@@ -132,7 +132,7 @@ export default {
 
 <style scoped lang="scss">
 
-//@import "src/components/widgets/comment/css/comment";
+@import "src/css/comment";
 
 .container {
   padding: 0 10px;

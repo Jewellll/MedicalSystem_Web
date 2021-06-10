@@ -77,7 +77,7 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                评论
+                <Comment :comments="commentData"></Comment>
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
@@ -170,88 +170,98 @@
 //     getTeacherListPage,
 //     removeTeacher
 // } from '../../api/api'
+import {getTeacherListPage} from '../../api/api'
+import {comments} from '../../mock/mockdata'
+import Comment from './Comment'
+
 export default {
-    data () {
-        return {
-            imgPreview: {
-                img: '',
-                show: false
-            },
-            //附件
-            dialogImageUrl: '',
-            dialogVisible: false,
-            disabled: false,
-            //文件上传
-            fileList: [{
-                name: 'food.jpeg',
-                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-            },
-                {
-                    name: 'food2.jpeg',
-                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }]
-        }
-    },
-    // created () {
-    //     this.getUserList()
-    // },
-    methods: {
-        async getUserList () {
-            this.listLoading = true
-            getTeacherListPage(this.queryInfo).then((res) => {
-                console.log(res)
-                this.total = res.data.total
-                this.userList = res.data.users
-                this.listLoading = false
-            })
-        },
-        //附件
-        // 删除
-        handleRemove1(file) {
-            this.$refs.pictureUpload.handleRemove(file)
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url
-            this.dialogVisible = true
-            console.log(file.name)
-        },
-        handleDownload(file) {
-            console.log(file)
-            var a = document.createElement('a')
-            var event = new MouseEvent('click')
-            a.download = file.name
-            a.href = file.url;
-            a.dispatchEvent(event)
-
-        },
-        handleRemove (file, fileList) {
-            console.log(file, fileList)
-        },
-        //下载文件
-        handlePreview (file) {
-            var a = document.createElement('a')
-            var event = new MouseEvent('click')
-            a.download = file.name
-            a.href = file.url
-            a.dispatchEvent(event)
-            console.log(file.url)
-
-        },
-        handleExceed (files, fileList) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-        },
-        beforeRemove (file, fileList) {
-            return this.$confirm(`确定移除 ${file.name}？`)
-        },
-        //预览图片
-        showImg (e) {
-            // console.log(e.target)
-            if (e.target.tagName === 'IMG') {
-                this.imgPreview.img = e.target.src
-                this.imgPreview.show = true
-            }
-        },
+  components: {
+    Comment
+  },
+  data () {
+    return {
+      imgPreview: {
+        img: '',
+        show: false
+      },
+      // 附件
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false,
+      commentData: [],
+      // 文件上传
+      fileList: [{
+        name: 'food.jpeg',
+        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+      },
+      {
+        name: 'food2.jpeg',
+        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+      }]
     }
+  },
+  // created () {
+  //     this.getUserList()
+  // },
+  methods: {
+    async getUserList () {
+      this.listLoading = true
+      // eslint-disable-next-line no-undef
+      getTeacherListPage(this.queryInfo).then((res) => {
+        console.log(res)
+        this.total = res.data.total
+        this.userList = res.data.users
+        this.listLoading = false
+      })
+    },
+    // 附件
+    // 删除
+    handleRemove1 (file) {
+      this.$refs.pictureUpload.handleRemove(file)
+    },
+    handlePictureCardPreview (file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+      console.log(file.name)
+    },
+    handleDownload (file) {
+      console.log(file)
+      var a = document.createElement('a')
+      var event = new MouseEvent('click')
+      a.download = file.name
+      a.href = file.url
+      a.dispatchEvent(event)
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    // 下载文件
+    handlePreview (file) {
+      var a = document.createElement('a')
+      var event = new MouseEvent('click')
+      a.download = file.name
+      a.href = file.url
+      a.dispatchEvent(event)
+      console.log(file.url)
+    },
+    handleExceed (files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    // 预览图片
+    showImg (e) {
+      // console.log(e.target)
+      if (e.target.tagName === 'IMG') {
+        this.imgPreview.img = e.target.src
+        this.imgPreview.show = true
+      }
+    }
+  },
+  created () {
+    this.commentData = comments.data
+  }
 }
 </script>
 
