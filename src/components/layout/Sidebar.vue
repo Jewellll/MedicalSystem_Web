@@ -112,11 +112,16 @@ export default {
                 },
                 {
                     icon: 'el-icon-set-up',
+                    index: 'createCases',
+                    title: '创建案例'
+                },
+                {
+                    icon: 'el-icon-notebook-1',
                     index: 'replyCase',
                     title: '回复案例'
                 },
                 {
-                    icon: 'el-icon-set-up',
+                    icon: 'el-icon-user',
                     index: 'systemManage',
                     title: '参数管理'
                 },
