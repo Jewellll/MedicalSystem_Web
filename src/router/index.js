@@ -21,6 +21,8 @@ import RoleManage from '../components/page/RoleManage'
 import AddDictionary from '../components/page/AddDictionary'
 import CaseDetail from '../components/page/CaseDetail'
 import ReplyCase from '../components/page/ReplyCase'
+import caseManage from '../components/page/caseManage'
+import createCases from '../components/page/createCases'
 
 Vue.use(Router)
 
@@ -171,6 +173,24 @@ export default new Router({
                     component: CaseDetail,
                     meta: {
                         title:'案例详情',
+                        requireAuth: true
+                    }
+                },
+                {
+                    path: '/caseManage',
+                    name: 'caseManage',
+                    component: caseManage,
+                    meta: {
+                        title:'案例管理',
+                        requireAuth: true
+                    }
+                },
+                {
+                    path: '/createCases',
+                    name: 'createCases',
+                    component: createCases,
+                    meta: {
+                        title:'案例管理',
                         requireAuth: true
                     }
                 },

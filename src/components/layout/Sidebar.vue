@@ -70,35 +70,40 @@ export default {
                     index: 'manage',
                     title: '系统首页'
                 },
-                {
-                    icon: 'el-icon-collection',
-                    index: 'teacherManage',
-                    title: '教师管理'
-                },
-                {
-                    icon: 'el-icon-notebook-1',
-                    index: 'studentManage',
-                    title: '学生管理'
-                },
-                {
-                    icon: 'el-icon-data-analysis',
-                    index: 'courseManage',
-                    title: '课程管理'
-                },
-                {
-                    icon: 'el-icon-user',
-                    index: 'userManage',
-                    title: '用户管理'
-                },
-                {
-                    icon: 'el-icon-lock',
-                    index: 'roleManage',
-                    title: '角色管理'
-                },
+                // {
+                //     icon: 'el-icon-collection',
+                //     index: 'teacherManage',
+                //     title: '教师管理'
+                // },
+                // {
+                //     icon: 'el-icon-notebook-1',
+                //     index: 'studentManage',
+                //     title: '学生管理'
+                // },
+                // {
+                //     icon: 'el-icon-data-analysis',
+                //     index: 'courseManage',
+                //     title: '课程管理'
+                // },
+                // {
+                //     icon: 'el-icon-user',
+                //     index: 'userManage',
+                //     title: '用户管理'
+                // },
+                // {
+                //     icon: 'el-icon-lock',
+                //     index: 'roleManage',
+                //     title: '角色管理'
+                // },
                 {
                     icon: 'el-icon-reading',
                     index: 'dictionary',
                     title: '字典管理'
+                },
+                {
+                    icon: 'el-icon-collection',
+                    index: 'caseManage',
+                    title: '案例管理'
                 },
                 {
                     icon: 'el-icon-set-up',
