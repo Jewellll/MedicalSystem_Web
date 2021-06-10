@@ -49,6 +49,50 @@ const comments = {
             likeNum: 0,
             content: '从没见过这么优秀的人',
             reply: []
+        },
+        {
+            id: '3',
+            date: '2021-07-05 08:32',
+            ownerId: 'talents100022',
+            fromId: 'errhefe232213',
+            fromName: '撒旦郭德纲',
+            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
+            likeNum: 0,
+            content: '从没见过这么优秀的人',
+            reply: []
+        },
+        {
+            id: '4',
+            date: '2021-07-05 08:33',
+            ownerId: 'talents100020',
+            fromId: 'errhefe232213',
+            fromName: '毒蛇郭德纲',
+            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
+            likeNum: 0,
+            content: '从没见过这么优秀的人',
+            reply: []
+        },
+        {
+            id: '5',
+            date: '2021-07-05 08:34',
+            ownerId: 'talents100020',
+            fromId: 'errhefe232213',
+            fromName: '毒蛇郭德纲',
+            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
+            likeNum: 0,
+            content: '豆腐干大概士大夫是',
+            reply: []
+        },
+        {
+            id: '6',
+            date: '2021-07-05 08:35',
+            ownerId: 'talents100020',
+            fromId: 'errhefe232213',
+            fromName: '毒蛇郭德纲',
+            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
+            likeNum: 0,
+            content: '豆士大夫v飒飒的概士大夫是',
+            reply: []
         }
     ]
 };

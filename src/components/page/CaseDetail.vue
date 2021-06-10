@@ -442,7 +442,7 @@ img {
 
 .submit {
     width: 50%;
-    height: 600px;
+    height: 800px;
     margin: 0px;
     box-sizing: border-box;
 }

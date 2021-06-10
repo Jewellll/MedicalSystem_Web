@@ -1,6 +1,23 @@
 <!--评论模块-->
 <template>
   <div class="container">
+      <div class="user">
+      <div class="avatar-user">
+      <img class="avatar" src="../../assets/img/img1.jpg" width="36" height="36" alt=""/>
+      </div>
+      <div class="input-user" >
+          <el-input class="gray-bg-input"
+                    v-model="inputComment"
+                    type="textarea"
+                    :rows="1"
+                    autofocus
+                    placeholder="写下你的评论">
+          </el-input>
+          <div class="btn-control">
+              <el-button size="small" class="btn" type="primary"  @click="commitComment">确定</el-button>
+          </div>
+      </div>
+      </div>
     <div class="comment" v-for="item in comments" :key="item.id">
       <div class="info">
         <img class="avatar" :src="item.fromAvatar" width="36" height="36" alt=""/>
@@ -133,6 +150,30 @@ export default {
 <style scoped lang="scss">
 
 @import "src/css/comment";
+.user{
+    width: 100%;
+    position: relative;
+    left: -37px;
+    .avatar-user{
+
+        vertical-align: 30px;
+        display: inline-block;
+        .avatar{
+            border-radius: 50%;
+        }
+    }
+    .input-user{
+        width: 80%;
+        display: inline-block;
+        .btn-control{
+            margin-top: 10px;
+            position: relative;
+            left: 230px;
+        }
+    }
+}
+
+
 
 .container {
   padding: 0 10px;
