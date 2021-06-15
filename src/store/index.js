@@ -24,6 +24,9 @@ export default new Vuex.Store({
         },
         setDiction(state,data){
             state.dicCode = data
+        },
+        setCollapse(state,data){
+            state.isCollapse=data
         }
     },
     //异步操作

@@ -19,8 +19,10 @@
     "element-plus": "^1.0.2-beta.35",
     "element-ui": "^2.14.1",
     "mockjs": "^1.1.0",
-    "sass-loader": "^6.0.0",
     "node-sass": "^6.0.0",
+    "postcss-px2rem": "^0.3.0",
+    "px2rem-loader": "^0.1.9",
+    "sass-loader": "^6.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.6.0"

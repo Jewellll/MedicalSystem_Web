@@ -104,7 +104,24 @@ export default {
             }
         }
     },
+    computed:{
+        getIsCollapse(){
+            return this.$store.state.isCollapse
+        }
+    },
     watch: {
+        getIsCollapse:{
+            handler(newValue,oldValue){ //当词条改变时执行事件
+                if(newValue===false){
+                    const tag = document.getElementsByClassName('tag-container');
+                    console.log(tag[0])
+                    tag[0].style.marginLeft = "167px";
+                }else{
+                    const tag = document.getElementsByClassName('tag-container');
+                    tag[0].style.marginLeft = "75px";
+                }
+            }
+        },
         //路由变化,设置标签
         $route (newValue, oldValue) {
             this.setTags(newValue)
@@ -125,6 +142,7 @@ export default {
     background-color: white;
     border-bottom: 1px solid #e6e6e6;
     justify-content: space-between;
+    transition: margin-left 0.4s;
 }
 .tag {
     margin-left: 2px;

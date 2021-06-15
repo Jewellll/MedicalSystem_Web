@@ -165,6 +165,7 @@ export default {
         // 动态控制展开与收起和切换对应图标
         isC() {
             this.isCollapse = !this.isCollapse;
+            this.$store.commit('setCollapse',this.isCollapse);
             this.toggle = !this.toggle;
             this.block = !this.block;
         },
