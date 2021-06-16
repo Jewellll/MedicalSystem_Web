@@ -80,11 +80,11 @@ export default {
                     index: 'studentManage',
                     title: '学生管理'
                 },
-                // {
-                //     icon: 'el-icon-data-analysis',
-                //     index: 'courseManage',
-                //     title: '课程管理'
-                // },
+                {
+                    icon: 'el-icon-data-analysis',
+                    index: 'courseManage',
+                    title: '课程管理'
+                },
                 // {
                 //     icon: 'el-icon-user',
                 //     index: 'userManage',
