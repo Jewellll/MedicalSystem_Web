@@ -70,16 +70,16 @@ export default {
                     index: 'manage',
                     title: '系统首页'
                 },
-                // {
-                //     icon: 'el-icon-collection',
-                //     index: 'teacherManage',
-                //     title: '教师管理'
-                // },
-                // {
-                //     icon: 'el-icon-notebook-1',
-                //     index: 'studentManage',
-                //     title: '学生管理'
-                // },
+                {
+                    icon: 'el-icon-collection',
+                    index: 'teacherManage',
+                    title: '教师管理'
+                },
+                {
+                    icon: 'el-icon-notebook-1',
+                    index: 'studentManage',
+                    title: '学生管理'
+                },
                 // {
                 //     icon: 'el-icon-data-analysis',
                 //     index: 'courseManage',
@@ -120,11 +120,11 @@ export default {
                     index: 'replyCase',
                     title: '回复案例'
                 },
-                {
-                    icon: 'el-icon-user',
-                    index: 'systemManage',
-                    title: '参数管理'
-                },
+                // {
+                //     icon: 'el-icon-user',
+                //     index: 'systemManage',
+                //     title: '参数管理'
+                // },
                 {
                     icon: 'el-icon-paperclip',
                     index: '3',
