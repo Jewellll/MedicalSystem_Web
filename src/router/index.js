@@ -11,7 +11,6 @@ import StudentManage from '../components/page/StudentManage'
 import TeacherManage from '../components/page/TeacherManage'
 import error from '../components/page/404'
 import Dictionary from '../components/page/Dictionary'
-import UserInformation from '../components/page/UserInformation'
 import UserManage from '../components/page/UserManage'
 import SystemManage from '../components/page/SystemManage'
 import CourseManage from '../components/page/CourseManage'
@@ -111,15 +110,6 @@ export default new Router({
                     component: SystemManage,
                     meta: {
                         title:'系统参数管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/userInformation',
-                    name: 'UserInformation',
-                    component: UserInformation,
-                    meta: {
-                        title:'个人信息',
                         requireAuth: true
                     }
                 },

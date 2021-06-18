@@ -1,10 +1,10 @@
 <template>
     <div class="header">
-        <div class="logo">
-            到云</div>
+<!--        <div class="logo">-->
+<!--            医疗</div>-->
         <div class="user">
             <div class="username">
-                你好，{{ userInfo.username }}！
+                你好，{{ userInfo.name }}！
             </div>
             <div class="user-img">
                 <img :src="this.userInfo.avatar"/>

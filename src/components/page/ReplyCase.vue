@@ -13,63 +13,31 @@
                 <h1 style="position: relative;left: -35%;">简要病史</h1>
                 <div class="box">
                     <el-scrollbar>
-                        <p>刚好项目里面一直在使用的都是element</p>
-                        <p>因为原生的滚动条太丑了</p>
-                        <p>发现elementui中有个隐藏的组件</p>
-                        <p>优化滚动条样式</p>
-                        <p>亲测可用</p>
-                        <p>刚好项目里面一直在使用的都是element</p>
-                        <p>因为原生的滚动条太丑了</p>
-                        <p>发现elementui中有个隐藏的组件</p>
-                        <p>优化滚动条样式</p>
-                        <p>亲测可用</p>
-                        <p>刚好项目里面一直在使用的都是element</p>
-                        <p>因为原生的滚动条太丑了</p>
-                        <p>发现elementui中有个隐藏的组件</p>
-                        <p>优化滚动条样式</p>
-                        <p>亲测可用</p>
-                        <p>优化滚动条样式</p>
-                        <p>亲测可用</p>
+                        <p>患者，女，33岁</p>
+                        <p>主诉：左髋部肿物伴疼痛4月余</p>
+                        <p>既往史：2013年直肠腺癌，术前短程快速放疗（共DT3900CGY/13F）；2018年左髋部疼痛，复查MRI股骨头颈及大小转子占位性病变，活检病理“疑癌”。2019年左髋关节病理性骨折，2019年5月外院行“人工左髋关节置换术”，外院病理示“骨脂肪硬化性纤维黏液瘤”；</p>
+                        <p>影像学：2019年12月MRI显示：左髋关节置换术后，左侧髂骨翼、左髋人工关节周围软组织多发占位，考虑恶性肿瘤，转移瘤可能大，2020年1月转诊我院</p>
+                        <p>2020年3月我院胸部CT平扫：左肺及右肺中叶多发小结节</p>
+                        <p>2020年3月行左上肺肿物切除术</p>
+                        <p>2020年4月行左髋外侧肿块切除术</p>
+<!--                        <p>女，10岁，发现左侧大腿根部内侧肿物。</p>-->
+<!--                        <p><b>免疫组化:</b></p>-->
+<!--                        <p>阳性指标（FLI-1、CD99、NKX2.2、KI67）</p>-->
+<!--                        <p>阴性指标（CK、Vimentin、LCA、MPO、TdT、Desmin、CD56、TLE-1、S100、CD3、CD20）</p>-->
                     </el-scrollbar>
                 </div>
             </div>
             <div class="caseImg layout">
                 <h1 style="position: relative;left: -25%">病例图片</h1>
-                <div class="imgBox1">
-                    <div class="img img1" @click="showImg($event)">
-                        <img src="../../assets/img/img1.jpg" alt="">
-                        <div class="imgDolg" v-show="imgPreview.show" @click.stop="imgPreview.show = false">
-                            <i class="el-icon-close" id="imgDolgClose" @click.stop="imgPreview.show = false"></i>
-                            <img @click.stop="imgPreview.show = flase" :src="imgPreview.img"/>
-                        </div>
-                        <span>图片说明</span>
-                    </div>
-                    <div class="img img2" @click="showImg($event)">
-                        <img src="../../assets/img/img2.jpg" alt="">
-                        <div class="imgDolg" v-show="imgPreview.show" @click.stop="imgPreview.show = false">
-                            <i class="el-icon-close" id="imgDolgClose" @click.stop="imgPreview.show = false"></i>
-                            <img @click.stop="imgPreview.show = flase" :src="imgPreview.img"/>
-                        </div>
-                        <span>图片说明</span>
-                    </div>
-                </div>
-                <div class="imgBox2">
-                    <div class="img img3" @click="showImg($event)">
-                        <img src="../../assets/img/img3.jpg" alt="">
-                        <div class="imgDolg" v-show="imgPreview.show" @click.stop="imgPreview.show = false">
-                            <i class="el-icon-close" id="imgDolgClose" @click.stop="imgPreview.show = false"></i>
-                            <img @click.stop="imgPreview.show = flase" :src="imgPreview.img"/>
-                        </div>
-                        <span>图片说明</span>
-                    </div>
-                    <div class="img img4" @click="showImg($event)">
-                        <img src="../../assets/img/img4.jpg" alt="">
-                        <div class="imgDolg" v-show="imgPreview.show" @click.stop="imgPreview.show = false">
-                            <i class="el-icon-close" id="imgDolgClose" @click.stop="imgPreview.show = false"></i>
-                            <img @click.stop="imgPreview.show = flase" :src="imgPreview.img"/>
-                        </div>
-                        <span>图片说明</span>
-                    </div>
+                <div class="demo-image__lazy">
+                    <el-scrollbar>
+                        <el-image
+                            v-for="url in urls" :key="url" lazy
+                            style="width: 250px; height: 250px;margin-right: 5px"
+                            :src="url"
+                            :preview-src-list="srcList">
+                        </el-image>
+                    </el-scrollbar>
                 </div>
             </div>
         </div>
@@ -110,51 +78,18 @@
                 <h2 style="position: relative;left: -40%">思考</h2>
                 <div class="think">
                     <el-scrollbar>
-                        <p>我国《商标法》规则，商标注册人享有牌号专一使用权，受司法关心。企业要求商标最大的代价等于关切自身的品牌，担保本人的品牌产品、效劳畸形地在市场上发展发卖、广告，制止别人的使用。</p>
-                        <p>一方面，牌号注册依照在先申请轨制，企业如果不有注册商标，很容易被一些分工对手和牌号投契份子恶意抢注。另外一方面，商标承载着品牌的商誉，是企业品牌价值的法律载体。</p>
+                        <p>1、影像学磁共振表现？</p>
+                        <p>2、最常见放疗后差分化梭形细胞肉瘤</p>
+                        <p>3、放疗后血管肉瘤病理诊断标准</p>
                     </el-scrollbar>
                 </div>
             </div>
             <el-divider></el-divider>
             <div class="comment layout">
+                <div class="comment-box">
                 <Comment :comments="commentData"></Comment>
+                </div>
             </div>
-<!--            <div class="submit layout">-->
-<!--                <el-divider></el-divider>-->
-<!--                <h4 style="position: relative;left: -33%">提交诊断或治疗方案</h4>-->
-<!--                <div class="upload1">-->
-<!--                    <el-upload-->
-<!--                        class="upload-demo"-->
-<!--                        action="https://jsonplaceholder.typicode.com/posts/"-->
-<!--                        :on-preview="handlePreview"-->
-<!--                        :on-remove="handleRemove"-->
-<!--                        :before-remove="beforeRemove"-->
-<!--                        multiple-->
-<!--                        :limit="3"-->
-<!--                        :on-exceed="handleExceed"-->
-<!--                        :file-list="fileList">-->
-<!--                        <el-button size="middle" type="primary">点击上传</el-button>-->
-<!--                        <div slot="tip" class="el-upload__tip" style="color:#c1c1c1">只能上传jpg/png文件，且不超过500kb <br>-->
-<!--                            支持扩展名：.rar .zip .doc .docx .pdf .jpg... <br>诊断结果以文本形式提交，治疗方案以word、pdf、ppt形式提交-->
-<!--                        </div>-->
-<!--                    </el-upload>-->
-<!--                </div>-->
-<!--                <div class="upload2">-->
-<!--                    <el-upload-->
-<!--                        class="upload-demo"-->
-<!--                        drag-->
-<!--                        :on-preview="handlePreview"-->
-<!--                        action="https://jsonplaceholder.typicode.com/posts/"-->
-<!--                        multiple>-->
-<!--                        <i class="el-icon-upload"></i>-->
-<!--                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-<!--                        <div class="el-upload__tip" slot="tip" style="color:#c1c1c1">支持扩展名：.rar .zip .doc .docx .pdf-->
-<!--                            .jpg...-->
-<!--                        </div>-->
-<!--                    </el-upload>-->
-<!--                </div>-->
-<!--            </div>-->
-
         </div>
 
         <!-- 卡片视图区域 -->
@@ -180,6 +115,30 @@ export default {
     },
     data () {
         return {
+            urls: [
+                require('../../assets/img/CaseImg/Case02-1.png'),
+                require('../../assets/img/CaseImg/Case02-2.png'),
+                require('../../assets/img/CaseImg/Case02-3.png'),
+                require('../../assets/img/CaseImg/Case02-4.png'),
+                require('../../assets/img/CaseImg/Case02-5.png'),
+                require('../../assets/img/CaseImg/Case02-6.png'),
+                require('../../assets/img/CaseImg/Case02-7.png'),
+                require('../../assets/img/CaseImg/Case02-8.png'),
+                require('../../assets/img/CaseImg/Case02-9.png'),
+                require('../../assets/img/CaseImg/Case02-10.png')
+            ],
+            srcList: [
+                require('../../assets/img/CaseImg/Case02-1.png'),
+                require('../../assets/img/CaseImg/Case02-2.png'),
+                require('../../assets/img/CaseImg/Case02-3.png'),
+                require('../../assets/img/CaseImg/Case02-4.png'),
+                require('../../assets/img/CaseImg/Case02-5.png'),
+                require('../../assets/img/CaseImg/Case02-6.png'),
+                require('../../assets/img/CaseImg/Case02-7.png'),
+                require('../../assets/img/CaseImg/Case02-8.png'),
+                require('../../assets/img/CaseImg/Case02-9.png'),
+                require('../../assets/img/CaseImg/Case02-10.png')
+            ],
             imgPreview: {
                 img: '',
                 show: false
@@ -251,13 +210,13 @@ export default {
             return this.$confirm(`确定移除 ${file.name}？`)
         },
         // 预览图片
-        showImg (e) {
-            // console.log(e.target)
-            if (e.target.tagName === 'IMG') {
-                this.imgPreview.img = e.target.src
-                this.imgPreview.show = true
-            }
-        }
+        // showImg (e) {
+        //     // console.log(e.target)
+        //     if (e.target.tagName === 'IMG') {
+        //         this.imgPreview.img = e.target.src
+        //         this.imgPreview.show = true
+        //     }
+        // }
     },
     created () {
         this.commentData = comments.data
@@ -267,69 +226,38 @@ export default {
 
 <style scoped>
 /*案例图片*/
-.img {
-    display: inline-block;
-
-    height: 220px;
-    width: 220px;
-    margin-top: 3px;
+.demo-image__lazy {
+    margin-left: 2.6em;
+    height: 500px;
+    width: 85%;
 }
 
-img {
-    width: 100%;
-    height: 100%;
-}
-
-.imgDolg {
-    width: 60vw;
-    height: 80vh;
-    position: fixed;
-    z-index: 9999;
-    background-color: rgba(140, 134, 134, 0.6);
-    top: 100px;
-    left: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#imgDolgClose {
-    position: fixed;
-    top: 120px;
-    cursor: pointer;
-    right: 250px;
-    font-size: 50px;
-    color: white;
-}
-
-.imgBox1 {
-    width: 100%;
-}
-
-.imgBox2 {
-    width: 100%;
-    margin-top: 10px;
-}
-
-.img1 {
-    margin-right: 40px;
-}
-
-.img3 {
-    margin-right: 40px;
+.demo-image__lazy >>> .el-scrollbar__wrap {
+    overflow: scroll;
+    width: 110%;
+    height: 104%;
 }
 
 /*案例简述*/
 .box {
     border-radius: 2px;
     position: relative;
+    padding-right: 5px;
     left: 5%;
     width: 90%;
     height: 70%;
     border: 1px solid #c1c1c1;
     background: #f6f4f4;
 }
-
+.box p {
+    left: 1em;
+    line-height: 2em;
+    position: relative;
+    width: 90%;
+    text-align: justify;
+    text-indent: 2em;
+    font-size: 16px;
+}
 .el-scrollbar {
     height: 100%;
 }
@@ -339,20 +267,29 @@ img {
     width: 110%;
     height: 120%;
 }
-/*.think {*/
-/*    border-radius: 2px;*/
-/*    position: relative;*/
-/*    left: 10%;*/
-/*    width: 80%;*/
-/*    height: 70%;*/
-/*    border: 1px solid #c1c1c1;*/
-/*    background: #f6f4f4;*/
-/*}*/
-/*.think >>> .el-scrollbar__wrap {*/
-/*    overflow: scroll;*/
-/*    width: 110%;*/
-/*    height: 120%;*/
-/*}*/
+/*思考*/
+.think p{
+    position: relative;
+    left: 10%;
+    width: 80%;
+    text-align: justify;
+    text-indent: 2em;
+    font-size: 16px;
+}
+.think {
+    border-radius: 2px;
+    position: relative;
+    left: 10%;
+    width: 80%;
+    height: 70%;
+    border: 1px solid #c1c1c1;
+    background: #f6f4f4;
+}
+.think >>> .el-scrollbar__wrap {
+    overflow: scroll;
+    width: 110%;
+    height: 120%;
+}
 
 /*上传*/
 .upload1 {
@@ -362,13 +299,13 @@ img {
 .upload2 {
     margin-top: 50px;
 }
-.think p{
+
+/*评论*/
+
+.comment-box{
     position: relative;
-    left: 10%;
-    width: 80%;
-    text-align: justify;
-    text-indent: 2em;
-    font-size: 16px;
+    left: 15%;
+    width: 70%;
 }
 /*布局*/
 .el-divider{
