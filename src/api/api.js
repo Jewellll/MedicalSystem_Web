@@ -42,7 +42,7 @@ export const getStudentListPage = params => { return http.get(`${base}/student/l
 
 export const editStudent = params => { return http.get(`${base}/student/edit`, { params: params }); };
 
-//export const addStudent = params => { return http.get(`${base}/student/add`, { params: params }); };
+export const addStudent = params => { return http.get(`${base}/student/add`, { params: params }); };
 
 export const removeStudent = params => { return http.get(`${base}/student/remove`, { params: params }); };
 
