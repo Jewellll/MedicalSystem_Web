@@ -5,94 +5,63 @@ const comments = {
     data: [
         {
             id: '1', //主键id
-            date: '2021-07-05 08:30',  //评论时间
+            date: '2021-06-05 08:30',  //评论时间
             ownerId: 'talents100020', //文章的id
             fromId: 'errhefe232213',  //评论者id
             fromName: '犀利的评论家',   //评论者昵称
             fromAvatar: 'http://ww4.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2pddjuj30v90uvagf.jpg', //评论者头像
             likeNum: 3, //点赞人数
-            content: '非常靠谱的程序员',  //评论内容
+            content: '老师请问下，多次活检无法明确诊断的原因？',  //评论内容
             reply: [  //回复，或子评论
-                {
-                    id: '3452324455',  //主键id
-                    commentId: 'comment0001',  //父评论id，即父亲的id
-                    fromId: 'observer223432',  //评论者id
-                    fromName: '夕阳红',  //评论者昵称
-                    fromAvatar: 'https://wx4.sinaimg.cn/mw690/69e273f8gy1ft1541dmb7j215o0qv7wh.jpg', //评论者头像
-                    toId: 'errhefe232213',  //被评论者id
-                    toName: '犀利的评论家',  //被评论者昵称
-                    toAvatar: 'http://ww4.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2pddjuj30v90uvagf.jpg',  //被评论者头像
-                    content: '赞同，很靠谱，水平很高',  //评论内容
-                    date: '2021-07-05 08:35'   //评论时间
-                },
-                {
-                    id: '34523244545',
-                    commentId: 'comment0001',
-                    fromId: 'observer567422',
-                    fromName: '清晨一缕阳光',
-                    fromAvatar: 'http://imgsrc.baidu.com/imgad/pic/item/c2fdfc039245d688fcba1b80aec27d1ed21b245d.jpg',
-                    toId: 'observer223432',
-                    toName: '夕阳红',
-                    toAvatar: 'https://wx4.sinaimg.cn/mw690/69e273f8gy1ft1541dmb7j215o0qv7wh.jpg',
-                    content: '大神一个！',
-                    date: '2021-07-05 08:50'
-                }
             ]
         },
         {
             id: '2',
-            date: '2021-07-05 08:30',
+            date: '2021-06-05 08:32',
             ownerId: 'talents100020',
-            fromId: 'errhefe232213',
-            fromName: '毒蛇郭德纲',
+            fromId: 'errhefe232214',
+            fromName: '天天向上',
             fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
             likeNum: 0,
-            content: '从没见过这么优秀的人',
-            reply: []
+            content: '我想知道肺转移是否是血管肉瘤的手术标忌症？',
+            reply: [
+                {
+                    id: '3452324455',  //主键id
+                    commentId: 'comment0001',  //父评论id，即父亲的id
+                    fromId: 'observer223432',  //评论者id
+                    fromName: '张主任',  //评论者昵称
+                    fromAvatar: 'https://wx4.sinaimg.cn/mw690/69e273f8gy1ft1541dmb7j215o0qv7wh.jpg', //评论者头像
+                    toId: 'errhefe232214',  //被评论者id
+                    toName: '天天向上',  //被评论者昵称
+                    toAvatar: 'http://ww4.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2pddjuj30v90uvagf.jpg',  //被评论者头像
+                    content: '肺转移不适宜做根治性手术，只能做姑息性手术 ',  //评论内容
+                    date: '2021-06-05 08:36'   //评论时间
+                }
+            ]
         },
         {
             id: '3',
-            date: '2021-07-05 08:32',
+            date: '2021-07-05 08:35',
             ownerId: 'talents100022',
             fromId: 'errhefe232213',
-            fromName: '撒旦郭德纲',
+            fromName: '天天向上',
             fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
             likeNum: 0,
-            content: '从没见过这么优秀的人',
-            reply: []
-        },
-        {
-            id: '4',
-            date: '2021-07-05 08:33',
-            ownerId: 'talents100020',
-            fromId: 'errhefe232213',
-            fromName: '毒蛇郭德纲',
-            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
-            likeNum: 0,
-            content: '从没见过这么优秀的人',
-            reply: []
-        },
-        {
-            id: '5',
-            date: '2021-07-05 08:34',
-            ownerId: 'talents100020',
-            fromId: 'errhefe232213',
-            fromName: '毒蛇郭德纲',
-            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
-            likeNum: 0,
-            content: '豆腐干大概士大夫是',
-            reply: []
-        },
-        {
-            id: '6',
-            date: '2021-07-05 08:35',
-            ownerId: 'talents100020',
-            fromId: 'errhefe232213',
-            fromName: '毒蛇郭德纲',
-            fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
-            likeNum: 0,
-            content: '豆士大夫v飒飒的概士大夫是',
-            reply: []
+            content: '请问放疗后肉瘤患者可能具有哪些临床病理特征？',
+            reply: [
+                {
+                    id: '3452324455',  //主键id
+                    commentId: 'comment0001',  //父评论id，即父亲的id
+                    fromId: 'observer223432',  //评论者id
+                    fromName: '张主任',  //评论者昵称
+                    fromAvatar: 'https://wx4.sinaimg.cn/mw690/69e273f8gy1ft1541dmb7j215o0qv7wh.jpg', //评论者头像
+                    toId: 'errhefe232213',  //被评论者id
+                    toName: '犀利的评论家',  //被评论者昵称
+                    toAvatar: 'http://ww4.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2pddjuj30v90uvagf.jpg',  //被评论者头像
+                    content: '放疗后肉瘤患者常伴有Li-Fraumeni综合症，具有多肿瘤家族史，表现TP53胚系突变。',  //评论内容
+                    date: '2021-06-05 08:37'   //评论时间
+                }
+            ]
         }
     ]
 };
