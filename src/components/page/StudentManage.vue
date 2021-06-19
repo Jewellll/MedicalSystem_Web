@@ -8,33 +8,38 @@
                         <el-input v-model="filters.name" placeholder="姓名"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" v-on:click="getUsers">查询</el-button>
+                        <el-button type="primary" v-on:click="getstudents">查询</el-button>
                     </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="handleAdd">新增</el-button>
-                    </el-form-item>
+<!--                    <el-form-item>-->
+<!--                        <el-button type="primary" @click="handleAdd">新增</el-button>-->
+<!--                    </el-form-item>-->
                 </el-form>
             </el-col>
 
             <!--列表-->
-            <el-table :data="users" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"
-                      :row-style="{height:'25px'}" :cell-style="{padding:'1px'}"
+            <el-table :data="students" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"
+                      :row-style="{height:'25px'}" :cell-style="{padding:'1px'}" border
                       highlight-current-row v-loading="listLoading" @selection-change="selsChange" class="table">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
                 <el-table-column type="index" width="60">
                 </el-table-column>
-                <el-table-column prop="studentId" label="学号" width="200" :formatter="formatSex" sortable>
+                <el-table-column prop="student_id" label="学生ID" width="150" sortable>
                 </el-table-column>
-                <el-table-column prop="name" label="姓名" width="300" sortable>
+                <el-table-column prop="studentname" label="姓名" width="150" sortable>
                 </el-table-column>
-                <el-table-column prop="school" label="学校" width="300" sortable>
+                <el-table-column prop="sex" label="性别" width="150" :formatter="formatSex" sortable>
                 </el-table-column>
-                <el-table-column prop="class" label="班课" width="300" sortable>
+                <el-table-column prop="grade" label="年级" width="100" sortable>
+                </el-table-column>
+                <el-table-column prop="department" label="科室" sortable>
+                </el-table-column>
+                <el-table-column prop="phone" label="电话" >
                 </el-table-column>
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
-                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button size="small" @click="handleTeam(scope.$index, scope.row)">加入团队</el-button>
+                        <el-button size="small" @click="handleCourse(scope.$index, scope.row)">加入课程</el-button>
                         <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -50,8 +55,8 @@
                 </el-pagination>
             </el-col>
 
-            <!--编辑界面-->
-            <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+            <!--加入团队界面-->
+            <el-dialog title="加入团队" :visible.sync="editFormVisible" :close-on-click-modal="false">
                 <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
                     <el-form-item label="学号" prop="studentId">
                         <el-input v-model="editForm.studentId" auto-complete="off"></el-input>
@@ -76,7 +81,7 @@
             <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
                 <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
                     <el-form-item label="学号" prop="studentId">
-                        <el-input v-model="addForm.studentId" auto-complete="off"></el-input>
+                        <el-input v-model="addForm.student_id" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="姓名" prop="name">
                         <el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -114,7 +119,7 @@ export default {
       filters: {
         name: '' // 需要查询的名字
       },
-      users: [],
+      students: [],
       total: 0,
       page: 1,
       listLoading: false,
@@ -129,28 +134,28 @@ export default {
       },
       // 编辑界面数据
       editForm: {
-        id: 0,
-        name: '',
+        student_id: 0,
+        studentname: '',
         sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
+        grade: '',
+        department: '',
+        phone: ''
       },
 
       addFormVisible: false, // 新增界面是否显示
       addLoading: false,
       addFormRules: {
-        name: [
+        studentname: [
           {required: true, message: '请输入姓名', trigger: 'blur'}
         ]
       },
       // 新增界面数据
       addForm: {
-        name: '',
+        studentname: '',
         sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
+        grade: '',
+        department: '',
+        phone: ''
       }
 
     }
@@ -159,18 +164,18 @@ export default {
     // 翻页
     handleCurrentChange (val) {
       this.page = val
-      this.getUsers()
+      this.getstudents()
     },
     // 获取用户列表
-    getUsers () {
+    getstudents () {
       let para = {
         page: this.page,
         name: this.filters.name
       }
-      this.listLoading = true
+      this.listLoading = false
       getStudentListPage(para).then((res) => {
         this.total = res.data.total
-        this.users = res.data.users
+        this.students = res.data.students
         this.listLoading = false
         // NProgress.done();
       })
@@ -189,16 +194,19 @@ export default {
             message: '删除成功',
             type: 'success'
           })
-          this.getUsers()
+          this.getstudents()
         })
       }).catch(() => {
 
       })
     },
-    // 显示编辑界面
-    handleEdit: function (index, row) {
+    // 显示加入团队界面
+    handleTeam: function (index, row) {
       this.editFormVisible = true
       this.editForm = Object.assign({}, row)
+    },
+    handleCourse (index, row) {
+
     },
     // 显示新增界面
     handleAdd: function () {
@@ -229,7 +237,7 @@ export default {
               })
               this.$refs['editForm'].resetFields()
               this.editFormVisible = false
-              this.getUsers()
+              this.getstudents()
             })
           })
         }
@@ -251,7 +259,7 @@ export default {
               })
               this.$refs['addForm'].resetFields()
               this.addFormVisible = false
-              this.getUsers()
+              this.getstudents()
             })
           })
         }
@@ -275,7 +283,7 @@ export default {
             message: '删除成功',
             type: 'success'
           })
-          this.getUsers()
+          this.getstudents()
         })
       }).catch(() => {
 
@@ -283,7 +291,7 @@ export default {
     }
   },
   mounted () {
-    this.getUsers()
+    this.getstudents()
   }
 }
 </script>
