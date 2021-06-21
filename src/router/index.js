@@ -22,7 +22,8 @@ import CaseDetail from '../components/page/CaseDetail'
 import ReplyCase from '../components/page/ReplyCase'
 import caseManage from '../components/page/caseManage'
 import createCases from '../components/page/createCases'
-import studentTeamManage from "../components/page/studentTeamManage";
+import studentTeamManage from '../components/page/studentTeamManage'
+import studentHome from '../components/page/studentHome'
 
 Vue.use(Router)
 
@@ -47,6 +48,16 @@ export default new Router({
           component: Manage,
           meta: {
             title: '系统首页',
+            hideclose: true,
+            requireAuth: true
+          }
+        },
+        {
+          path: '/studentHome',
+          name: 'studentHome',
+          component: studentHome,
+          meta: {
+            title: '学生首页',
             hideclose: true,
             requireAuth: true
           }

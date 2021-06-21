@@ -71,6 +71,11 @@ export default {
                     title: '系统首页'
                 },
                 {
+                    icon: 'el-icon-house',
+                    index: 'studentHome',
+                    title: '学生首页'
+                },
+                {
                     icon: 'el-icon-collection',
                     index: 'teacherManage',
                     title: '教师管理'

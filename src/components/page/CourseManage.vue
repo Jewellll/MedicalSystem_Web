@@ -30,17 +30,17 @@
                       :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column type="index"></el-table-column>
-                <el-table-column prop="course_id" label="课程号" width="100px"></el-table-column>
-                <el-table-column prop="coursename" label="课程名" width="150px"></el-table-column>
-                <el-table-column prop="teacher_id" label="创建老师" width="150px"></el-table-column>
+                <el-table-column prop="course_id" label="课程号" width="80px"></el-table-column>
+                <el-table-column prop="coursename" label="课程名" width="100px"></el-table-column>
+                <el-table-column prop="teacher_id" label="创建老师" width="100px"></el-table-column>
+                <el-table-column prop="teacher_members" label="教学团队" width="200px"></el-table-column>
                 <el-table-column prop="createtime" label="创建时间" width="200px"></el-table-column>
                 <el-table-column prop="desc" label="课程状态" width="100px"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary"  size="mini" @click="handleTeam(scope.$index, scope.row)">团队管理</el-button>
                         <el-button type="primary"  size="mini" @click="addStudent(scope.$index, scope.row)">添加学生</el-button>
-                        <el-button type="primary"  size="mini" @click="handleDel(scope.$index, scope.row)">添加老师</el-button>
+                        <el-button type="primary"  size="mini" @click="addTeacher(scope.$index, scope.row)">添加老师</el-button>
                         <el-button type="primary"  size="mini" @click="handleDel(scope.$index, scope.row)">添加案例</el-button>
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -100,7 +100,7 @@
             <!-- 内容的主体区域 -->
             <el-transfer
                 style="text-align: left; display: inline-block"
-                v-model="value"
+                v-model="students"
                 filterable
                 :render-content="renderFunc"
                 :titles="['Source', 'Target']"
@@ -116,7 +116,31 @@
                 <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
             </div>
         </el-dialog>
-
+<!--        添加老师-->
+        <el-dialog
+            title="添加老师"
+            :visible.sync="addTeacherVisible"
+            width="100%"
+            @close="addDialogClosed" >
+            <!-- 内容的主体区域 -->
+            <el-transfer
+                style="text-align: left; display: inline-block"
+                v-model="teachers"
+                filterable
+                :render-content="renderFunc"
+                :titles="['Source', 'Target']"
+                :format="{
+        noChecked: '${total}',
+        hasChecked: '${checked}/${total}'
+      }"
+                @change="handleChange"
+                :data="data">
+            </el-transfer>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+            </div>
+        </el-dialog>
         <!--编辑界面-->
         <el-dialog title="编辑"  width="40%" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
@@ -190,7 +214,8 @@ export default {
     }
     return {
       data: generateData(),
-      value: [],
+      students: [],
+      teachers: [],
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
@@ -207,9 +232,10 @@ export default {
       total: 0,
       // 列表加载
       listLoading: false,
-      // 控制添加用户对话框的显示与隐藏，默认为隐藏
+      // 控制添加对话框的显示与隐藏，默认为隐藏
       addFormVisible: false,
       addStudentVisible: false,
+      addTeacherVisible: false,
       addLoading: false,
       // 添加用户的表单数据
       addForm: {
@@ -337,6 +363,10 @@ export default {
     // 添加学生
     addStudent (index, row) {
       this.addStudentVisible = true
+    },
+    // 添加老师
+    addTeacher (index, row) {
+      this.addTeacherVisible = true
     },
     // 显示编辑
     handleTeam: function (index, row) {
