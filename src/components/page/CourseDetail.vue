@@ -1,21 +1,40 @@
 <template>
     <div class="container">
+
         <!-- 面包屑导航区域 -->
-        <div class="crumb">
-            <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size: 5px">
-                <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>案例管理</el-breadcrumb-item>
-            </el-breadcrumb>
+        <div class="add">
+            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
+               课程详情
+            </div>
+            <hr>
+            <div>
+                <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 1em">
+                    课程名：<div style="display: inline-block">{{CourseInfo.course_name}}</div>
+                </div>
+                <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 2em">
+                    <div style="display: inline-block; vertical-align: top">
+                    课程描述：
+                    </div>
+                    <div class="descBox">
+                        <el-scrollbar>
+                        <p>{{CourseInfo.desc}}</p>
+                        </el-scrollbar>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- 卡片视图区域 -->
         <div class="table">
-            <!-- 搜索与添加区域 -->
+
+            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
+                课程案例
+            </div>
+            <hr>
             <div class="toolbar">
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
+                        <el-input placeholder="请输入案例名" v-model="queryInfo.query" clearable @clear="getCourseDetail">
+                            <el-button slot="append" icon="el-icon-search" @click="getCourseDetail()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -26,23 +45,17 @@
                     </el-col>
                 </el-row>
             </div>
-            <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" @selection-change="selsChange"
-                      :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
-                <el-table-column type="selection" width="55">
-                </el-table-column>
-                <el-table-column type="index"></el-table-column>
-                <el-table-column prop="case_id" label="案例号" width="200px"></el-table-column>
-                <el-table-column prop="casename" label="案例名"></el-table-column>
-                <el-table-column prop="teacher_id" label="创建老师"></el-table-column>
-                <el-table-column prop="createtime" label="创建时间"></el-table-column>
-                <el-table-column prop="desc" label="案例是否发布" width="60px"></el-table-column>
-                <el-table-column label="操作" align="center">
+            <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" @selection-change="selsChange">
+                <el-table-column type="selection" width="40"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
+                <el-table-column prop="case_name" label="案例名称"></el-table-column>
+                <el-table-column prop="valueName" label="创建教师" ></el-table-column>
+                <el-table-column label="操作">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
-                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index, scope.row)">案例详情</el-button>
                         <!-- 删除按钮 -->
-                        <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-                        <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">查看详情</el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDel(scope.$index, scope.row)">删除案例</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -58,29 +71,33 @@
                     :total="total">
                 </el-pagination>
             </div>
+            <div class="submit">
+                <el-button @click="addFormVisible = false">重  置</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="addUser">提  交</el-button>
+            </div>
         </div>
 
-        <!-- 添加案例 -->
+        <!-- 添加用户的对话框 -->
         <el-dialog
-            title="添加案例"
+            title="添加数据项"
             :visible.sync="addFormVisible"
             width="40%"
             @close="addDialogClosed" >
             <!-- 内容的主体区域 -->
             <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="案例号" prop="case_id">
+                <el-form-item label="数据数值" prop="valueId">
                     <el-col :span="8">
-                        <el-input v-model="addForm.case_id" ></el-input>
+                        <el-input v-model="addForm.valueId" ></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="案例名">
+                <el-form-item label="数据名称" prop="valueName">
                     <el-col :span="8">
-                        <el-input v-model="addForm.casename"></el-input>
+                        <el-input v-model="addForm.valueName"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="创建老师">
+                <el-form-item label="创建时间" prop="createTime">
                     <el-col :span="14">
-                        <el-input v-model="addForm.teacher_id"></el-input>
+                        <el-input  v-model="addForm.createTime"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -94,19 +111,20 @@
         <!--编辑界面-->
         <el-dialog title="编辑"  width="40%" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="案例号" prop="case_id">
+                <el-form-item label="数据数值" prop="valueId">
                     <el-col :span="8">
-                        <el-input v-model="editForm.case_id"></el-input>
+                        <el-input v-model="editForm.valueId"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="案例号" prop="card">
+                <el-form-item label="数据名称" prop="valueName">
                     <el-col :span="8">
-                        <el-input v-model="editForm.casename"></el-input>
+                        <el-input v-model="editForm.valueName"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="创建老师" prop="teacher_id">
+
+                <el-form-item label="创建时间" prop="createTime">
                     <el-col :span="14">
-                        <el-input v-model="editForm.teacher_id"></el-input>
+                        <el-input  v-model="editForm.createTime"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -122,46 +140,33 @@
 import {
     addTeacher, batchRemoveCase,
     batchRemoveTeacher,
-    editTeacher, getCaseListPage, removeCase,
+    editTeacher, getCourseDetailPage,
+    getTeacherListPage, removeCase,
     removeTeacher
 } from '../../api/api'
+import dicList from './Dictionary'
 
 export default {
     data () {
-        // 验证邮箱的校验规则
-        var checkEmail = (rule, value, callback) => {
-            // 验证邮箱的正则表达式
-            const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
-            if (regEmail.test(value)) {
-                // 验证通过，合法的邮箱
-                return callback()
-            }
-            // 验证不通过，不合法
-            callback(new Error('请输入合法的邮箱'))
-        }
-        // 验证手机号的验证规则
-        var checkMobile = (rule, value, callback) => {
-            // 验证手机号的正则表达式
-            const regMobile = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
-            if (regMobile.test(value)) {
-                // 验证通过，合法的手机号
-                return callback()
-            }
-            // 验证不通过，不合法
-            callback(new Error('请输入合法的手机号'))
-        }
         return {
             // 获取用户列表的参数对象
             queryInfo: {
                 // 查询参数
                 query: '',
+                //课程名
+                course_name:'',
                 // 当前的页码数
                 pagenum: 1,
                 // 每页显示多少条数据
                 pagesize: 5
             },
-            // 获取的用户列表
-            caseList: [],
+            // 课程
+            CourseInfo:{
+                course_name:'癌细胞转移',
+                desc:'国家创新重点课程'
+            },
+            // 案例
+            caseList:[],
             sels: [],//列表选中列
             // 总数
             total: 0,
@@ -170,69 +175,61 @@ export default {
             // 控制添加用户对话框的显示与隐藏，默认为隐藏
             addFormVisible: false,
             addLoading:false,
+            //数据字典
+            dicForm:{
+                case_name:'',
+            },
+            dicFormRules: {
+                typeName: [
+                    {required: true, message: '请输入用户名', trigger: 'blur'},
+                ],
+                typeCode: [
+                    {required: true, message: '请输入密码', trigger: 'blur'},
+                ]
+            },
             // 添加用户的表单数据
             addForm: {
-                case_id: '',
-                casename:'',
-                teacher_id: '',
-                create_time:'',
-                desc: ''
+                valueName:'',
+                valueId:'',
+                CreateTime:''
             },
             // 添加表单的验证规则对象
             addFormRules: {
-                case_id: [
-                    {required: true, message: '请输入案例号', trigger: 'blur'},
-                    {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+                valueName: [
+                    {required: true, message: '请输入用户名', trigger: 'blur'},
                 ],
-                casename: [
-                    {required: true, message: '请输入案例名', trigger: 'blur'},
-                    {min: 9, max: 9, trigger: 'blur'}
-                ],
-                teacher_id: [
-                    {required: true, message: '请输入创建老师', trigger: 'blur'},
-                    {validator: checkEmail, trigger: 'blur'}
+                valueId: [
+                    {required: true, message: '请输入密码', trigger: 'blur'},
                 ]
-
             },
             //编辑
             editLoading: false,
             editFormVisible:false,
             editForm: {
-                case_id: '',
-                casename:'',
-                teacher_id: '',
-                create_time:'',
-                desc: ''
+                valueName:'',
+                valueId:'',
+                CreateTime:''
             },
             editFormRules: {
-                case_id: [
-                    {required: true, message: '请输入案例号', trigger: 'blur'},
-                    {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+                valueName: [
+                    {required: true, message: '请输入用户名', trigger: 'blur'},
                 ],
-                casename: [
-                    {required: true, message: '请输入案例名', trigger: 'blur'},
-                    {min: 9, max: 9, trigger: 'blur'}
-                ],
-                teacher_id: [
-                    {required: true, message: '请输入创建老师', trigger: 'blur'},
-                    {validator: checkEmail, trigger: 'blur'}
+                valueId: [
+                    {required: true, message: '请输入密码', trigger: 'blur'},
                 ]
             },
         }
     },
     created () {
-        this.getCaseList()
+        this.getCourseDetail()
     },
     methods: {
-        //性别显示转换
-        formatSex: function (row, column) {
-            return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
-        },
-        async getCaseList () {
+        async getCourseDetail () {
+            this.queryInfo.courseName=this.$store.state.courseName
             this.listLoading=true
-            getCaseListPage(this.queryInfo).then((res) => {
-                console.log(res)
+            getCourseDetailPage(this.queryInfo).then((res) => {
                 this.total = res.data.total
+                this.CourseInfo=res.data
                 this.caseList = res.data.users
                 this.listLoading=false
             })
@@ -243,7 +240,7 @@ export default {
             //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
             this.queryInfo.pagesize = newSize
             //  修改完以后，重新发起请求获取一次数据
-            this.getCaseList()
+            this.getCourseDetail()
         },
         // 监听 页码值  改变的事件
         handleCurrentChange (newPage) {
@@ -251,7 +248,7 @@ export default {
             //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
             this.queryInfo.pagenum = newPage
             //  修改完以后，重新发起请求获取一次数据
-            this.getUserList()
+            this.getCourseDetail()
         },
         // 监听 switch 开关状态的改变
         async userStateChange (userInfo) {
@@ -269,30 +266,28 @@ export default {
             this.$refs.addFormRef.resetFields()
             this.$refs.editForm.resetFields()
         },
-        // 点击按钮，添加案例
-        addCase(){
-            this.$router.push("createCases")
-        },
-        addUser () {
-            this.$refs.addFormRef.validate(async valid => {
-                if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.addLoading = true
-                        let para = Object.assign({}, this.addForm)
-                        addTeacher(para).then((res) => {
-                            if(res.data.code==200) {
-                                this.addLoading = false
-                                this.$message({
-                                    message: '新增成功',
-                                    type: 'success'
-                                })
-                                this.addFormVisible = false
-                                this.getUserList()
-                            }
-                        })
-                    })
-                }
-            })
+        // 点击按钮，添加新用户
+        addCase () {
+            this.$router.push({ path: "/createCases", query: {} });
+            // this.$refs.addFormRef.validate(async valid => {
+            //     if (valid) {
+            //         this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            //             this.addLoading = true
+            //             let para = Object.assign({}, this.addForm)
+            //             addTeacher(para).then((res) => {
+            //                 if(res.data.code==200) {
+            //                     this.addLoading = false
+            //                     this.$message({
+            //                         message: '新增成功',
+            //                         type: 'success'
+            //                     })
+            //                     this.addFormVisible = false
+            //                     this.getCourseDetail()
+            //                 }
+            //             })
+            //         })
+            //     }
+            // })
         },
         //显示编辑
         handleEdit: function (index, row) {
@@ -315,7 +310,7 @@ export default {
         //                             type: 'success'
         //                         })
         //                         this.editFormVisible = false
-        //                         this.getUserList()
+        //                         this.getCourseDetail()
         //                     }
         //                 })
         //             })
@@ -337,7 +332,7 @@ export default {
                             message: res.data.msg,
                             type: 'success'
                         })
-                        this.getUserList()
+                        this.getCourseDetail()
                     }
                 })
             }).catch(() => {
@@ -364,7 +359,7 @@ export default {
                             message: '删除成功',
                             type: 'success'
                         })
-                        this.getUserList()
+                        this.getCourseDetail()
                     }
                 })
             }).catch(() => {
@@ -383,19 +378,46 @@ export default {
     margin-right: 10px;
     padding: 10px 10px;
     background-color: #FFFFFF;
-    height: 100vh;
+    height: 100%;
     border-radius: 5px;
-}
-.crumb{
-    margin-left: 2px;
 }
 .table{
     margin-top: 20px;
 }
+
+.submit{
+    margin-top: 10px;
+    text-align: right;
+}
 .toolbar{
     margin-bottom: 10px;
 }
-.page{
-    margin-top: 10px;
+.descBox{
+    display: inline-block;
+    border: 1px solid #c1c1c1;
+    width:32em;
+    height: 6em;
+    border-radius: 2px;
 }
+.descBox p {
+    left: 0.5em;
+    margin-top: 0.5em;
+    line-height: 1.2em;
+    position: relative;
+    width: 90%;
+    text-align: justify;
+    font-size: 1em;
+}
+.el-scrollbar {
+    height: 100%;
+}
+.descBox >>> .el-scrollbar__wrap {
+    overflow: scroll;
+    width: 110%;
+    height: 118%;
+}
+
+
 </style>
+
+

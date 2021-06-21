@@ -1,7 +1,7 @@
 <template>
     <body id="poster">
     <div class="title">
-        <h1>DAOYUN</h1>
+        <h1>Medical System</h1>
     </div>
 <router-view></router-view>
     </body>
@@ -15,7 +15,7 @@ export default {
 <style scoped>
 #poster {
     margin: 0;
-    background: url("../assets/img/login.jpg") no-repeat;
+    background: url("../assets/img/login.jpeg") no-repeat;
     background-position: center;
     height: 100%;
     width: 100%;

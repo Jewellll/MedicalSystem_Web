@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container">
-            <div align="center" style="font-size: 40px;">创建案例</div>
+            <div align="center" style="font-size: 40px;">编辑案例</div>
             <div class="left">
                 <el-form :model="caseForm"  label-width="100px">
                     <el-form-item label="案例名:" prop="casename">
@@ -26,8 +26,6 @@
                         </el-col>
                     </el-form-item>
                 </el-form>
-
-
             </div>
 
             <div class="right">
@@ -65,59 +63,59 @@
 
 <script>
 export default {
-  name: 'createCases',
-  data () {
-    return {
-      caseForm: {
-        casename: '',
-        desc: '',
-        question: ''
-      },
-      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},
-        {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+    name: 'createCases',
+    data () {
+        return {
+            caseForm: {
+                casename: '',
+                desc: '',
+                question: ''
+            },
+            fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},
+                {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
 
+        }
+    },
+    methods: {
+        handleRemove (file, fileList) {
+            console.log(file, fileList)
+        },
+        handlePreview (file) {
+            console.log(file)
+        },
+        back(){
+            this.$router.go(-1)
+        }
     }
-  },
-  methods: {
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
-    },
-      back(){
-        this.$router.go(-1)
-      }
-  }
 }
 </script>
 
 <style scoped>
-    .left{
-        margin-left: 100px;
-        margin-top: 50px;
-        position: absolute;
-        width: 40%;
-        height: 500px;
-    }
-    .right{
-        margin-top: 20px;
-        width: 45%;
-        margin-left: 600px;
-        height: 550px;
+.left{
+    margin-left: 100px;
+    margin-top: 50px;
+    position: absolute;
+    width: 40%;
+    height: 500px;
+}
+.right{
+    margin-top: 20px;
+    width: 45%;
+    margin-left: 600px;
+    height: 550px;
 
-    }
-    .container{
-        margin-top: 8px;
-        margin-left: 10px;
-        margin-right: 10px;
-        padding: 10px 10px;
-        background-color: #FFFFFF;
-        height: 100vh;
-        border-radius: 5px;
-    }
-    .footer{
-        height: 40px;
-        margin-top: 10px;
-    }
+}
+.container{
+    margin-top: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px 10px;
+    background-color: #FFFFFF;
+    height: 100vh;
+    border-radius: 5px;
+}
+.footer{
+    height: 40px;
+    margin-top: 10px;
+}
 </style>

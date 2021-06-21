@@ -24,6 +24,30 @@ export default {
         Sidebar,
         Footer,
         Label
+    },
+    computed:{
+        getIsCollapse(){
+            return this.$store.state.isCollapse
+        }
+    },
+    watch: {
+        //路由变化,设置标签
+        $route (newValue, oldValue) {
+            // this.setTags(newValue)
+        },
+        getIsCollapse:{
+            handler(newValue,oldValue){ //当词条改变时执行事件
+                if(newValue===false){
+                    const tag = document.getElementsByClassName('container');
+                    console.log(tag[0])
+                    tag[0].style.marginLeft = "157px";
+                }else{
+                    const tag = document.getElementsByClassName('container');
+                    tag[0].style.marginLeft = "65px";
+                }
+            }
+        },
+
     }
 }
 </script>
@@ -38,9 +62,13 @@ body {
 
 .sidebar {
     float: left;
+    position: fixed;
+    z-index: 2;
 }
 .container{
+    margin-left: 65px;
     height: 100%;
     margin-bottom: 200px;
+    transition: margin-left 0.4s;
 }
 </style>

@@ -10,6 +10,7 @@ export default new Vuex.Store({
          user:{},
          dicCode:'',
          isCollapse: true,
+        caseName:''
 
     },
     // 更改vuex的store中状态的唯一方法 - 同步操作
@@ -27,6 +28,9 @@ export default new Vuex.Store({
         },
         setCollapse(state,data){
             state.isCollapse=data
+        },
+        setCaseName(state,data){
+            state.caseName=data
         }
     },
     //异步操作

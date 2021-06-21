@@ -120,11 +120,11 @@ export default {
                     index: 'replyCase',
                     title: '回复案例'
                 },
-                // {
-                //     icon: 'el-icon-user',
-                //     index: 'systemManage',
-                //     title: '参数管理'
-                // },
+                {
+                    icon: 'el-icon-user',
+                    index: 'courseDetail',
+                    title: '课程详情'
+                },
                 {
                     icon: 'el-icon-paperclip',
                     index: '3',
@@ -175,6 +175,7 @@ export default {
             return this.$route.path.replace('/', '/manage');
         }
     },
+
 };
 </script>
 

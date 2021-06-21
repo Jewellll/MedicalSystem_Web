@@ -28,8 +28,8 @@
                 登录
             </el-button>
         </el-form-item>
-        <el-link :underline="false" class="forget-link" @click="forgetPassword()">忘记密码</el-link>
-        <el-link :underline="false" class="phone-link" @click="phoneLogin()"><i class="el-icon-mobile-phone"></i>手机登录</el-link>
+<!--        <el-link :underline="false" class="forget-link" @click="forgetPassword()">忘记密码</el-link>-->
+<!--        <el-link :underline="false" class="phone-link" @click="phoneLogin()"><i class="el-icon-mobile-phone"></i>手机登录</el-link>-->
         <el-link :underline="false" class="signup-link" @click="register()">注册账号</el-link>
     </el-form>
     </div>
@@ -104,9 +104,9 @@ export default {
                 if (valid) {
                     this.logining = true;
                     const loginParams = {username: this.loginForm.username, password: this.loginForm.password}
-                    requestLogin(loginParams).then(data => {
+                    requestLogin(loginParams).then(res => {
                         this.logining = false;
-                        let { msg, code, user,token } = data;
+                        let { msg, code, user,token } = res;
                         if (code == 300) {
                             this.$message.error(msg);
                         } else if(code==200){
@@ -123,12 +123,12 @@ export default {
                 }
             });
         },
-        forgetPassword(){
-            this.$router.push({ path: "/checkphone", query: {} });
-        },
-        phoneLogin(){
-            this.$router.push({ path: "/phoneLogin", query: {} });
-        },
+        // forgetPassword(){
+        //     this.$router.push({ path: "/checkphone", query: {} });
+        // },
+        // phoneLogin(){
+        //     this.$router.push({ path: "/phoneLogin", query: {} });
+        // },
         register(){
             this.$router.push({ path: "/register", query: {} });
         }
@@ -168,7 +168,7 @@ export default {
 }
 .signup-link{
     position: relative;
-    left: 120px;
+    right: -170px;
     color: #505458;
     font-size: 12px;
 }

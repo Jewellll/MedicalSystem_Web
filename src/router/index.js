@@ -22,6 +22,8 @@ import CaseDetail from '../components/page/CaseDetail'
 import ReplyCase from '../components/page/ReplyCase'
 import caseManage from '../components/page/caseManage'
 import createCases from '../components/page/createCases'
+import CourseDetail from '../components/page/CourseDetail'
+import EditCases from '../components/page/EditCases'
 
 Vue.use(Router)
 
@@ -190,6 +192,24 @@ export default new Router({
                     component: ReplyCase,
                     meta: {
                         title:'回复案例',
+                        requireAuth: true
+                    }
+                },
+                {
+                    path: '/courseDetail',
+                    name: 'courseDetail',
+                    component: CourseDetail,
+                    meta: {
+                        title:'课程详情',
+                        requireAuth: true
+                    }
+                },
+                {
+                    path: '/editCases',
+                    name: 'editCases',
+                    component: EditCases,
+                    meta: {
+                        title:'编辑案例',
                         requireAuth: true
                     }
                 }

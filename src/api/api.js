@@ -72,17 +72,6 @@ export const batchRemoveDic = params => { return http.get(`${base}/dictionary/ba
 
 export const editDictionary = params => { return http.get(`${base}/dictionary/edit`, { params: params }); };
 
-//系统参数管理
-
-export const getParaListPage = params => { return http.get(`${base}/systemManage/listpage`, { params: params }); };
-
-export const editPara = params => { return http.get(`${base}/systemManage/edit`, { params: params }); };
-
-export const addPara = params => { return http.get(`${base}/systemManage/add`, { params: params }); };
-
-export const removePara = params => { return http.get(`${base}/systemManage/remove`, { params: params }); };
-
-export const batchRemovePara = params => { return http.get(`${base}/systemManage/batchremove`, { params: params }); };
 
 //案例管理
 
@@ -94,3 +83,12 @@ export const getCaseListPage = params => { return http.get(`${base}/case/listpag
 // export const batchRemoveTeacher = params => { return http.get(`${base}/teacher/batchremove`, { params: params }); };
 
 //创建案例
+
+
+//课程详情
+export const getCourseDetailPage = params => { return http.get(`${base}/courseDetail/listpage`, { params: params }); };
+
+//删除课程
+export const removeCase = params => { return http.get(`${base}/case/remove`, { params: params }); };
+
+export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, { params: params }); };

@@ -20,10 +20,10 @@
                         <p>2020年3月我院胸部CT平扫：左肺及右肺中叶多发小结节</p>
                         <p>2020年3月行左上肺肿物切除术</p>
                         <p>2020年4月行左髋外侧肿块切除术</p>
-<!--                        <p>女，10岁，发现左侧大腿根部内侧肿物。</p>-->
-<!--                        <p><b>免疫组化:</b></p>-->
-<!--                        <p>阳性指标（FLI-1、CD99、NKX2.2、KI67）</p>-->
-<!--                        <p>阴性指标（CK、Vimentin、LCA、MPO、TdT、Desmin、CD56、TLE-1、S100、CD3、CD20）</p>-->
+                        <p>女，10岁，发现左侧大腿根部内侧肿物。</p>
+                        <p><b>免疫组化:</b></p>
+                        <p>阳性指标（FLI-1、CD99、NKX2.2、KI67）</p>
+                        <p>阴性指标（CK、Vimentin、LCA、MPO、TdT、Desmin、CD56、TLE-1、S100、CD3、CD20）</p>
                     </el-scrollbar>
                 </div>
             </div>
@@ -251,7 +251,7 @@ export default {
     padding-right: 5px;
     left: 5%;
     width: 90%;
-    height: 70%;
+    height: 31.5em;
     border: 1px solid #c1c1c1;
     background: #f6f4f4;
 }
@@ -267,7 +267,7 @@ export default {
 .box >>> .el-scrollbar__wrap {
     overflow: scroll;
     width: 110%;
-    height: 120%;
+    height: 104%;
 }
 
 /*案例图片*/
@@ -303,12 +303,11 @@ export default {
 .think >>> .el-scrollbar__wrap {
     overflow: scroll;
     width: 110%;
-    height: 120%;
+    height: 104%;
 }
 
 /*上传*/
 .upload1 {
-
 }
 
 .upload2 {

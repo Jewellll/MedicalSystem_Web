@@ -1,40 +1,57 @@
 <template>
-    <div>
-        <el-form :model="regForm" :rules="rules" ref="regForm" class="reg-container" label-position="left"
-                 label-width="0x">
-            <h3 class="check_title">注册</h3>
-            <el-form-item prop="phoneNum">
-                <el-input type="text" v-model="phoneNum"
-                          auto-complete="off" placeholder="请输入手机号码"></el-input>
+    <div class="reg-container">
+        <h3 class="check_title">注册</h3>
+        <el-form :model="regForm" :rules="rules" ref="regForm"  label-position="right" size="small"
+                 label-width="25%" >
+            <el-form-item label="用户名" prop="username">
+                <el-input type="text" v-model="regForm.username" auto-complete="off" placeholder="请输入用户名"></el-input>
             </el-form-item>
-            <el-form-item>
-                <div class="iden">
-                    <el-input type="text" v-model="verifyNum" style=""
-                              auto-complete="off" @keyup.enter.native="verificationCode"
-                              placeholder="请输入验证码"></el-input>
-                    <el-button :style="{border: none,background:btnColor?'#2E9AFE':'#617079',color:'#FFF',width:'50%'}"
-                               v-on:click="sendSmsCode"
-                               class="verify-btn" v-model="btnContent"
-                               v-bind="{'disabled':disabled}">
-                        {{ btnContent }}
-                    </el-button>
-                </div>
+            <el-form-item label="真实姓名" prop="real_name">
+                <el-input type="text" v-model="regForm.real_name" auto-complete="off" placeholder="请输入姓名"></el-input>
             </el-form-item>
-            <el-form-item prop="username">
-                <el-input type="text" v-model="regForm.username" placeholder="用户名"></el-input>
+            <el-form-item label="性别" prop="sex">
+                    <el-radio v-model="regForm.sex" label="0">女</el-radio>
+                    <el-radio v-model="regForm.sex" label="1">男</el-radio>
             </el-form-item>
-            <el-form-item prop="email">
-                <el-input type="text" v-model="regForm.email" placeholder="邮箱"></el-input>
+            <el-form-item label="职称" prop="title">
+                <el-select v-model="regForm.title" placeholder="请选择职称">
+                    <el-option
+                        v-for="item in title"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item  prop="newPassword">
-                <el-input type="password" v-model="regForm.newPassword" placeholder="新密码"></el-input>
+            <el-form-item label="科室" prop="department">
+                <el-select v-model="regForm.department" placeholder="请选择科室">
+                    <el-option
+                        v-for="item in department"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item prop="checkPassword">
-                <el-input type="password" v-model="regForm.checkPassword" placeholder="确认新密码"></el-input>
+            <el-form-item label="手机号" prop="phone">
+                <el-input type="text" v-model="regForm.phone" placeholder="请输入手机号"></el-input>
             </el-form-item>
-            <el-form-item>
+            <el-form-item label="邮箱" prop="email">
+                <el-input type="text" v-model="regForm.email" placeholder="请输入邮箱"></el-input>
+            </el-form-item>
+            <el-form-item label="密码"  prop="password">
+                <el-input type="password" v-model="regForm.password" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="checkPassword">
+                <el-input type="password" v-model="regForm.checkPassword" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
+            </el-form-item>
+            <el-form-item label="角色" prop="role_id">
+                <el-radio v-model="regForm.role_id" label="0">学生</el-radio>
+                <el-radio v-model="regForm.role_id" label="1">教师</el-radio>
+            </el-form-item>
+            <el-form-item label-width="0px">
                 <el-button type="primary" style="width: 100%;border: none"
-                           v-on:click.stop="verificationCode">
+                           v-on:click.stop="register()">
                     确定
                 </el-button>
             </el-form-item>
@@ -44,11 +61,34 @@
 </template>
 
 <script>
-import {editUserInfo, requestLogin, requestMss, requireRegister} from '../../api/api'
+import { requireRegister} from '../../api/api'
 
 export default {
     name: 'Register',
     data () {
+        // 自定义验证邮箱规则，后在addeFormRules中使用
+        var checkEmail = (rule, value, cb) => {
+            // 验证邮箱的正则表达式
+            const regEmail = /^[A-Za-z0-9]+([_.][A-Za-z0-9]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$/
+
+            if (regEmail.test(value)) {
+                // 合法的邮箱
+                return cb()
+            }
+
+            cb(new Error('请输入合法的邮箱'))
+        };
+        // 自定义验证手机号规则，后在addeFormRules中使用
+        var checkMobile = (rule, value, cb) => {
+            // 先定义一个验证手机号的正则表达式
+            const regMobile = /^1[34578]\d{9}$/
+            // 合法： regMobile.test(value)进过测试后放回的值
+            if (regMobile.test(value)) {
+                return cb()
+            }
+            // 不合法
+            cb(new Error('请输入合法的手机号'))
+        };
         var validatePass = (rule, value, callback) => {
             if (!value) {
                 callback(new Error("请输入新密码"));
@@ -61,114 +101,91 @@ export default {
         var validatePass2 = (rule, value, callback) => {
             if (value === "") {
                 callback(new Error("请再次输入密码"));
-            } else if (value !== this.regForm.newPassword) {
+            } else if (value !== this.regForm.password) {
                 callback(new Error("两次输入密码不一致!"));
             } else {
                 callback();
             }
         };
         return {
+            title: [{
+                value: '住院医师',
+                label: '住院医师'
+            }, {
+                value: '主治医师',
+                label: '主治医师'
+            }, {
+                value: '副主任医师',
+                label: '副主任医师'
+            }, {
+                value: '主任医师',
+                label: '主任医师'
+            }, {
+                value: '助理医师',
+                label: '助理医师'
+            },
+            ],
+            department: [{
+                value: '心脏内科',
+                label: '心脏内科'
+            }, {
+                value: '心胸外科',
+                label: '心胸外科'
+            }, {
+                value: '妇产科',
+                label: '妇产科'
+            }, {
+                value: '骨科',
+                label: '骨科'
+            }, {
+                value: '麻醉科',
+                label: '麻醉科'
+            },
+            ],
             regForm: {
                 username:"",
+                real_name:'',
+                sex:'',
+                title:'',
+                department:'',
+                phone:'',
                 email:"",
-                newPassword:"",
-                checkPassword:""
+                password:"",
+                checkPassword:"",
+                role_id:'0'
             },
             rules: {
                 username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-                newPassword: [{ validator: validatePass, trigger: "blur" }],
-                checkPassword: [{ validator: validatePass2, trigger: "blur" }]
+                real_name: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
+                phone: [{ required: true, message: "请输入手机号", trigger: "blur" },
+                    { validator: checkMobile, trigger: 'blur' }],
+                department: [{ required: true, message: "请选择科室", trigger: "blur" }],
+                email: [{ required: true, message: "请输入邮箱", trigger: "blur" },
+                    { validator: checkEmail, trigger: 'blur' }],
+                password: [{ required: true, message: "请输入密码", trigger: "blur" },
+                    { validator: validatePass, trigger: "blur" }],
+                checkPassword: [{ required: true, message: "请再次输入密码", trigger: "blur" },
+                    { validator: validatePass2, trigger: "blur" }],
+                role_id:[{ required: true, message: "请选择角色", trigger: "blur" }]
             },
-            phoneNum: '', //手机号
-            verifyNum: '', //验证码
-            btnContent: '获取验证码', //获取验证码按钮内文字
-            time: 0, //发送验证码间隔时间
-            disabled: false, //按钮状态
-            btnColor: true
         }
     },
     created () {
-
     },
     methods: {
-        // 获取验证码
-        sendSmsCode () {
-            var reg = 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$///手机号正则验证
-            var phoneNum = this.phoneNum
-            if (!phoneNum) {//未输入手机号
-                this.$message({
-                    message: '手机号不能为空',
-                    center: true
-                })
-                return
-            }
-            if (!reg.test(phoneNum)) {//手机号不合法
-                this.$message({
-                    message: '手机号格式不正确',
-                    center: true
-                })
-                return
-            }
-            this.time = 60
-            this.btnColor = false
-            this.timer()
-            获取验证码请求
-            const phoneParams={phoneNum: this.phoneNum}
-            requestMss(phoneParams).then(data => {
-                let {msg, code, user, token} = data;
-                if (code === 200) {
-                    this.$message('发送成功')
-                } else if (code === 400) {
-                    this.$message.error("发送失败");
-                }
-            });
-            // this.$http
-            //     .post('/send', {
-            //         phoneNum: this.phoneNum,
-            //     })
-            //     .then(res => {
-            //         if (res.data.code === 200) {
-            //             this.$message('发送成功')
-            //         }
-            //         if (res.data.code === 400) {
-            //             this.$message.error("发送失败");
-            //         }
-            //     })
-            //     .catch(failResponse => {});
-        },
-        timer () {
-            if (this.time > 0) {
-                this.time--
-                this.btnContent = this.time + 's后重新获取'
-                this.disabled = true
-                var timer = setTimeout(this.timer, 1000)
-            } else if (this.time == 0) {
-                this.btnContent = '获取验证码'
-                clearTimeout(timer)
-                this.disabled = false
-                this.btnColor = true
-            }
-        },
         // 验证验证码
-        verificationCode () {
+        register () {
             this.$refs.regForm.validate((valid) => {
                 if (valid) {
-                    const regParams = { phoneNum: this.phoneNum,
-                        verifyNum: this.verifyNum,
-                        username: this.regForm.username,
-                        password:this.regForm.newPassword,
-                        email: this.regForm.email}
-                     requireRegister(regParams).then(data => {
-                        this.logining = false
-                        let {msg, code, user, token} = data
+                    const regParams = this.regForm
+                     requireRegister(regParams).then(res => {
+                        let {msg, code,} = res
                         if (code !== 200) {
                             this.$message.error("注册失败");
                         } else {
                             this.$message('注册成功')
                             var path = this.$route.query.redirect
-                            this.$router.replace({
-                                path: path === '/' || path === undefined ? '/login' : path
-                            });
+                            this.$router.push( "/login");
                         }
                     })
                 } else {
@@ -178,34 +195,28 @@ export default {
             });
         },
         back(){
-            this.$router.push({ path: "/login", query: {} });
+            this.$router.push( "/login");
         }
     }
 }
 </script>
 
 <style scoped>
-.iden {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-}
-
 .reg-container {
     border-radius: 15px;
+    top:auto ;
     margin-left:auto;
     margin-right: auto;
-    margin-top: 0px;
-    width: 350px;
+    width: 380px;
     padding: 0px 35px 8px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
+    box-shadow: 0 0 20px #cac6c6;
     opacity: 0.9;
 }
 .back-link {
     position: relative;
-    left: 180px;
+    left: 195px;
     color: #505458;
     font-size: 13px;
 }
