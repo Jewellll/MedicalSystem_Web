@@ -27,27 +27,31 @@
                     </el-form-item>
                 </el-form>
 
-
             </div>
 
             <div class="right">
-                <el-upload
-                    class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :file-list="fileList"
-                    list-type="picture">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+                <el-scrollbar>
+                    <el-upload
+                        class="upload-demo"
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :file-list="fileList"
+                        :limit="3"
+                        :on-success="(response, file, fileList)=>{return onSuccess(response, file, fileList, index)}"
+                        list-type="picture">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                    </el-upload>
+                </el-scrollbar>
+
                 <br>
                 <el-upload
                     class="upload-demo"
                     drag
                     action="https://jsonplaceholder.typicode.com/posts/"
                     multiple
-                    :file-list="fileList"
+                    :file-list="fileListDemo"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -73,12 +77,17 @@ export default {
         desc: '',
         question: ''
       },
-      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},
-        {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+      fileList: [{name: 'Case01-1.png', url: require('../../assets/img/CaseImg/Case01-1.png')},
+        {name: 'Case01-2.png', url: require('../../assets/img/CaseImg/Case01-2.png')}],
+      fileListDemo: [{name: 'Case01.doc'}]
 
     }
   },
   methods: {
+    // 上传图片
+    onSuccess (response, file, fileList, idx) {
+      this.fileList.push({ name: file.name, url: file.url })
+    },
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
@@ -106,6 +115,11 @@ export default {
         margin-left: 600px;
         height: 550px;
 
+    }
+    .right >>> .el-scrollbar__wrap {
+        overflow: scroll;
+        width: 110%;
+        height: 120%;
     }
     .container{
         margin-top: 8px;

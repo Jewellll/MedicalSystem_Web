@@ -22,238 +22,239 @@ import CaseDetail from '../components/page/CaseDetail'
 import ReplyCase from '../components/page/ReplyCase'
 import caseManage from '../components/page/caseManage'
 import createCases from '../components/page/createCases'
-import CourseDetail from '../components/page/CourseDetail'
-import EditCases from '../components/page/EditCases'
+import studentTeamManage from '../components/page/studentTeamManage'
+import studentHome from '../components/page/studentHome'
 
 Vue.use(Router)
 
 export default new Router({
-    mode: 'history', // 去除#路由，即hash
-    routes: [
+  mode: 'history', // 去除#路由，即hash
+  routes: [
+    {
+      path: '/',
+      name: 'Login',
+      redirect: '/login'
+    },
+    {
+      // home页面并不需要被访问，只是作为其它组件的父组件
+      path: '/home',
+      name: 'Home',
+      component: Home,
+      redirect: '/manage',
+      children: [
         {
-            path: '/',
-            name: 'Login',
-            redirect: '/login'
+          path: '/manage',
+          name: 'Manage',
+          component: Manage,
+          meta: {
+            title: '系统首页',
+            hideclose: true,
+            requireAuth: true
+          }
         },
         {
-            // home页面并不需要被访问，只是作为其它组件的父组件
-            path: '/home',
-            name: 'Home',
-            component: Home,
-            redirect: '/manage',
-            children: [
-                {
-                    path: '/manage',
-                    name: 'Manage',
-                    component: Manage,
-                    meta: {
-                        title:'系统首页',
-                        hideclose:true,
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/studentmanage',
-                    name: 'StudentManage',
-                    component: StudentManage,
-                    meta: {
-                        title:'学生管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/teachermanage',
-                    name: 'TeacherManage',
-                    component: TeacherManage,
-                    meta: {
-                        title:'教师管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/courseManage',
-                    name: 'courseManage',
-                    component: CourseManage,
-                    meta: {
-                        title:'课程管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/dictionary',
-                    name: 'Dictionary',
-                    component: Dictionary,
-                    meta: {
-                        title:'数据字典',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/addDictionary',
-                    name: 'AddDictionary',
-                    component: AddDictionary,
-                    meta: {
-                        title:'数据字典',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/userManage',
-                    name: 'UserManage',
-                    component: UserManage,
-                    meta: {
-                        title:'用户管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/systemManage',
-                    name: 'systemManage',
-                    component: SystemManage,
-                    meta: {
-                        title:'系统参数管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/roleManage',
-                    name: 'RoleManage',
-                    component: RoleManage,
-                    meta: {
-                        title:'角色管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/test',
-                    name: 'Test',
-                    component: Test,
-                    meta: {
-                        title:'测试页面',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/500',
-                    name: '500',
-                    component: () =>
-                        import (  '../components/page/500.vue'),
-                    meta:{
-                        title:'服务异常'
-                    }
-                },
-                {
-                    path: '/403',
-                    name: '403',
-                    component: () =>
-                        import (  '../components/page/403.vue'),
-                    meta:{
-                        title:'服务异常'
-                    }
-                },
-                {
-                    path: '/404',
-                    name: '404',
-                    component: error,
-                    meta:{
-                        title:'页面走丢了'
-                    }
-                },
-                {
-                    path: '/caseDetail',
-                    name: 'caseDetail',
-                    component: CaseDetail,
-                    meta: {
-                        title:'案例详情',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/caseManage',
-                    name: 'caseManage',
-                    component: caseManage,
-                    meta: {
-                        title:'案例管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/createCases',
-                    name: 'createCases',
-                    component: createCases,
-                    meta: {
-                        title:'案例管理',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/replyCase',
-                    name: 'replyCase',
-                    component: ReplyCase,
-                    meta: {
-                        title:'回复案例',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/courseDetail',
-                    name: 'courseDetail',
-                    component: CourseDetail,
-                    meta: {
-                        title:'课程详情',
-                        requireAuth: true
-                    }
-                },
-                {
-                    path: '/editCases',
-                    name: 'editCases',
-                    component: EditCases,
-                    meta: {
-                        title:'编辑案例',
-                        requireAuth: true
-                    }
-                }
-            ]
+          path: '/studentHome',
+          name: 'studentHome',
+          component: studentHome,
+          meta: {
+            title: '学生首页',
+            hideclose: true,
+            requireAuth: true
+          }
         },
         {
-            path: '/login',
-            name: 'Login',
-            component: LoginHome,
-            children: [
-                {
-                    path: '/login',
-                    name: 'Login',
-                    component: Login
-                },
-                {
-                    path: '/forgetpassword',
-                    name: 'ForgetPassword',
-                    component: ForgetPassword
-                },
-                {
-                    path: '/checkphone',
-                    name: 'CheckPhone',
-                    component: CheckPhone
-                },
-                {
-                    path: '/register',
-                    name: 'Register',
-                    component: Register
-                },
-                {
-                    path: '/phoneLogin',
-                    name: 'PhoneLogin',
-                    component: PhoneLogin
-                }
-            ]
+          path: '/studentmanage',
+          name: 'StudentManage',
+          component: StudentManage,
+          meta: {
+            title: '学生管理',
+            requireAuth: true
+          }
         },
         {
-            path: '*',
-            name: '404',
-            component: error,
-            meta:{
-                title:'页面走丢了'
-            }
+          path: '/teachermanage',
+          name: 'TeacherManage',
+          component: TeacherManage,
+          meta: {
+            title: '教师管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/courseManage',
+          name: 'courseManage',
+          component: CourseManage,
+          meta: {
+            title: '课程管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/studentTeamManage',
+          name: 'studentTeamManage',
+          component: studentTeamManage,
+          meta: {
+            title: '学生团队管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/dictionary',
+          name: 'Dictionary',
+          component: Dictionary,
+          meta: {
+            title: '数据字典',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/addDictionary',
+          name: 'AddDictionary',
+          component: AddDictionary,
+          meta: {
+            title: '数据字典',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/userManage',
+          name: 'UserManage',
+          component: UserManage,
+          meta: {
+            title: '用户管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/systemManage',
+          name: 'systemManage',
+          component: SystemManage,
+          meta: {
+            title: '系统参数管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/roleManage',
+          name: 'RoleManage',
+          component: RoleManage,
+          meta: {
+            title: '角色管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/test',
+          name: 'Test',
+          component: Test,
+          meta: {
+            title: '测试页面',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/500',
+          name: '500',
+          component: () =>
+                        import('../components/page/500.vue'),
+          meta: {
+            title: '服务异常'
+          }
+        },
+        {
+          path: '/403',
+          name: '403',
+          component: () =>
+                        import('../components/page/403.vue'),
+          meta: {
+            title: '服务异常'
+          }
+        },
+        {
+          path: '/404',
+          name: '404',
+          component: error,
+          meta: {
+            title: '页面走丢了'
+          }
+        },
+        {
+          path: '/caseDetail',
+          name: 'caseDetail',
+          component: CaseDetail,
+          meta: {
+            title: '案例详情',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/caseManage',
+          name: 'caseManage',
+          component: caseManage,
+          meta: {
+            title: '案例管理',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/createCases',
+          name: 'createCases',
+          component: createCases,
+          meta: {
+            title: '创建案例',
+            requireAuth: true
+          }
+        },
+        {
+          path: '/replyCase',
+          name: 'replyCase',
+          component: ReplyCase,
+          meta: {
+            title: '回复案例',
+            requireAuth: true
+          }
         }
-    ]
+      ]
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: LoginHome,
+      children: [
+        {
+          path: '/login',
+          name: 'Login',
+          component: Login
+        },
+        {
+          path: '/forgetpassword',
+          name: 'ForgetPassword',
+          component: ForgetPassword
+        },
+        {
+          path: '/checkphone',
+          name: 'CheckPhone',
+          component: CheckPhone
+        },
+        {
+          path: '/register',
+          name: 'Register',
+          component: Register
+        },
+        {
+          path: '/phoneLogin',
+          name: 'PhoneLogin',
+          component: PhoneLogin
+        }
+      ]
+    },
+    {
+      path: '*',
+      name: '404',
+      component: error,
+      meta: {
+        title: '页面走丢了'
+      }
+    }
+  ]
 })
