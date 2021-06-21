@@ -72,8 +72,8 @@
                 </el-pagination>
             </div>
             <div class="submit">
-                <el-button @click="addFormVisible = false">重  置</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="addUser">提  交</el-button>
+                <el-button type="primary" @click="back">返  回</el-button>
+<!--                <el-button type="primary" :loading="addLoading" @click.native="addUser">提  交</el-button>-->
             </div>
         </div>
 
@@ -365,6 +365,9 @@ export default {
             }).catch(() => {
 
             })
+        },
+        back(){
+            this.$router.go(-1)
         }
     }
 }

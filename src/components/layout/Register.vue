@@ -3,11 +3,11 @@
         <h3 class="check_title">注册</h3>
         <el-form :model="regForm" :rules="rules" ref="regForm"  label-position="right" size="small"
                  label-width="25%" >
-            <el-form-item label="用户名" prop="username">
-                <el-input type="text" v-model="regForm.username" auto-complete="off" placeholder="请输入用户名"></el-input>
+            <el-form-item label="用户名" prop="userName">
+                <el-input type="text" v-model="regForm.userName" auto-complete="off" placeholder="请输入用户名"></el-input>
             </el-form-item>
-            <el-form-item label="真实姓名" prop="real_name">
-                <el-input type="text" v-model="regForm.real_name" auto-complete="off" placeholder="请输入姓名"></el-input>
+            <el-form-item label="真实姓名" prop="realName">
+                <el-input type="text" v-model="regForm.realName" auto-complete="off" placeholder="请输入姓名"></el-input>
             </el-form-item>
             <el-form-item label="性别" prop="sex">
                     <el-radio v-model="regForm.sex" label="0">女</el-radio>
@@ -39,15 +39,15 @@
             <el-form-item label="邮箱" prop="email">
                 <el-input type="text" v-model="regForm.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
-            <el-form-item label="密码"  prop="password">
-                <el-input type="password" v-model="regForm.password" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
+            <el-form-item label="密码"  prop="passWord">
+                <el-input type="password" v-model="regForm.passWord" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPassword">
                 <el-input type="password" v-model="regForm.checkPassword" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
             </el-form-item>
-            <el-form-item label="角色" prop="role_id">
-                <el-radio v-model="regForm.role_id" label="0">学生</el-radio>
-                <el-radio v-model="regForm.role_id" label="1">教师</el-radio>
+            <el-form-item label="角色" prop="roleId">
+                <el-radio v-model="regForm.roleId" label="0">学生</el-radio>
+                <el-radio v-model="regForm.roleId" label="1">教师</el-radio>
             </el-form-item>
             <el-form-item label-width="0px">
                 <el-button type="primary" style="width: 100%;border: none"
@@ -143,20 +143,20 @@ export default {
             },
             ],
             regForm: {
-                username:"",
-                real_name:'',
+                userName:"",
+                realName:'',
                 sex:'',
                 title:'',
                 department:'',
                 phone:'',
                 email:"",
-                password:"",
+                passWord:"",
                 checkPassword:"",
-                role_id:'0'
+                roleId:'0'
             },
             rules: {
-                username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-                real_name: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
+                userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+                realName: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
                 phone: [{ required: true, message: "请输入手机号", trigger: "blur" },
                     { validator: checkMobile, trigger: 'blur' }],
                 department: [{ required: true, message: "请选择科室", trigger: "blur" }],
@@ -166,7 +166,7 @@ export default {
                     { validator: validatePass, trigger: "blur" }],
                 checkPassword: [{ required: true, message: "请再次输入密码", trigger: "blur" },
                     { validator: validatePass2, trigger: "blur" }],
-                role_id:[{ required: true, message: "请选择角色", trigger: "blur" }]
+                roleId:[{ required: true, message: "请选择角色", trigger: "blur" }]
             },
         }
     },

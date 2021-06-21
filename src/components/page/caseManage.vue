@@ -19,7 +19,7 @@
                         </el-input>
                     </el-col>
                     <el-col :span="2">
-                        <el-button type="primary" @click="addCase">创建案例</el-button>
+                        <el-button type="primary" @click="addCase">添加案例</el-button>
                     </el-col>
                     <el-col :span="2">
                         <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
@@ -39,8 +39,8 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
-                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="primary"  size="mini" @click="handleDetail(scope.$index, scope.row)">查看详情</el-button>
+                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
+                        <el-button type="primary"  size="mini" @click="caseDetail(scope.$index, scope.row)">查看案例</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -120,261 +120,258 @@
 
 <script>
 import {
-  addTeacher, batchRemoveCase,
-  batchRemoveTeacher,
-  editTeacher, getCaseListPage, removeCase,
-  removeTeacher
+    addTeacher, batchRemoveCase,
+    batchRemoveTeacher,
+    editTeacher, getCaseListPage, removeCase,
+    removeTeacher
 } from '../../api/api'
 
 export default {
-  data () {
-    // 验证邮箱的校验规则
-    var checkEmail = (rule, value, callback) => {
-      // 验证邮箱的正则表达式
-      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
-      if (regEmail.test(value)) {
-        // 验证通过，合法的邮箱
-        return callback()
-      }
-      // 验证不通过，不合法
-      callback(new Error('请输入合法的邮箱'))
-    }
-    // 验证手机号的验证规则
-    var checkMobile = (rule, value, callback) => {
-      // 验证手机号的正则表达式
-      const regMobile = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
-      if (regMobile.test(value)) {
-        // 验证通过，合法的手机号
-        return callback()
-      }
-      // 验证不通过，不合法
-      callback(new Error('请输入合法的手机号'))
-    }
-    return {
-      // 获取用户列表的参数对象
-      queryInfo: {
-        // 查询参数
-        query: '',
-        // 当前的页码数
-        pagenum: 1,
-        // 每页显示多少条数据
-        pagesize: 5
-      },
-      // 获取的用户列表
-      caseList: [],
-      sels: [], // 列表选中列
-      // 总数
-      total: 0,
-      // 列表加载
-      listLoading: false,
-      // 控制添加用户对话框的显示与隐藏，默认为隐藏
-      addFormVisible: false,
-      addLoading: false,
-      // 添加用户的表单数据
-      addForm: {
-        case_id: '',
-        casename: '',
-        teacher_id: '',
-        create_time: '',
-        desc: ''
-      },
-      // 添加表单的验证规则对象
-      addFormRules: {
-        case_id: [
-          {required: true, message: '请输入案例号', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
-        ],
-        casename: [
-          {required: true, message: '请输入案例名', trigger: 'blur'},
-          {min: 9, max: 9, trigger: 'blur'}
-        ],
-        teacher_id: [
-          {required: true, message: '请输入创建老师', trigger: 'blur'},
-          {validator: checkEmail, trigger: 'blur'}
-        ]
-
-      },
-      // 编辑
-      editLoading: false,
-      editFormVisible: false,
-      editForm: {
-        case_id: '',
-        casename: '',
-        teacher_id: '',
-        create_time: '',
-        desc: ''
-      },
-      editFormRules: {
-        case_id: [
-          {required: true, message: '请输入案例号', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
-        ],
-        casename: [
-          {required: true, message: '请输入案例名', trigger: 'blur'},
-          {min: 9, max: 9, trigger: 'blur'}
-        ],
-        teacher_id: [
-          {required: true, message: '请输入创建老师', trigger: 'blur'},
-          {validator: checkEmail, trigger: 'blur'}
-        ]
-      }
-    }
-  },
-  created () {
-    this.getCaseList()
-  },
-  methods: {
-    // 性别显示转换
-    formatSex: function (row, column) {
-      return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
-    },
-    async getCaseList () {
-      this.listLoading = true
-      getCaseListPage(this.queryInfo).then((res) => {
-        console.log(res)
-        this.total = res.data.total
-        this.caseList = res.data.users
-        this.listLoading = false
-      })
-    },
-    // 监听 pageSize 改变的事件
-    handleSizeChange (newSize) {
-      //   console.log(newSize)
-      //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
-      this.queryInfo.pagesize = newSize
-      //  修改完以后，重新发起请求获取一次数据
-      this.getCaseList()
-    },
-    // 监听 页码值  改变的事件
-    handleCurrentChange (newPage) {
-      //   console.log(newPage)
-      //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
-      this.queryInfo.pagenum = newPage
-      //  修改完以后，重新发起请求获取一次数据
-      this.getUserList()
-    },
-    // 监听 switch 开关状态的改变
-    async userStateChange (userInfo) {
-      console.log(userInfo)
-      const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
-      if (res.meta.status !== 200) {
-        // 更新失败，将状态返回初始状态
-        this.userInfo.mg_state = !this.userInfo.mg_state
-        this.$message.error('更新用户状态失败！')
-      }
-      this.$message.success('更新用户状态成功！')
-    },
-    // 监听添加用户对话框的关闭事件
-    addDialogClosed () {
-      this.$refs.addFormRef.resetFields()
-      this.$refs.editForm.resetFields()
-    },
-    // 点击按钮，添加案例
-    addCase () {
-      this.$router.push('createCases')
-    },
-    addUser () {
-      this.$refs.addFormRef.validate(async valid => {
-        if (valid) {
-          this.$confirm('确认提交吗？', '提示', {}).then(() => {
-            this.addLoading = true
-            let para = Object.assign({}, this.addForm)
-            addTeacher(para).then((res) => {
-              if (res.data.code == 200) {
-                this.addLoading = false
-                this.$message({
-                  message: '新增成功',
-                  type: 'success'
-                })
-                this.addFormVisible = false
-                this.getUserList()
-              }
-            })
-          })
+    data () {
+        // 验证邮箱的校验规则
+        var checkEmail = (rule, value, callback) => {
+            // 验证邮箱的正则表达式
+            const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+            if (regEmail.test(value)) {
+                // 验证通过，合法的邮箱
+                return callback()
+            }
+            // 验证不通过，不合法
+            callback(new Error('请输入合法的邮箱'))
         }
-      })
-    },
-    // 显示编辑
-    handleEdit: function (index, row) {
-      let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.case_name)
-      this.$router.push({ path: '/editCases', query: {} })
-    },
-    handleDetail (index, row) {
-      this.$router.push({path: '/caseDetail', query: {}})
-    },
-    // //编辑提交
-    // editSubmit: function () {
-    //     this.$refs.editForm.validate((valid) => {
-    //         if (valid) {
-    //             this.$confirm('确认提交吗？', '提示', {}).then(() => {
-    //                 this.editLoading = true
-    //                 let para = Object.assign({}, this.editForm)
-    //                 editTeacher(para).then((res) => {
-    //                     if(res.data.code==200) {
-    //                         this.editLoading = false
-    //                         this.$message({
-    //                             message: res.data.msg,
-    //                             type: 'success'
-    //                         })
-    //                         this.editFormVisible = false
-    //                         this.getUserList()
-    //                     }
-    //                 })
-    //             })
-    //         }
-    //     })
-    // },
-    // 删除
-    handleDel: function (index, row) {
-      this.$confirm('确认删除该记录吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        this.listLoading = true
-        let para = {id: row.id}
-        removeCase(para).then((res) => {
-          if (res.data.code == 200) {
-            this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-            this.getUserList()
-          }
-        })
-      }).catch(() => {
+        // 验证手机号的验证规则
+        var checkMobile = (rule, value, callback) => {
+            // 验证手机号的正则表达式
+            const regMobile = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
+            if (regMobile.test(value)) {
+                // 验证通过，合法的手机号
+                return callback()
+            }
+            // 验证不通过，不合法
+            callback(new Error('请输入合法的手机号'))
+        }
+        return {
+            // 获取用户列表的参数对象
+            queryInfo: {
+                // 查询参数
+                query: '',
+                // 当前的页码数
+                pagenum: 1,
+                // 每页显示多少条数据
+                pagesize: 5
+            },
+            // 获取的用户列表
+            caseList: [],
+            sels: [],//列表选中列
+            // 总数
+            total: 0,
+            //列表加载
+            listLoading:false,
+            // 控制添加用户对话框的显示与隐藏，默认为隐藏
+            addFormVisible: false,
+            addLoading:false,
+            // 添加用户的表单数据
+            addForm: {
+                case_id: '',
+                casename:'',
+                teacher_id: '',
+                create_time:'',
+                desc: ''
+            },
+            // 添加表单的验证规则对象
+            addFormRules: {
+                case_id: [
+                    {required: true, message: '请输入案例号', trigger: 'blur'},
+                    {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+                ],
+                casename: [
+                    {required: true, message: '请输入案例名', trigger: 'blur'},
+                    {min: 9, max: 9, trigger: 'blur'}
+                ],
+                teacher_id: [
+                    {required: true, message: '请输入创建老师', trigger: 'blur'},
+                    {validator: checkEmail, trigger: 'blur'}
+                ]
 
-      })
+            },
+            //编辑
+            editLoading: false,
+            editFormVisible:false,
+            editForm: {
+                case_id: '',
+                casename:'',
+                teacher_id: '',
+                create_time:'',
+                desc: ''
+            },
+            editFormRules: {
+                case_id: [
+                    {required: true, message: '请输入案例号', trigger: 'blur'},
+                    {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+                ],
+                casename: [
+                    {required: true, message: '请输入案例名', trigger: 'blur'},
+                    {min: 9, max: 9, trigger: 'blur'}
+                ],
+                teacher_id: [
+                    {required: true, message: '请输入创建老师', trigger: 'blur'},
+                    {validator: checkEmail, trigger: 'blur'}
+                ]
+            },
+        }
     },
-    // 选择多行
-    selsChange: function (sels) {
-      this.sels = sels
+    created () {
+        this.getCaseList()
     },
-    // 批量删除
-    batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString()
-      this.$confirm('确认删除选中记录吗？', '提示', {
-        type: 'warning'
-      }).then(() => {
-        this.listLoading = true
-        let para = {ids: ids}
-        batchRemoveCase(para).then((res) => {
-          if (res.data.code == 200) {
-            this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
+    methods: {
+        //性别显示转换
+        formatSex: function (row, column) {
+            return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
+        },
+        async getCaseList () {
+            this.listLoading=true
+            getCaseListPage(this.queryInfo).then((res) => {
+                console.log(res)
+                this.total = res.data.total
+                this.caseList = res.data.users
+                this.listLoading=false
             })
+        },
+        // 监听 pageSize 改变的事件
+        handleSizeChange (newSize) {
+            //   console.log(newSize)
+            //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
+            this.queryInfo.pagesize = newSize
+            //  修改完以后，重新发起请求获取一次数据
+            this.getCaseList()
+        },
+        // 监听 页码值  改变的事件
+        handleCurrentChange (newPage) {
+            //   console.log(newPage)
+            //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
+            this.queryInfo.pagenum = newPage
+            //  修改完以后，重新发起请求获取一次数据
             this.getUserList()
-          }
-        })
-      }).catch(() => {
+        },
+        // 监听 switch 开关状态的改变
+        async userStateChange (userInfo) {
+            console.log(userInfo)
+            const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
+            if (res.meta.status !== 200) {
+                // 更新失败，将状态返回初始状态
+                this.userInfo.mg_state = !this.userInfo.mg_state
+                this.$message.error('更新用户状态失败！')
+            }
+            this.$message.success('更新用户状态成功！')
+        },
+        // 监听添加用户对话框的关闭事件
+        addDialogClosed () {
+            this.$refs.addFormRef.resetFields()
+            this.$refs.editForm.resetFields()
+        },
+        // 点击按钮，添加案例
+        addCase(){
+            this.$router.push("createCases")
+        },
+        addUser () {
+            this.$refs.addFormRef.validate(async valid => {
+                if (valid) {
+                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                        this.addLoading = true
+                        let para = Object.assign({}, this.addForm)
+                        addTeacher(para).then((res) => {
+                            if(res.data.code==200) {
+                                this.addLoading = false
+                                this.$message({
+                                    message: '新增成功',
+                                    type: 'success'
+                                })
+                                this.addFormVisible = false
+                                this.getUserList()
+                            }
+                        })
+                    })
+                }
+            })
+        },
+        //显示编辑
+        handleEdit: function (index, row) {
+            let para = Object.assign({}, row)
+            this.$store.commit('setCaseName', para.case_name);
+            this.$router.push({ path: "/editCases", query: {} });
+        },
+        // //编辑提交
+        // editSubmit: function () {
+        //     this.$refs.editForm.validate((valid) => {
+        //         if (valid) {
+        //             this.$confirm('确认提交吗？', '提示', {}).then(() => {
+        //                 this.editLoading = true
+        //                 let para = Object.assign({}, this.editForm)
+        //                 editTeacher(para).then((res) => {
+        //                     if(res.data.code==200) {
+        //                         this.editLoading = false
+        //                         this.$message({
+        //                             message: res.data.msg,
+        //                             type: 'success'
+        //                         })
+        //                         this.editFormVisible = false
+        //                         this.getUserList()
+        //                     }
+        //                 })
+        //             })
+        //         }
+        //     })
+        // },
+        //删除
+        handleDel: function (index, row) {
+            this.$confirm('确认删除该记录吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                this.listLoading = true
+                let para = {id: row.id}
+                removeCase(para).then((res) => {
+                    if(res.data.code==200) {
+                        this.listLoading = false
+                        //NProgress.done();
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'success'
+                        })
+                        this.getUserList()
+                    }
+                })
+            }).catch(() => {
 
-      })
+            })
+        },
+        //选择多行
+        selsChange: function (sels) {
+            this.sels = sels
+        },
+        //批量删除
+        batchRemove: function () {
+            var ids = this.sels.map(item => item.id).toString()
+            this.$confirm('确认删除选中记录吗？', '提示', {
+                type: 'warning'
+            }).then(() => {
+                this.listLoading = true
+                let para = {ids: ids}
+                batchRemoveCase(para).then((res) => {
+                    if(res.data.code==200) {
+                        this.listLoading = false
+                        //NProgress.done();
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        })
+                        this.getUserList()
+                    }
+                })
+            }).catch(() => {
+
+            })
+        }
     }
-  }
 }
 </script>
 

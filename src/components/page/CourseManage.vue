@@ -39,7 +39,7 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
-                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">查看课程</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="primary"  size="mini" @click="addStudent(scope.$index, scope.row)">添加学生</el-button>
                         <el-button type="primary"  size="mini" @click="handleDel(scope.$index, scope.row)">添加老师</el-button>
