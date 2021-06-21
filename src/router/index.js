@@ -24,6 +24,7 @@ import studentTeamManage from '../components/page/studentTeamManage'
 import studentHome from '../components/page/studentHome'
 import CourseDetail from '../components/page/CourseDetail'
 import EditCases from '../components/page/EditCases'
+import StudentCourseDetail from "../components/page/StudentCourseDetail";
 
 Vue.use(Router)
 
@@ -58,6 +59,16 @@ export default new Router({
           component: studentHome,
           meta: {
             title: '学生首页',
+            hideclose: true,
+            requireAuth: true
+          }
+        },
+        {
+          path: '/studentCourseDetail',
+          name: 'studentCourseDetail',
+          component: StudentCourseDetail,
+          meta: {
+            title: '学生课程详情',
             hideclose: true,
             requireAuth: true
           }
@@ -196,24 +207,24 @@ export default new Router({
             requireAuth: true
           }
         },
-          {
-              path: '/editCases',
-              name: 'editCases',
-              component: EditCases,
-              meta: {
-                  title: '编辑案例',
-                  requireAuth: true
-              }
-          },
-          {
-              path: '/courseDetail',
-              name: 'courseDetail',
-              component: CourseDetail,
-              meta: {
-                  title: '课程详情',
-                  requireAuth: true
-              }
+        {
+          path: '/editCases',
+          name: 'editCases',
+          component: EditCases,
+          meta: {
+            title: '编辑案例',
+            requireAuth: true
           }
+        },
+        {
+          path: '/courseDetail',
+          name: 'courseDetail',
+          component: CourseDetail,
+          meta: {
+            title: '课程详情',
+            requireAuth: true
+          }
+        }
       ]
     },
     {
@@ -258,4 +269,3 @@ export default new Router({
     }
   ]
 })
-

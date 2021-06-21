@@ -16,8 +16,8 @@
         :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"
         border>
             <el-table-column type="index"></el-table-column>
-            <el-table-column prop="coursename" label="已加入课程" align="center"></el-table-column>
-            <el-table-column prop="teachername" label="创建老师" align="center"></el-table-column>
+            <el-table-column prop="courseName" label="已加入课程" align="center"></el-table-column>
+            <el-table-column prop="teacherName" label="创建老师" align="center"></el-table-column>
             <el-table-column prop="state" label="课程状态" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
@@ -34,8 +34,8 @@
             :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"
             border>
             <el-table-column type="index"></el-table-column>
-            <el-table-column prop="coursename" label="未加入课程" align="center"></el-table-column>
-            <el-table-column prop="teachername" label="创建老师" align="center"></el-table-column>
+            <el-table-column prop="courseName" label="未加入课程" align="center"></el-table-column>
+            <el-table-column prop="teacherName" label="创建老师" align="center"></el-table-column>
             <el-table-column prop="state" label="课程状态" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
@@ -55,13 +55,14 @@ export default {
   data () {
     return {
       addedCourse: [],
-      allCourses: [],
-      courseDetail: []
+      allCourses: []
     }
   },
   methods: {
     handleDetail (index, row) {
-      this.courseDetail = Object.assign({}, row)
+      let para = Object.assign({}, row)
+      this.$store.commit('setCourseName', para.courseName)
+      this.$router.push({ path: '/studentCourseDetail', query: {} })
     },
     handleAdd (index, row) {
 

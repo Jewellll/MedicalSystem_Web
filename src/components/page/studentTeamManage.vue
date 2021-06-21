@@ -18,7 +18,7 @@
                     </el-col>
                 </el-row>
             </div>
-            <el-table :data="teamList" :stripe="true" :border="true"  @selection-change="selsChange"
+            <el-table :data="teamList" :stripe="true" :border="true"
                       :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" style="width: 50%; margin-left: 25%" >
                 <el-table-column type="selection" width="55">
                 </el-table-column>
@@ -120,37 +120,40 @@ export default {
         pagesize: 5
       },
       addTeamVisible: false,
-        editTeamVisible:false,
-        addLoading:false,
-        editLoading:false,
+      editTeamVisible: false,
+      addLoading: false,
+      editLoading: false,
       teamList: [],
-        addForm:{team_id:'',
-            students:[{key:'1',label:'a'}],
-            members:[]
-        },
-        editTeam:{
-          team_id: '',
-          members: [{id:'',studentname:''}]
-        },
-
+      addForm: {team_id: '',
+        students: [{key: '1', label: 'a'},
+          {key: '2', label: 'b'},
+          {key: '3', label: 'c'}],
+        members: []
+      },
+      editTeam: {
+        team_id: '',
+        members: [{id: '', studentname: ''}]
+      }
 
     }
   },
-  methods:{
-      addTeam(){
-
-      },
-      addRow(){
-        let para = {id:'',studentname:''};
-        this.editTeam.members.push(para);
-      },
-      handleTeam(index, row){
-          this.editTeamVisible = true;
-          this.editTeam = Object.assign({},row);
-      },
-      handleDel(index, row){
-        this.editTeam.members.splice(index,1);
-      }
+  methods: {
+    addTeam (index, row) {
+      // courseId从课程详情页面获取
+      let para = {courseId: this.$route.query.courseId, team_id: this.addForm.team_id}
+      console.log(this.addForm.members)
+    },
+    addRow () {
+      let para = {id: '', studentname: ''}
+      this.editTeam.members.push(para)
+    },
+    handleTeam (index, row) {
+      this.editTeamVisible = true
+      this.editTeam = Object.assign({}, row)
+    },
+    handleDel (index, row) {
+      this.editTeam.members.splice(index, 1)
+    }
   }
 }
 </script>
