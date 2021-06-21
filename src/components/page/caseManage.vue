@@ -39,10 +39,10 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
-                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
+                        <el-button type="primary"  size="mini" @click="caseDetail(scope.$index, scope.row)">查看案例</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-                        <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">查看详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
