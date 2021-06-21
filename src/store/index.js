@@ -10,7 +10,10 @@ export default new Vuex.Store({
          user:{},
          dicCode:'',
          isCollapse: true,
-        caseName:''
+        // 课程中添加/编辑案例
+         caseName:'',
+        courseName:''
+
 
     },
     // 更改vuex的store中状态的唯一方法 - 同步操作
@@ -31,6 +34,9 @@ export default new Vuex.Store({
         },
         setCaseName(state,data){
             state.caseName=data
+        },
+        setCourseName(state,data){
+            state.courseName=data
         }
     },
     //异步操作

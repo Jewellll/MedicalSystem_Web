@@ -103,7 +103,7 @@ export default {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
                     this.logining = true;
-                    const loginParams = {username: this.loginForm.username, password: this.loginForm.password}
+                    const loginParams = {userName: this.loginForm.username, passWord: this.loginForm.password}
                     requestLogin(loginParams).then(res => {
                         this.logining = false;
                         let { msg, code, user,token } = res;

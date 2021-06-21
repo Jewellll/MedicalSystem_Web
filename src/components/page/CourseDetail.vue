@@ -9,7 +9,7 @@
             <hr>
             <div>
                 <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 1em">
-                    课程名：<div style="display: inline-block">{{CourseInfo.course_name}}</div>
+                    课程名：<div style="display: inline-block">{{courseInfo.courseName}}</div>
                 </div>
                 <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 2em">
                     <div style="display: inline-block; vertical-align: top">
@@ -17,7 +17,7 @@
                     </div>
                     <div class="descBox">
                         <el-scrollbar>
-                        <p>{{CourseInfo.desc}}</p>
+                        <p>{{courseInfo.desc}}</p>
                         </el-scrollbar>
                     </div>
                 </div>
@@ -161,8 +161,8 @@ export default {
                 pagesize: 5
             },
             // 课程
-            CourseInfo:{
-                course_name:'癌细胞转移',
+            courseInfo:{
+                courseName:'癌细胞转移',
                 desc:'国家创新重点课程'
             },
             // 案例
@@ -229,7 +229,7 @@ export default {
             this.listLoading=true
             getCourseDetailPage(this.queryInfo).then((res) => {
                 this.total = res.data.total
-                this.CourseInfo=res.data
+                this.courseInfo=res.data
                 this.caseList = res.data.users
                 this.listLoading=false
             })

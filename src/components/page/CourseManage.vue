@@ -338,31 +338,32 @@ export default {
       },
     // 显示编辑
     handleEdit: function (index, row) {
-      this.editFormVisible = true
-      this.editForm = Object.assign({}, row)
+        let para = Object.assign({}, row)
+        this.$store.commit('setCourseName', para.courseName);
+        this.$router.push({ path: "/courseDetail", query: {} });
     },
-    // 编辑提交
-    editSubmit: function () {
-      this.$refs.editForm.validate((valid) => {
-        if (valid) {
-          this.$confirm('确认提交吗？', '提示', {}).then(() => {
-            this.editLoading = true
-            let para = Object.assign({}, this.editForm)
-            editTeacher(para).then((res) => {
-              if (res.data.code == 200) {
-                this.editLoading = false
-                this.$message({
-                  message: res.data.msg,
-                  type: 'success'
-                })
-                this.editFormVisible = false
-                this.getUserList()
-              }
-            })
-          })
-        }
-      })
-    },
+    // // 编辑提交
+    // editSubmit: function () {
+    //   this.$refs.editForm.validate((valid) => {
+    //     if (valid) {
+    //       this.$confirm('确认提交吗？', '提示', {}).then(() => {
+    //         this.editLoading = true
+    //         let para = Object.assign({}, this.editForm)
+    //         editTeacher(para).then((res) => {
+    //           if (res.data.code == 200) {
+    //             this.editLoading = false
+    //             this.$message({
+    //               message: res.data.msg,
+    //               type: 'success'
+    //             })
+    //             this.editFormVisible = false
+    //             this.getUserList()
+    //           }
+    //         })
+    //       })
+    //     }
+    //   })
+    // },
     // 删除
     handleDel: function (index, row) {
       this.$confirm('确认删除该记录吗?', '提示', {
