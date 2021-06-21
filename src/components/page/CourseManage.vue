@@ -26,14 +26,15 @@
                     </el-col>
                 </el-row>
             </div>
-            <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" @selection-change="selsChange"
+            <el-table :data="courseList" :stripe="true" :border="true" v-loading="listLoading" @selection-change="selsChange"
                       :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
                 <el-table-column type="index"></el-table-column>
-                <el-table-column prop="case_id" label="课程号" width="100px"></el-table-column>
-                <el-table-column prop="casename" label="课程名" width="150px"></el-table-column>
-                <el-table-column prop="teacher_id" label="创建老师" width="150px"></el-table-column>
+                <el-table-column prop="courseId" label="课程号" width="100px"></el-table-column>
+                <el-table-column prop="courseName" label="课程名" width="150px"></el-table-column>
+                <el-table-column prop="createTeacher" label="创建老师" width="100px"></el-table-column>
+                <el-table-column prop="teacherMembers" label="教学老师" width="150px"></el-table-column>
                 <el-table-column prop="createtime" label="创建时间" width="200px"></el-table-column>
                 <el-table-column prop="desc" label="课程状态" width="100px"></el-table-column>
                 <el-table-column label="操作" align="center">
@@ -42,8 +43,7 @@
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">查看课程</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="primary"  size="mini" @click="addStudent(scope.$index, scope.row)">添加学生</el-button>
-                        <el-button type="primary"  size="mini" @click="handleDel(scope.$index, scope.row)">添加老师</el-button>
-                        <el-button type="primary"  size="mini" @click="handleDel(scope.$index, scope.row)">添加案例</el-button>
+                        <el-button type="primary"  size="mini" @click="addTeachers(scope.$index, scope.row)">添加老师</el-button>
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -64,25 +64,30 @@
 
         <!-- 添加课程 -->
         <el-dialog
-            title="添加案例"
+            title="添加课程"
             :visible.sync="addFormVisible"
             width="40%"
             @close="addDialogClosed" >
             <!-- 内容的主体区域 -->
             <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="案例号" prop="case_id">
+                <el-form-item label="课程号" prop="case_id">
                     <el-col :span="8">
-                        <el-input v-model="addForm.case_id" ></el-input>
+                        <el-input v-model="addForm.courseId" ></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="案例名">
+                <el-form-item label="课程名">
                     <el-col :span="8">
                         <el-input v-model="addForm.casename"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="创建老师">
                     <el-col :span="14">
-                        <el-input v-model="addForm.teacher_id"></el-input>
+                        <el-input v-model="addForm.createTeacher"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="课程描述">
+                    <el-col :span="14">
+                        <el-input v-model="addForm.desc" type="textarea" :rows="5"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -102,42 +107,42 @@
             <!-- 内容的主体区域 -->
             <el-transfer
                 style="text-align: left; display: inline-block"
-                v-model="value"
+                v-model="students"
                 filterable
-                :render-content="renderFunc"
                 :titles="['Source', 'Target']"
                 :format="{
         noChecked: '${total}',
         hasChecked: '${checked}/${total}'
       }"
-                @change="handleChange"
                 :data="data">
             </el-transfer>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addStudentVisible = false">取 消</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="handleAddStudent">确 定</el-button>
+            </span>
         </el-dialog>
-
-        <!--编辑界面-->
-        <el-dialog title="编辑"  width="40%" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="案例号" prop="case_id">
-                    <el-col :span="8">
-                        <el-input v-model="editForm.case_id"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="案例号" prop="card">
-                    <el-col :span="8">
-                        <el-input v-model="editForm.casename"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="创建老师" prop="teacher_id">
-                    <el-col :span="14">
-                        <el-input v-model="editForm.teacher_id"></el-input>
-                    </el-col>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
+<!--        添加老师-->
+        <el-dialog
+            title="添加老师"
+            :visible.sync="addTeacherVisible"
+            width="100%"
+            @close="addDialogClosed" >
+            <!-- 内容的主体区域 -->
+            <el-transfer
+                style="text-align: left; display: inline-block"
+                v-model="teachers"
+                filterable
+                :titles="['Source', 'Target']"
+                :format="{
+        noChecked: '${total}',
+        hasChecked: '${checked}/${total}'
+      }"
+                :data="data">
+            </el-transfer>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addTeacherVisible = false">取 消</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="handleAddTeacher()">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -164,6 +169,7 @@ export default {
       callback(new Error('请输入合法的邮箱'))
     }
     // 验证手机号的验证规则
+    // eslint-disable-next-line no-unused-vars
     var checkMobile = (rule, value, callback) => {
       // 验证手机号的正则表达式
       const regMobile = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
@@ -178,9 +184,10 @@ export default {
     const generateData = _ => {
       const data = []
       for (let i = 1; i <= 15; i++) {
+        // 右边穿梭框传过去的是key值
         data.push({
-          key: i,
-          label: `学生 ${i}`,
+          key: i + '123',
+          label: `学生${i} `,
           disabled: i % 4 === 0
         })
       }
@@ -188,7 +195,8 @@ export default {
     }
     return {
       data: generateData(),
-      value: [],
+      students: [],
+      teachers: [],
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
@@ -198,8 +206,8 @@ export default {
         // 每页显示多少条数据
         pagesize: 5
       },
-      // 获取的用户列表
-      caseList: [],
+      // 获取的课程列表
+      courseList: [{courseName: 's', createTeacher: 'a', teacherMembers: 'aa'}],
       sels: [], // 列表选中列
       // 总数
       total: 0,
@@ -208,30 +216,18 @@ export default {
       // 控制添加用户对话框的显示与隐藏，默认为隐藏
       addFormVisible: false,
       addStudentVisible: false,
+      addTeacherVisible: false,
       addLoading: false,
       // 添加用户的表单数据
       addForm: {
-        case_id: '',
-        casename: '',
-        teacher_id: '',
+        courseId: '',
+        courseName: '',
+        createTeacher: '',
         create_time: '',
         desc: ''
       },
       // 添加表单的验证规则对象
       addFormRules: {
-        case_id: [
-          {required: true, message: '请输入案例号', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
-        ],
-        casename: [
-          {required: true, message: '请输入案例名', trigger: 'blur'},
-          {min: 9, max: 9, trigger: 'blur'}
-        ],
-        teacher_id: [
-          {required: true, message: '请输入创建老师', trigger: 'blur'},
-          {validator: checkEmail, trigger: 'blur'}
-        ]
-
       },
       // 编辑
       editLoading: false,
@@ -335,6 +331,18 @@ export default {
     // 添加学生
     addStudent (index, row) {
       this.addStudentVisible = true
+    },
+    // 点击按钮添加学生
+    handleAddStudent () {
+
+    },
+    // 点击按钮添加老师
+    handleAddTeacher () {
+      this.courseList[0].teacherMembers += ' ' + this.teachers[0]
+      this.addTeacherVisible = false
+    },
+    addTeachers (index, row) {
+      this.addTeacherVisible = true
     },
     // 显示编辑
     handleEdit: function (index, row) {
