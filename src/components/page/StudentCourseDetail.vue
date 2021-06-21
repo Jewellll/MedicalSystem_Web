@@ -73,66 +73,8 @@
             </div>
             <div class="submit">
                 <el-button type="primary" @click="back">返  回</el-button>
-                <!--                <el-button type="primary" :loading="addLoading" @click.native="addUser">提  交</el-button>-->
             </div>
         </div>
-
-        <!-- 添加用户的对话框 -->
-        <el-dialog
-            title="添加数据项"
-            :visible.sync="addFormVisible"
-            width="40%"
-            @close="addDialogClosed" >
-            <!-- 内容的主体区域 -->
-            <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="数据数值" prop="valueId">
-                    <el-col :span="8">
-                        <el-input v-model="addForm.valueId" ></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="数据名称" prop="valueName">
-                    <el-col :span="8">
-                        <el-input v-model="addForm.valueName"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="创建时间" prop="createTime">
-                    <el-col :span="14">
-                        <el-input  v-model="addForm.createTime"></el-input>
-                    </el-col>
-                </el-form-item>
-            </el-form>
-            <!-- 底部区域 -->
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addFormVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="addUser">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!--编辑界面-->
-        <el-dialog title="编辑"  width="40%" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="数据数值" prop="valueId">
-                    <el-col :span="8">
-                        <el-input v-model="editForm.valueId"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="数据名称" prop="valueName">
-                    <el-col :span="8">
-                        <el-input v-model="editForm.valueName"></el-input>
-                    </el-col>
-                </el-form-item>
-
-                <el-form-item label="创建时间" prop="createTime">
-                    <el-col :span="14">
-                        <el-input  v-model="editForm.createTime"></el-input>
-                    </el-col>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -172,52 +114,6 @@ export default {
       total: 0,
       // 列表加载
       listLoading: false,
-      // 控制添加用户对话框的显示与隐藏，默认为隐藏
-      addFormVisible: false,
-      addLoading: false,
-      // 数据字典
-      dicForm: {
-        case_name: ''
-      },
-      dicFormRules: {
-        typeName: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
-        ],
-        typeCode: [
-          {required: true, message: '请输入密码', trigger: 'blur'}
-        ]
-      },
-      // 添加用户的表单数据
-      addForm: {
-        valueName: '',
-        valueId: '',
-        CreateTime: ''
-      },
-      // 添加表单的验证规则对象
-      addFormRules: {
-        valueName: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
-        ],
-        valueId: [
-          {required: true, message: '请输入密码', trigger: 'blur'}
-        ]
-      },
-      // 编辑
-      editLoading: false,
-      editFormVisible: false,
-      editForm: {
-        valueName: '',
-        valueId: '',
-        CreateTime: ''
-      },
-      editFormRules: {
-        valueName: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
-        ],
-        valueId: [
-          {required: true, message: '请输入密码', trigger: 'blur'}
-        ]
-      }
     }
   },
   created () {
@@ -269,54 +165,13 @@ export default {
     // 点击按钮，添加新用户
     addCase () {
       this.$router.push({ path: '/createCases', query: {} })
-      // this.$refs.addFormRef.validate(async valid => {
-      //     if (valid) {
-      //         this.$confirm('确认提交吗？', '提示', {}).then(() => {
-      //             this.addLoading = true
-      //             let para = Object.assign({}, this.addForm)
-      //             addTeacher(para).then((res) => {
-      //                 if(res.data.code==200) {
-      //                     this.addLoading = false
-      //                     this.$message({
-      //                         message: '新增成功',
-      //                         type: 'success'
-      //                     })
-      //                     this.addFormVisible = false
-      //                     this.getCourseDetail()
-      //                 }
-      //             })
-      //         })
-      //     }
-      // })
     },
     // 显示编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.case_name)
-      this.$router.push({ path: '/editCases', query: {} })
+      this.$store.commit('setCaseName', para.caseName)
+      this.$router.push('/replyCase')
     },
-    // //编辑提交
-    // editSubmit: function () {
-    //     this.$refs.editForm.validate((valid) => {
-    //         if (valid) {
-    //             this.$confirm('确认提交吗？', '提示', {}).then(() => {
-    //                 this.editLoading = true
-    //                 let para = Object.assign({}, this.editForm)
-    //                 editTeacher(para).then((res) => {
-    //                     if(res.data.code==200) {
-    //                         this.editLoading = false
-    //                         this.$message({
-    //                             message: res.data.msg,
-    //                             type: 'success'
-    //                         })
-    //                         this.editFormVisible = false
-    //                         this.getCourseDetail()
-    //                     }
-    //                 })
-    //             })
-    //         }
-    //     })
-    // },
     // 删除
     handleDel: function (index, row) {
       this.$confirm('确认删除该记录吗?', '提示', {

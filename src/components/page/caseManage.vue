@@ -28,17 +28,17 @@
                 <el-table-column type="selection" width="55">
                 </el-table-column>
                 <el-table-column type="index"></el-table-column>
-                <el-table-column prop="case_id" label="案例号" width="200px"></el-table-column>
-                <el-table-column prop="casename" label="案例名"></el-table-column>
+                <el-table-column prop="caseId" label="案例号" width="200px"></el-table-column>
+                <el-table-column prop="caseName" label="案例名"></el-table-column>
                 <el-table-column prop="courseName" label="课程名"></el-table-column>
-                <el-table-column prop="teacher_id" label="创建老师"></el-table-column>
-                <el-table-column prop="createtime" label="创建时间"></el-table-column>
+                <el-table-column prop="teacherId" label="创建老师"></el-table-column>
+                <el-table-column prop="createTime" label="创建时间"></el-table-column>
                 <el-table-column prop="desc" label="案例是否发布" width="60px"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
-                        <el-button type="primary"  size="mini" @click="caseDetail(scope.$index, scope.row)">查看案例</el-button>
+                        <el-button type="primary"  size="mini" @click="caseDetail(scope.$index, scope.row)">案例详情</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -57,62 +57,6 @@
                 </el-pagination>
             </div>
         </div>
-
-        <!-- 添加案例 -->
-        <el-dialog
-            title="添加案例"
-            :visible.sync="addFormVisible"
-            width="40%"
-            @close="addDialogClosed" >
-            <!-- 内容的主体区域 -->
-            <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="案例号" prop="case_id">
-                    <el-col :span="8">
-                        <el-input v-model="addForm.case_id" ></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="案例名">
-                    <el-col :span="8">
-                        <el-input v-model="addForm.casename"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="创建老师">
-                    <el-col :span="14">
-                        <el-input v-model="addForm.teacher_id"></el-input>
-                    </el-col>
-                </el-form-item>
-            </el-form>
-            <!-- 底部区域 -->
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addFormVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="addUser">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!--编辑界面-->
-        <el-dialog title="编辑"  width="40%" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="案例号" prop="case_id">
-                    <el-col :span="8">
-                        <el-input v-model="editForm.case_id"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="案例号" prop="card">
-                    <el-col :span="8">
-                        <el-input v-model="editForm.casename"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="创建老师" prop="teacher_id">
-                    <el-col :span="14">
-                        <el-input v-model="editForm.teacher_id"></el-input>
-                    </el-col>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -170,23 +114,23 @@ export default {
       addLoading: false,
       // 添加用户的表单数据
       addForm: {
-        case_id: '',
-        casename: '',
-        teacher_id: '',
-        create_time: '',
+        caseId: '',
+        caseName: '',
+        teacherId: '',
+        createTime: '',
         desc: ''
       },
       // 添加表单的验证规则对象
       addFormRules: {
-        case_id: [
+          caseId: [
           {required: true, message: '请输入案例号', trigger: 'blur'},
           {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
         ],
-        casename: [
+        caseName: [
           {required: true, message: '请输入案例名', trigger: 'blur'},
           {min: 9, max: 9, trigger: 'blur'}
         ],
-        teacher_id: [
+        teacherId: [
           {required: true, message: '请输入创建老师', trigger: 'blur'},
           {validator: checkEmail, trigger: 'blur'}
         ]
@@ -196,22 +140,22 @@ export default {
       editLoading: false,
       editFormVisible: false,
       editForm: {
-        case_id: '',
-        casename: '',
-        teacher_id: '',
-        create_time: '',
-        desc: ''
+          caseId: '',
+          caseName: '',
+          teacherId: '',
+          createTime: '',
+          desc: ''
       },
       editFormRules: {
-        case_id: [
+        caseId: [
           {required: true, message: '请输入案例号', trigger: 'blur'},
           {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
         ],
-        casename: [
+        caseName: [
           {required: true, message: '请输入案例名', trigger: 'blur'},
           {min: 9, max: 9, trigger: 'blur'}
         ],
-        teacher_id: [
+        teacherId: [
           {required: true, message: '请输入创建老师', trigger: 'blur'},
           {validator: checkEmail, trigger: 'blur'}
         ]
@@ -292,34 +236,19 @@ export default {
         }
       })
     },
-    // 显示编辑
+    // 编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.case_name)
+      this.$store.commit('setCaseName', para.caseName)
+        this.$store.commit('setCaseName', para.courseName)
       this.$router.push({ path: '/editCases', query: {} })
     },
-    // //编辑提交
-    // editSubmit: function () {
-    //     this.$refs.editForm.validate((valid) => {
-    //         if (valid) {
-    //             this.$confirm('确认提交吗？', '提示', {}).then(() => {
-    //                 this.editLoading = true
-    //                 let para = Object.assign({}, this.editForm)
-    //                 editTeacher(para).then((res) => {
-    //                     if(res.data.code==200) {
-    //                         this.editLoading = false
-    //                         this.$message({
-    //                             message: res.data.msg,
-    //                             type: 'success'
-    //                         })
-    //                         this.editFormVisible = false
-    //                         this.getUserList()
-    //                     }
-    //                 })
-    //             })
-    //         }
-    //     })
-    // },
+      // 查看
+      caseDetail: function (index, row) {
+          let para = Object.assign({}, row)
+          this.$store.commit('setCaseName', para.caseName)
+          this.$router.push('/caseDetail')
+      },
     // 删除
     handleDel: function (index, row) {
       this.$confirm('确认删除该记录吗?', '提示', {

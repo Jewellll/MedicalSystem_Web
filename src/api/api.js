@@ -86,11 +86,22 @@ export const getCaseListPage = params => { return http.get(`${base}/case/listpag
 
 
 //课程详情
-export const getCourseDetailPage = params => { return http.get(`${base}/courseDetail/listpage`,  params).then(res => res.data); };
+
+export const getCourseDetailPage = params => { return http.get(`${base}/case/listpage`,  params).then(res => res.data); };
 
 //删除课程
+
 export const removeCase = params => { return http.get(`${base}/case/remove`,  params).then(res => res.data); };
 
 export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`,  params).then(res => res.data); };
 // 评论
+
 export const requestComment = params => { return http.post(`${base}/comment/addComment`, params).then(res => res.data); };
+
+//编辑案例
+
+export const getCaseToEdit = params => { return http.post(`${base}/case/getCase`, params).then(res => res.data); };
+
+export const editCse = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data); };
+
+export const addCase = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data); };

@@ -7,19 +7,12 @@
                 <el-breadcrumb-item>案例管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div align="center" style="font-size: 40px;" v-text="$route.query.name+'团队管理'"></div>
+        <div align="center" style="font-size: 1.5em; text-align: left;" v-text="$route.query.name+'团队管理'"></div>
         <!-- 列表区域 -->
         <div class="table">
             <!-- 搜索与添加区域 -->
-            <div class="toolbar">
-                <el-row :gutter="20">
-                    <el-col :span="2">
-                        <el-button type="primary" @click="addTeamVisible=true">创建团队</el-button>
-                    </el-col>
-                </el-row>
-            </div>
             <el-table :data="teamList" :stripe="true" :border="true"
-                      :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" style="width: 50%; margin-left: 25%" >
+                      :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" style="width: 100%" >
                 <el-table-column type="selection" width="55">
                 </el-table-column>
                 <el-table-column type="index"></el-table-column>
@@ -32,6 +25,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-button  @click="addTeamVisible=true" class="button">创建团队</el-button>
         </div>
             <!-- 分页区域 -->
             <div class="page">
@@ -185,5 +179,10 @@ export default {
     font-size: 14px;
     align: center;
     margin-left: 5%;
+}
+.button {
+    margin-top: 10px;
+    width: 100%;
+    boder: 1px dashed;
 }
 </style>

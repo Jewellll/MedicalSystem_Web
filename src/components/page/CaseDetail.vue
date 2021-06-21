@@ -187,11 +187,9 @@ export default {
     methods: {
         async getUserList () {
             this.listLoading = true
-            // eslint-disable-next-line no-undef
-            getTeacherListPage(this.queryInfo).then((res) => {
-                console.log(res)
-                this.total = res.data.total
-                this.userList = res.data.users
+            var param=this.$store.state.courseName
+            getTeacherListPage(param).then((res) => {
+                this.userList = res.users
                 this.listLoading = false
             })
         },

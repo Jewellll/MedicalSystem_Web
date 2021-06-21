@@ -90,35 +90,10 @@ export default {
                     index: 'courseManage',
                     title: '课程管理'
                 },
-                // {
-                //     icon: 'el-icon-user',
-                //     index: 'userManage',
-                //     title: '用户管理'
-                // },
-                // {
-                //     icon: 'el-icon-lock',
-                //     index: 'roleManage',
-                //     title: '角色管理'
-                // },
-                {
-                    icon: 'el-icon-reading',
-                    index: 'dictionary',
-                    title: '字典管理'
-                },
                 {
                     icon: 'el-icon-collection',
                     index: 'caseManage',
                     title: '案例管理'
-                },
-                {
-                    icon: 'el-icon-set-up',
-                    index: 'caseDetail',
-                    title: '案例详情'
-                },
-                {
-                    icon: 'el-icon-set-up',
-                    index: 'createCases',
-                    title: '创建案例'
                 },
                 {
                     icon: 'el-icon-notebook-1',
@@ -126,9 +101,9 @@ export default {
                     title: '回复案例'
                 },
                 {
-                    icon: 'el-icon-user',
-                    index: 'courseDetail',
-                    title: '课程详情'
+                    icon: 'el-icon-reading',
+                    index: 'dictionary',
+                    title: '字典管理'
                 },
                 {
                     icon: 'el-icon-paperclip',

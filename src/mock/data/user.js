@@ -75,10 +75,10 @@ for (let i = 0; i < 3; i++) {
 // 案例
 for (let i = 0; i < 20; i++) {
   Case.push(Mock.mock({
-    case_id: /^0[0-9]{6}$/,
-    'casename|1': ['呼吸内科', '耳鼻喉', '骨科'],
-    teacher_id: Mock.Random.cname(),
-    'createtime': '@datetime()', // 随机时间
+    caseId: /^0[0-9]{6}$/,
+    'caseName|1': ['呼吸内科', '耳鼻喉', '骨科'],
+    teacherId: Mock.Random.cname(),
+    'createTime': '@datetime()', // 随机时间
     'desc|1': ['是', '否']
   }))
 }
