@@ -83,6 +83,7 @@
 <script>
 
 import {comments} from '../../mock/mockdata.js'
+import {getTeacherListPage, requestComment} from '../../api/api'
 
 export default {
     props: {
@@ -130,6 +131,9 @@ export default {
          */
         commitComment () {
             console.log(this.inputComment)
+            requestComment(this.inputComment).then((res) => {
+               console.log('成功')
+            })
         },
 
         /**

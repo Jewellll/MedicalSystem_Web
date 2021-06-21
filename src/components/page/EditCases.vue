@@ -2,6 +2,7 @@
     <div>
         <div class="container">
             <div align="center" style="font-size: 40px;">编辑案例</div>
+            <div class="info">
             <div class="left">
                 <el-form :model="caseForm"  label-width="100px">
                     <el-form-item label="案例名:" prop="casename">
@@ -51,6 +52,7 @@
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 </el-upload>
             </div>
+            </div>
             <div class="footer">
                 <el-button type="primary" @click="back()">返回</el-button>
                 <el-button type="primary" >提交</el-button>
@@ -91,18 +93,25 @@ export default {
 </script>
 
 <style scoped>
+.info{
+    clear: both;
+}
 .left{
     margin-left: 100px;
     margin-top: 50px;
     position: absolute;
     width: 40%;
     height: 500px;
+    float: left;
+    border: 1px solid #505458;
 }
 .right{
+    float: right;
     margin-top: 20px;
     width: 45%;
-    margin-left: 600px;
+    margin-right: 100px;
     height: 550px;
+    border: 1px solid #505458;
 
 }
 .container{
@@ -115,6 +124,10 @@ export default {
     border-radius: 5px;
 }
 .footer{
+    position: absolute;
+    top: 600px;
+    right: 0px;
+    width: 100%;
     height: 40px;
     margin-top: 10px;
 }

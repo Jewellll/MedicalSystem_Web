@@ -92,3 +92,5 @@ export const getCourseDetailPage = params => { return http.get(`${base}/courseDe
 export const removeCase = params => { return http.get(`${base}/case/remove`, { params: params }); };
 
 export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, { params: params }); };
+// 评论
+export const requestComment = params => { return http.get(`${base}/case/batchremove`, { params: params }); };

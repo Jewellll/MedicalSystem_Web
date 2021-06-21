@@ -25,29 +25,40 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-        if (response.data.code === 999) {
-            this.$router.push({path:'/login'})
-            console.log("token过期");
-        }
+            switch (response.code) {
+                case '200':
+                    this.$router.replace( "/home");
+                    this.$message.success(response.msg);
+                    break;
+                case 104:
+                    this.$router.push({path: "/login"});
+                    this.$message.error(response.msg);
+                    break;
+                case 503:
+                    this.$router.push({path: "/503"});
+                    break;
+            }
+            // this.$router.push({path:'/home'})
+            // this.$message.success(response.data.msg);
         return response;
     },
     error => {
-        // // 对响应错误做点什么
-        // if (error.response) {
-        //     switch (error.response.data.code) {
-        //         case 404:
-        //             router.push({path: "/NotFound1"});
-        //             break;
-        //         case 500:
-        //             router.push({path: "/NotFound2"});
-        //             break;
-        //         case 503:
-        //             router.push({path: "/NotFound3"});
-        //             break;
-        //     }
-        // } else {
-        //     router.push({path: "/NotFound"});
-        // }
+        // 对响应错误做点什么
+        if (error.response) {
+            switch (error.response.data.code) {
+                case 404:
+                    this.$router.push( "/404");
+                    break;
+                case 500:
+                    this.$router.push({path: "/500"});
+                    break;
+                case 503:
+                    this.$router.push({path: "/503"});
+                    break;
+            }
+        } else {
+            router.push({path: "/NotFound"});
+        }
         return Promise.reject(error);
     }
 );

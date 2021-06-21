@@ -101,7 +101,7 @@ export default {
         var validatePass2 = (rule, value, callback) => {
             if (value === "") {
                 callback(new Error("请再次输入密码"));
-            } else if (value !== this.regForm.password) {
+            } else if (value !== this.regForm.passWord) {
                 callback(new Error("两次输入密码不一致!"));
             } else {
                 callback();
@@ -162,7 +162,7 @@ export default {
                 department: [{ required: true, message: "请选择科室", trigger: "blur" }],
                 email: [{ required: true, message: "请输入邮箱", trigger: "blur" },
                     { validator: checkEmail, trigger: 'blur' }],
-                password: [{ required: true, message: "请输入密码", trigger: "blur" },
+                passWord: [{ required: true, message: "请输入密码", trigger: "blur" },
                     { validator: validatePass, trigger: "blur" }],
                 checkPassword: [{ required: true, message: "请再次输入密码", trigger: "blur" },
                     { validator: validatePass2, trigger: "blur" }],
