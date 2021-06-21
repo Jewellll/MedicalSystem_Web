@@ -268,8 +268,8 @@ export default {
       this.listLoading = true
       getCaseListPage(this.queryInfo).then((res) => {
         console.log(res)
-        this.total = res.data.total
-        this.caseList = res.data.users
+        this.total = res.total
+        this.caseList = res.users
         this.listLoading = false
       })
     },

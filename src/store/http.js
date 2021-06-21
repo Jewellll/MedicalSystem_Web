@@ -1,5 +1,6 @@
+import router from "../router/index"
 import axios from 'axios'
-import router from '../router/index'
+
 import {Message} from 'element-ui'
 
 
@@ -17,48 +18,41 @@ axios.interceptors.request.use(
         return config;
     },
     err => {
-        router.push({path: "/NotFound"});
+        // router.push({path: "/NotFound"});
         return Promise.reject(err);
     }
 );
-
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-            switch (response.code) {
-                case '200':
-                    this.$router.replace( "/home");
-                    this.$message.success(response.msg);
-                    break;
-                case 104:
-                    this.$router.push({path: "/login"});
-                    this.$message.error(response.msg);
-                    break;
-                case 503:
-                    this.$router.push({path: "/503"});
-                    break;
-            }
-            // this.$router.push({path:'/home'})
-            // this.$message.success(response.data.msg);
+        //     switch (response.data.code) {
+        //         case '200':
+        //             break;
+        //         case '104':
+        //             break;
+        //         case '-2':
+        //             window.localStorage.removeItem('token')
+        //     }
+        // console.log('response')
         return response;
     },
     error => {
         // 对响应错误做点什么
-        if (error.response) {
-            switch (error.response.data.code) {
-                case 404:
-                    this.$router.push( "/404");
-                    break;
-                case 500:
-                    this.$router.push({path: "/500"});
-                    break;
-                case 503:
-                    this.$router.push({path: "/503"});
-                    break;
-            }
-        } else {
-            router.push({path: "/NotFound"});
-        }
+        // if (error.response) {
+        //     switch (error.response.code) {
+        //         case 404:
+        //            router.push( "/404");
+        //             break;
+        //         case 500:
+        //             router.push({path: "/500"});
+        //             break;
+        //         case 503:
+        //             router.push({path: "/503"});
+        //             break;
+        //     }
+        // } else {
+        //     router.push({path: "/NotFound"});
+        // }
         return Promise.reject(error);
     }
 );

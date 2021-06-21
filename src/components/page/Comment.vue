@@ -131,7 +131,14 @@ export default {
          */
         commitComment () {
             console.log(this.inputComment)
-            requestComment(this.inputComment).then((res) => {
+            const param = {
+                caseId: 2,
+                parentId: 1,
+                content: 'asdsadsa',
+                fromId: 2,
+                fromName: 'yuhang'
+            }
+            requestComment(param).then((res) => {
                console.log('成功')
             })
         },

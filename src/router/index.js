@@ -12,11 +12,9 @@ import TeacherManage from '../components/page/TeacherManage'
 import error from '../components/page/404'
 import Dictionary from '../components/page/Dictionary'
 import UserManage from '../components/page/UserManage'
-import SystemManage from '../components/page/SystemManage'
 import CourseManage from '../components/page/CourseManage'
 import PhoneLogin from '../components/page/PhoneLogin'
 import Test from '../components/page/Test'
-import RoleManage from '../components/page/RoleManage'
 import AddDictionary from '../components/page/AddDictionary'
 import CaseDetail from '../components/page/CaseDetail'
 import ReplyCase from '../components/page/ReplyCase'
@@ -124,24 +122,6 @@ export default new Router({
           component: UserManage,
           meta: {
             title: '用户管理',
-            requireAuth: true
-          }
-        },
-        {
-          path: '/systemManage',
-          name: 'systemManage',
-          component: SystemManage,
-          meta: {
-            title: '系统参数管理',
-            requireAuth: true
-          }
-        },
-        {
-          path: '/roleManage',
-          name: 'RoleManage',
-          component: RoleManage,
-          meta: {
-            title: '角色管理',
             requireAuth: true
           }
         },
@@ -278,3 +258,4 @@ export default new Router({
     }
   ]
 })
+

@@ -27,55 +27,55 @@ export const editUser = params => { return http.get(`${base}/user/edit`,  params
 export const addUser = params => { return http.post(`${base}/user/add`,  params ).then(res => res.data); };
 
 //教师管理
-export const getTeacherListPage = params => { return http.get(`${base}/teacher/listpage`, { params: params }); };
+export const getTeacherListPage = params => { return http.get(`${base}/teacher/listpage`,  params).then(res => res.data); };
 
-export const editTeacher = params => { return http.get(`${base}/teacher/edit`, { params: params }); };
+export const editTeacher = params => { return http.get(`${base}/teacher/edit`,  params).then(res => res.data); };
 
-export const addTeacher = params => { return http.get(`${base}/teacher/add`, { params: params }); };
+export const addTeacher = params => { return http.get(`${base}/teacher/add`,  params).then(res => res.data); };
 
-export const removeTeacher = params => { return http.get(`${base}/teacher/remove`, { params: params }); };
+export const removeTeacher = params => { return http.get(`${base}/teacher/remove`,  params).then(res => res.data); };
 
-export const batchRemoveTeacher = params => { return http.get(`${base}/teacher/batchremove`, { params: params }); };
+export const batchRemoveTeacher = params => { return http.get(`${base}/teacher/batchremove`,  params).then(res => res.data); };
 
 //学生管理
-export const getStudentListPage = params => { return http.get(`${base}/student/listpage`, { params: params }); };
+export const getStudentListPage = params => { return http.get(`${base}/student/listpage`,  params).then(res => res.data); };
 
-export const editStudent = params => { return http.get(`${base}/student/edit`, { params: params }); };
+export const editStudent = params => { return http.get(`${base}/student/edit`,  params).then(res => res.data); };
 
-export const addStudent = params => { return http.get(`${base}/student/add`, { params: params }); };
+export const addStudent = params => { return http.get(`${base}/student/add`,  params).then(res => res.data); };
 
-export const removeStudent = params => { return http.get(`${base}/student/remove`, { params: params }); };
+export const removeStudent = params => { return http.get(`${base}/student/remove`,  params).then(res => res.data); };
 
-export const batchRemoveStudent = params => { return http.get(`${base}/student/batchremove`, { params: params }); };
+export const batchRemoveStudent = params => { return http.get(`${base}/student/batchremove`,  params).then(res => res.data); };
 
 //课程管理
-export const getCourseListPage = params => { return http.get(`${base}/course/listpage`, { params: params }); };
+export const getCourseListPage = params => { return http.get(`${base}/course/listpage`,  params).then(res => res.data); };
 
-export const editCourse = params => { return http.get(`${base}/course/edit`, { params: params }); };
+export const editCourse = params => { return http.get(`${base}/course/edit`,  params).then(res => res.data); };
 
-export const addCourse = params => { return http.get(`${base}/course/add`, { params: params }); };
+export const addCourse = params => { return http.get(`${base}/course/add`,  params).then(res => res.data); };
 
-export const removeCourse = params => { return http.get(`${base}/course/remove`, { params: params }); };
+export const removeCourse = params => { return http.get(`${base}/course/remove`,  params).then(res => res.data); };
 
-export const batchRemoveCourse = params => { return http.get(`${base}/course/batchremove`, { params: params }); };
+export const batchRemoveCourse = params => { return http.get(`${base}/course/batchremove`,  params).then(res => res.data); };
 
 //字典管理
-export const getDicListPage = params => { return http.get(`${base}/dictionaries/listpage`, { params: params }); };
+export const getDicListPage = params => { return http.get(`${base}/dictionaries/listpage`,  params).then(res => res.data); };
 
-export const editDic = params => { return http.get(`${base}/dictionaries/code`, { params: params }); };
+export const editDic = params => { return http.get(`${base}/dictionaries/code`,  params).then(res => res.data); };
 
-export const addDic = params => { return http.get(`${base}/dictionaries/id`, { params: params }); };
+export const addDic = params => { return http.get(`${base}/dictionaries/id`,  params).then(res => res.data); };
 
-export const removeDic = params => { return http.get(`${base}/dictionaries/remove`, { params: params }); };
+export const removeDic = params => { return http.get(`${base}/dictionaries/remove`,  params).then(res => res.data); };
 
-export const batchRemoveDic = params => { return http.get(`${base}/dictionary/batchremove`, { params: params }); };
+export const batchRemoveDic = params => { return http.get(`${base}/dictionary/batchremove`,  params).then(res => res.data); };
 
-export const editDictionary = params => { return http.get(`${base}/dictionary/edit`, { params: params }); };
+export const editDictionary = params => { return http.get(`${base}/dictionary/edit`,  params).then(res => res.data); };
 
 
 //案例管理
 
-export const getCaseListPage = params => { return http.get(`${base}/case/listpage`, { params: params }); };
+export const getCaseListPage = params => { return http.get(`${base}/case/listpage`,  params).then(res => res.data); };
 
 // export const editTeacher = params => { return http.get(`${base}/teacher/edit`, { params: params }); };
 // export const addTeacher = params => { return http.get(`${base}/teacher/add`, { params: params }); };
@@ -86,11 +86,11 @@ export const getCaseListPage = params => { return http.get(`${base}/case/listpag
 
 
 //课程详情
-export const getCourseDetailPage = params => { return http.get(`${base}/courseDetail/listpage`, { params: params }); };
+export const getCourseDetailPage = params => { return http.get(`${base}/courseDetail/listpage`,  params).then(res => res.data); };
 
 //删除课程
-export const removeCase = params => { return http.get(`${base}/case/remove`, { params: params }); };
+export const removeCase = params => { return http.get(`${base}/case/remove`,  params).then(res => res.data); };
 
-export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, { params: params }); };
+export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`,  params).then(res => res.data); };
 // 评论
-export const requestComment = params => { return http.get(`${base}/case/batchremove`, { params: params }); };
+export const requestComment = params => { return http.post(`${base}/comment/addComment`, params).then(res => res.data); };

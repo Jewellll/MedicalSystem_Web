@@ -308,7 +308,7 @@ export default {
     })
       // 获取案例列表（分页）
       mock.onGet('/case/listpage').reply(config => {
-          let {pagenum, pagesize, query} = config.params
+          let {pagenum, pagesize, query} = config
           let mockUsers = _Case.filter(user => {
               if (query && user.name.indexOf(query) == -1) return false
               return true

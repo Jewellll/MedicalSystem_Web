@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = http;
 
-// Mock.bootstrap()            //模拟数据测试
+Mock.bootstrap()            //模拟数据测试
 
 Vue.use(ElementUI)
 
