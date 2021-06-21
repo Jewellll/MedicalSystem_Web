@@ -174,21 +174,21 @@ export default {
       // 验证不通过，不合法
       callback(new Error('请输入合法的手机号'))
     }
-    //data初始化
-      const generateData = _ => {
-          const data = [];
-          for (let i = 1; i <= 15; i++) {
-              data.push({
-                  key: i,
-                  label: `学生 ${i}`,
-                  disabled: i % 4 === 0
-              });
-          }
-          return data;
+    // data初始化
+    const generateData = _ => {
+      const data = []
+      for (let i = 1; i <= 15; i++) {
+        data.push({
+          key: i,
+          label: `学生 ${i}`,
+          disabled: i % 4 === 0
+        })
       }
+      return data
+    }
     return {
-        data:generateData(),
-        value:[],
+      data: generateData(),
+      value: [],
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
@@ -317,7 +317,7 @@ export default {
             this.addLoading = true
             let para = Object.assign({}, this.addForm)
             addTeacher(para).then((res) => {
-                // eslint-disable-next-line eqeqeq
+              // eslint-disable-next-line eqeqeq
               if (res.data.code == 200) {
                 this.addLoading = false
                 this.$message({
@@ -332,38 +332,16 @@ export default {
         }
       })
     },
-      //添加学生
-      addStudent(index,row){
-        this.addStudentVisible = true;
-      },
+    // 添加学生
+    addStudent (index, row) {
+      this.addStudentVisible = true
+    },
     // 显示编辑
     handleEdit: function (index, row) {
-        let para = Object.assign({}, row)
-        this.$store.commit('setCourseName', para.courseName);
-        this.$router.push({ path: "/courseDetail", query: {} });
+      let para = Object.assign({}, row)
+      this.$store.commit('setCourseName', para.courseName)
+      this.$router.push({ path: '/courseDetail', query: {} })
     },
-    // // 编辑提交
-    // editSubmit: function () {
-    //   this.$refs.editForm.validate((valid) => {
-    //     if (valid) {
-    //       this.$confirm('确认提交吗？', '提示', {}).then(() => {
-    //         this.editLoading = true
-    //         let para = Object.assign({}, this.editForm)
-    //         editTeacher(para).then((res) => {
-    //           if (res.data.code == 200) {
-    //             this.editLoading = false
-    //             this.$message({
-    //               message: res.data.msg,
-    //               type: 'success'
-    //             })
-    //             this.editFormVisible = false
-    //             this.getUserList()
-    //           }
-    //         })
-    //       })
-    //     }
-    //   })
-    // },
     // 删除
     handleDel: function (index, row) {
       this.$confirm('确认删除该记录吗?', '提示', {
