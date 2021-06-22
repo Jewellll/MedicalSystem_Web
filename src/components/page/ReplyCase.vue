@@ -181,7 +181,7 @@ export default {
         },
         //评论
         async getComments () {
-            // var param=this.$store.state.caseId
+            // var param= {caseId:this.caseId}
             var param= {caseId:1}
             getCommentList(param).then((res) => {
                 console.log(res)

@@ -166,11 +166,10 @@ export default {
     addCase () {
       this.$router.push({ path: '/createCases', query: {} })
     },
-    // 显示编辑
+    // 案例详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.caseName)
-      this.$router.push('/caseDetail')
+        this.$router.push({path:'/caseDetail',params:{caseId:para.caseId}})
     },
     // 删除
     handleDel: function (index, row) {

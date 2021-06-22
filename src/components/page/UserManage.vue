@@ -15,7 +15,7 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
+                            <el-button slot="append" icon="el-icon-search" @click="getUserByRealName()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -32,13 +32,19 @@
                 </el-table-column>
                 <el-table-column type="index" >
                 </el-table-column>
-                <el-table-column prop="username" label="用户名"  >
+                <el-table-column prop="userName" label="用户名"  >
                 </el-table-column>
-                <el-table-column prop="telphone" label="手机号">
+                <el-table-column prop="realName" label="姓名">
                 </el-table-column>
                 <el-table-column prop="sex" label="性别" :formatter="formatSex" >
                 </el-table-column>
-                <el-table-column prop="loginType" label="角色" >
+                <el-table-column prop="phone" label="手机号">
+                </el-table-column>
+                <el-table-column prop="department" label="科室">
+                </el-table-column>
+                <el-table-column prop="title" label="职称" >
+                </el-table-column>
+                <el-table-column prop="roleId" label="角色" :formatter="formatRole">
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
@@ -151,11 +157,11 @@
 
 <script>
 import {
-  addUser,
-  batchRemoveUser,
-  editUser,
-  getUserListPage,
-  removeUser
+    addUser,
+    batchRemoveUser,
+    editUser, getAllUserPage, getCourseListPage, getUserListByRealName,
+    getUserListPage,
+    removeUser
 } from '../../api/api'
 
 export default {
@@ -271,14 +277,37 @@ export default {
     formatSex: function (row, column) {
       return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
     },
+      formatRole: function (row, column) {
+          return row.roleId == 1 ? '学生' : row.sex == 2 ? '教师' : '管理员'
+      },
     async getUserList () {
-      this.listLoading = true
-      getUserListPage(this.queryInfo).then((res) => {
-        this.total = res.data.total
-        this.userList = res.data.users
-        this.listLoading = false
-      })
+
+        var param = {pagenum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
+        this.listLoading = true
+        getUserListPage(param).then((res) => {
+            this.$message.success(res.msg)
+            this.total = res.count
+            this.userList = res.data
+            this.listLoading = false
+        })
+        // getAllUserPage().then((res) => {
+        //     this.$message.success(res.msg)
+        //     this.total = res.count
+        //     this.userList = res.data
+        //     this.listLoading = false
+        // })
     },
+      //查找
+      getUserByRealName(){
+          this.listLoading = true
+          var param = {realName: this.queryInfo.query}
+          console.log(param)
+          getUserListByRealName(param).then((res) => {
+              this.total = res.count
+              this.userList = res.data
+              this.listLoading = false
+          })
+      },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
       //   console.log(newSize)
