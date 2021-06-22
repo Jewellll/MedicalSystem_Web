@@ -45,7 +45,7 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                <Comment :comments="commentData"></Comment>
+                <Comment :comments="commentData" :getComments="getComments"></Comment>
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
@@ -132,8 +132,7 @@
 </template>
 
 <script>
-import {getTeacherListPage} from '../../api/api'
-import {comments} from '../../mock/mockdata'
+import {getCommentList, getTeacherListPage} from '../../api/api'
 import Comment from './Comment'
 export default {
     components: {
@@ -170,6 +169,7 @@ export default {
             dialogVisible: false,
             disabled: false,
             commentData: [],
+            caseId: '',
             // 文件上传
             fileList: [{
                 name: 'food.jpeg',
@@ -181,16 +181,30 @@ export default {
                 }]
         }
     },
-    // created () {
-    //     this.getUserList()
-    // },
+    created () {
+        // this.getUserList()
+        this.getComments()
+    },
     methods: {
+        getParams(){
+            this.caseId=this.route.params.caseId
+        },
         async getUserList () {
             this.listLoading = true
             var param=this.$store.state.courseName
             getTeacherListPage(param).then((res) => {
                 this.userList = res.users
                 this.listLoading = false
+            })
+        },
+        //评论
+        async getComments () {
+            // var param=this.$store.state.caseId
+            var param= {caseId:1}
+            getCommentList(param).then((res) => {
+                console.log(res)
+                this.commentData = res.data
+                this.$message.success(res.msg)
             })
         },
         // 附件
@@ -229,9 +243,6 @@ export default {
         beforeRemove (file, fileList) {
             return this.$confirm(`确定移除 ${file.name}？`)
         },
-    },
-    created () {
-        this.commentData = comments.data
     }
 }
 </script>
