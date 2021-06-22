@@ -134,6 +134,7 @@
                     <el-button type="primary" @click.native="addTeam" :loading="addLoading">提交</el-button>
                 </div>
             </el-dialog>
+
             <!--            管理页面-->
             <el-dialog
                 title="管理团队"
@@ -159,6 +160,28 @@
                     </el-table>
                     <el-button @click="addRow">添加</el-button>
                 </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click.native="editTeamVisible = false">取消</el-button>
+                    <el-button type="primary" @click.native="editSubmit" :loading="addLoading">提交</el-button>
+                </div>
+            </el-dialog>
+            <!--            在已有团队中添加学生-->
+            <el-dialog width="60%" title="添加学生" :visible.sync="addStudentVisible">
+                    <el-transfer
+                        style="text-align: left; display: inline-block"
+                        v-model="editTeam.newMembers"
+                        filterable
+                        :titles="['Source', 'Target']"
+                        :format="{
+                        noChecked: '${total}',
+                        hasChecked: '${checked}/${total}'
+                      }"
+                        :data="addForm.students">
+                    </el-transfer>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click.native="addStudentVisible = false">取消</el-button>
+                    <el-button type="primary" @click.native="addStudent" :loading="addLoading">提交</el-button>
+                </div>
             </el-dialog>
             <div class="submit">
                 <el-button type="primary" @click="back">返  回</el-button>
@@ -169,201 +192,214 @@
 
 <script>
 import {
-    addTeacher, batchRemoveCase,
-    batchRemoveTeacher,
-    editTeacher, getCourseDetailPage,
-    getTeacherListPage, removeCase,
-    removeTeacher
+  addTeacher, batchRemoveCase,
+  batchRemoveTeacher,
+  editTeacher, getCourseDetailPage,
+  getTeacherListPage, removeCase,
+  removeTeacher
 } from '../../api/api'
 import dicList from './Dictionary'
 
 export default {
-    data () {
-        return {
-            // 获取用户列表的参数对象
-            queryInfo: {
-                // 查询参数
-                query: '',
-                //课程名
-                course_name:'',
-                // 当前的页码数
-                pagenum: 1,
-                // 每页显示多少条数据
-                pagesize: 5
-            },
-            // 课程
-            courseInfo:{
-                courseName:'癌细胞转移',
-                desc:'国家创新重点课程'
-            },
-            // 案例
-            caseList:[],
-            sels: [],//列表选中列
-            // 总数
-            total: 0,
-            //列表加载
-            listLoading:false,
-            teamListLoading:false,
-            //团队
-            addTeamVisible: false,
-            editTeamVisible: false,
-            addLoading: false,
-            editLoading: false,
-            teamList: [],
-            addForm: {team_id: '',
-                students: [{key: '1', label: 'a'},
-                    {key: '2', label: 'b'},
-                    {key: '3', label: 'c'}],
-                members: []
-            },
-            editTeam: {
-                team_id: '',
-                members: [{id: '', studentname: 'asd'}]
-            }
-        }
-    },
-    created () {
-        this.getCourseDetail()
-    },
-    methods: {
-        async getCourseDetail () {
-            this.queryInfo.courseName=this.$store.state.courseName
-            this.listLoading=true
-            this.teamListLoading=true
-            getCourseDetailPage(this.queryInfo).then((res) => {
-                this.total = res.total
-                this.courseInfo=res
-                this.teamList=[{team_id:12323,members:'成龙'}]
-                this.caseList = res.users
-                this.listLoading=false
-                this.teamListLoading=false
-            })
-        },
-        // 监听 pageSize 改变的事件
-        handleSizeChange (newSize) {
-            //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
-            this.queryInfo.pagesize = newSize
-            //  修改完以后，重新发起请求获取一次数据
-            this.getCourseDetail()
-        },
-        // 监听 页码值  改变的事件
-        handleCurrentChange (newPage) {
-            //   console.log(newPage)
-            //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
-            this.queryInfo.pagenum = newPage
-            //  修改完以后，重新发起请求获取一次数据
-            this.getCourseDetail()
-        },
-        // 监听 switch 开关状态的改变
-        async userStateChange (userInfo) {
-            console.log(userInfo)
-            const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
-            if (res.meta.status !== 200) {
-                // 更新失败，将状态返回初始状态
-                this.userInfo.mg_state = !this.userInfo.mg_state
-                this.$message.error('更新用户状态失败！')
-            }
-            this.$message.success('更新用户状态成功！')
-        },
-        // 监听添加用户对话框的关闭事件
-        addDialogClosed () {
-            this.$refs.addFormRef.resetFields()
-            this.$refs.editForm.resetFields()
-        },
-        // 点击按钮，添加新用户
-        addCase () {
-            this.$store.commit('setCourseName', this.courseInfo.courseName);
-            this.$router.push({ path: "/createCases", query: {} });
-        },
-        //编辑
-        handleEdit: function (index, row) {
-            let para = Object.assign({}, row)
-            this.$store.commit('setCaseName', para.case_name);
-            this.$store.commit('setCourseName', this.courseInfo.courseName);
-            this.$router.push({ path: "/editCases", query: {} });
-        },
-        // 查看
-        caseView: function (index, row) {
-            let para = Object.assign({}, row)
-            this.$store.commit('setCaseName', para.caseName);
-            this.$router.push({ path: "/replyCase", query: {} });
-        },
-       fileView: function (index, row) {
-            let para = Object.assign({}, row)
-            this.$store.commit('setCaseName', para.caseName);
-            this.$router.push({ path: "/fileView", query: {} });
-        },
-        //删除
-        handleDel: function (index, row) {
-            this.$confirm('确认删除该记录吗?', '提示', {
-                type: 'warning'
-            }).then(() => {
-                this.listLoading = true
-                let para = {id: row.id}
-                removeCase(para).then((res) => {
-                    if(res.data.code==200) {
-                        this.listLoading = false
-                        //NProgress.done();
-                        this.$message({
-                            message: res.data.msg,
-                            type: 'success'
-                        })
-                        this.getCourseDetail()
-                    }
-                })
-            }).catch(() => {
-
-            })
-        },
-        //选择多行
-        selsChange: function (sels) {
-            this.sels = sels
-        },
-        //批量删除
-        batchRemove: function () {
-            var ids = this.sels.map(item => item.id).toString()
-            this.$confirm('确认删除选中记录吗？', '提示', {
-                type: 'warning'
-            }).then(() => {
-                this.listLoading = true
-                let para = {ids: ids}
-                batchRemoveCase(para).then((res) => {
-                    if(res.data.code==200) {
-                        this.listLoading = false
-                        //NProgress.done();
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        })
-                        this.getCourseDetail()
-                    }
-                })
-            }).catch(() => {
-
-            })
-        },
-        back(){
-            this.$router.go(-1)
-        },
-        //团队
-        addTeam (index, row) {
-            // courseId从课程详情页面获取
-            let para = {courseId: this.$route.query.courseId, team_id: this.addForm.team_id}
-            console.log(this.addForm.members)
-        },
-        addRow () {
-            let para = {id: '', studentname: ''}
-            this.editTeam.members.push(para)
-        },
-        handleTeam (index, row) {
-            this.editTeamVisible = true
-            this.editTeam = Object.assign({}, row)
-            this.editTeam.members=[{studentname: '刘洋'}]
-        },
-        handleDelTeam (index, row) {
-            this.editTeam.members.splice(index, 1)
-        }
+  data () {
+    return {
+      // 获取用户列表的参数对象
+      queryInfo: {
+        // 查询参数
+        query: '',
+        // 课程名
+        course_name: '',
+        // 当前的页码数
+        pagenum: 1,
+        // 每页显示多少条数据
+        pagesize: 5
+      },
+      // 课程
+      courseInfo: {
+        courseName: '癌细胞转移',
+        desc: '国家创新重点课程'
+      },
+      // 案例
+      caseList: [],
+      sels: [], // 列表选中列
+      // 总数
+      total: 0,
+      // 列表加载
+      listLoading: false,
+      teamListLoading: false,
+      // 团队
+      addTeamVisible: false,
+      addStudentVisible: false,
+      editTeamVisible: false,
+      addLoading: false,
+      editLoading: false,
+      teamList: [],
+      addForm: {team_id: '',
+        students: [{key: '1', label: 'a'},
+          {key: '2', label: 'b'},
+          {key: '3', label: 'c'}],
+        members: []
+      },
+      editTeam: {
+        team_id: '',
+        members: [],
+        newMembers: []
+      }
     }
+  },
+  created () {
+    this.getCourseDetail()
+  },
+  methods: {
+    async getCourseDetail () {
+      this.queryInfo.courseName = this.$store.state.courseName
+      this.listLoading = true
+      this.teamListLoading = true
+      getCourseDetailPage(this.queryInfo).then((res) => {
+        this.total = res.total
+        this.courseInfo = res
+        this.teamList = [{team_id: 12323, members: '成龙'}]
+        this.caseList = res.users
+        this.listLoading = false
+        this.teamListLoading = false
+      })
+    },
+    // 监听 pageSize 改变的事件
+    handleSizeChange (newSize) {
+      //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
+      this.queryInfo.pagesize = newSize
+      //  修改完以后，重新发起请求获取一次数据
+      this.getCourseDetail()
+    },
+    // 监听 页码值  改变的事件
+    handleCurrentChange (newPage) {
+      //   console.log(newPage)
+      //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
+      this.queryInfo.pagenum = newPage
+      //  修改完以后，重新发起请求获取一次数据
+      this.getCourseDetail()
+    },
+    // 监听 switch 开关状态的改变
+    async userStateChange (userInfo) {
+      console.log(userInfo)
+      const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
+      if (res.meta.status !== 200) {
+        // 更新失败，将状态返回初始状态
+        this.userInfo.mg_state = !this.userInfo.mg_state
+        this.$message.error('更新用户状态失败！')
+      }
+      this.$message.success('更新用户状态成功！')
+    },
+    // 监听添加用户对话框的关闭事件
+    addDialogClosed () {
+      this.$refs.addFormRef.resetFields()
+      this.$refs.editForm.resetFields()
+    },
+    // 点击按钮，添加新用户
+    addCase () {
+      this.$store.commit('setCourseName', this.courseInfo.courseName)
+      this.$router.push({ path: '/createCases', query: {} })
+    },
+    // 编辑
+    handleEdit: function (index, row) {
+      let para = Object.assign({}, row)
+      this.$store.commit('setCaseName', para.case_name)
+      this.$store.commit('setCourseName', this.courseInfo.courseName)
+      this.$router.push({ path: '/editCases', query: {} })
+    },
+    // 查看
+    caseView: function (index, row) {
+      let para = Object.assign({}, row)
+      this.$store.commit('setCaseName', para.caseName)
+      this.$router.push({ path: '/replyCase', query: {} })
+    },
+    fileView: function (index, row) {
+      let para = Object.assign({}, row)
+      this.$store.commit('setCaseName', para.caseName)
+      this.$router.push({ path: '/fileView', query: {} })
+    },
+    // 删除
+    handleDel: function (index, row) {
+      this.$confirm('确认删除该记录吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        let para = {id: row.id}
+        removeCase(para).then((res) => {
+          if (res.data.code == 200) {
+            this.listLoading = false
+            // NProgress.done();
+            this.$message({
+              message: res.data.msg,
+              type: 'success'
+            })
+            this.getCourseDetail()
+          }
+        })
+      }).catch(() => {
+
+      })
+    },
+    // 选择多行
+    selsChange: function (sels) {
+      this.sels = sels
+    },
+    // 批量删除
+    batchRemove: function () {
+      var ids = this.sels.map(item => item.id).toString()
+      this.$confirm('确认删除选中记录吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        let para = {ids: ids}
+        batchRemoveCase(para).then((res) => {
+          if (res.data.code == 200) {
+            this.listLoading = false
+            // NProgress.done();
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getCourseDetail()
+          }
+        })
+      }).catch(() => {
+
+      })
+    },
+    back () {
+      this.$router.go(-1)
+    },
+    // 团队
+    addTeam (index, row) {
+      // courseId从课程详情页面获取
+      let para = {courseId: this.$route.query.courseId, team_id: this.addForm.team_id}
+      console.log(this.addForm.members)
+    },
+    // 团队中添加学生
+    addStudent () {
+      // nerMember里存的是key值，需要调用接口将key值转换为姓名
+      for (let i = 0; i < this.editTeam.newMembers.length; i++) {
+        this.editTeam.members.push({studentname: this.editTeam.newMembers[i]})
+      }
+      this.editTeam.newMembers = []
+      this.addStudentVisible = false
+    },
+    addRow () {
+      this.addStudentVisible = true
+    },
+    editSubmit () {
+      this.editTeamVisible = false
+    },
+    handleTeam (index, row) {
+      this.editTeamVisible = true
+      this.editTeam = Object.assign({}, row)
+      this.editTeam.members = [{studentname: '刘洋'}]
+    },
+    handleDelTeam (index, row) {
+      this.editTeam.members.splice(index, 1)
+    }
+  }
 }
 </script>
 
@@ -420,5 +456,3 @@ export default {
 }
 
 </style>
-
-
