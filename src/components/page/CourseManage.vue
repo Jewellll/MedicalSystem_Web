@@ -70,14 +70,9 @@
             @close="addDialogClosed" >
             <!-- 内容的主体区域 -->
             <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="课程号" prop="case_id">
-                    <el-col :span="8">
-                        <el-input v-model="addForm.courseId" ></el-input>
-                    </el-col>
-                </el-form-item>
                 <el-form-item label="课程名">
                     <el-col :span="8">
-                        <el-input v-model="addForm.casename"></el-input>
+                        <el-input v-model="addForm.courseName"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="创建老师">
@@ -87,14 +82,14 @@
                 </el-form-item>
                 <el-form-item label="课程描述">
                     <el-col :span="14">
-                        <el-input v-model="addForm.desc" type="textarea" :rows="5"></el-input>
+                        <el-input v-model="addForm.courseDesc" type="textarea" :rows="5"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
             <!-- 底部区域 -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addFormVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="addUser">确 定</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="addCourse">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -107,7 +102,7 @@
             <!-- 内容的主体区域 -->
             <el-transfer
                 style="text-align: left; display: inline-block"
-                v-model="students"
+                v-model="newStudents.courseStudents"
                 filterable
                 :titles="['Source', 'Target']"
                 :format="{
@@ -130,7 +125,7 @@
             <!-- 内容的主体区域 -->
             <el-transfer
                 style="text-align: left; display: inline-block"
-                v-model="teachers"
+                v-model="newTeachers.courseTeachers"
                 filterable
                 :titles="['Source', 'Target']"
                 :format="{
@@ -149,10 +144,9 @@
 
 <script>
 import {
-    addTeacher,
-    batchRemoveTeacher,
-    editTeacher, getCaseListPage, getCourseListPage,
-    removeTeacher
+  addCourse, addCourseStudents, addCourseTeachers,
+  batchRemoveTeacher,
+  getCourseListPage, removeCourse
 } from '../../api/api'
 
 export default {
@@ -195,8 +189,16 @@ export default {
     }
     return {
       data: generateData(),
-      students: [],
-      teachers: [],
+      newStudents: {
+        courseId: '',
+        courseName: '',
+        courseStudents: []
+      },
+      newTeachers: {
+        courseId: '',
+        courseName: '',
+        courseTeachers: []
+      },
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
@@ -220,51 +222,29 @@ export default {
       addLoading: false,
       // 添加用户的表单数据
       addForm: {
-        courseId: '',
         courseName: '',
         createTeacher: '',
-        create_time: '',
-        desc: ''
+        courseDesc: ''
       },
       // 添加表单的验证规则对象
       addFormRules: {
-      },
-      // 编辑
-      editLoading: false,
-      editFormVisible: false,
-      editForm: {
-        case_id: '',
-        casename: '',
-        teacher_id: '',
-        create_time: '',
-        desc: ''
-      },
-      editFormRules: {
-        case_id: [
-          {required: true, message: '请输入案例号', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
-        ],
-        casename: [
-          {required: true, message: '请输入案例名', trigger: 'blur'},
-          {min: 9, max: 9, trigger: 'blur'}
-        ],
-        teacher_id: [
-          {required: true, message: '请输入创建老师', trigger: 'blur'},
-          {validator: checkEmail, trigger: 'blur'}
-        ]
+        courseName: [{required: true, message: '请输入课程名', trigger: 'blur'}],
+        createTeacher: [{required: true, message: '请输入创建老师', trigger: 'blur'}],
+        courseDesc: [{required: true, message: '请简要描述课程', trigger: 'blur'}]
       }
+      // 编辑
+
     }
   },
   created () {
-    this.getCaseList()
+    this.getCourseList()
   },
   methods: {
-    async getCaseList () {
-        var param = {pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize }
+    async getCourseList () {
+      var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
       this.listLoading = true
       getCourseListPage(param).then((res) => {
-          this.$message.success(res.msg)
-        console.log(res)
+        this.$message.success(res.msg)
         this.total = res.count
         this.caseList = res.data
         this.listLoading = false
@@ -276,7 +256,7 @@ export default {
       //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
       this.queryInfo.pagesize = newSize
       //  修改完以后，重新发起请求获取一次数据
-      this.getCaseList()
+      this.getCourseList()
     },
     // 监听 页码值  改变的事件
     handleCurrentChange (newPage) {
@@ -284,7 +264,7 @@ export default {
       //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
       this.queryInfo.pagenum = newPage
       //  修改完以后，重新发起请求获取一次数据
-      this.getUserList()
+      this.getCourseList()
     },
     // 监听 switch 开关状态的改变
     async userStateChange (userInfo) {
@@ -300,16 +280,16 @@ export default {
     // 监听添加用户对话框的关闭事件
     addDialogClosed () {
       this.$refs.addFormRef.resetFields()
-      this.$refs.editForm.resetFields()
+      // this.$refs.editForm.resetFields()
     },
-    // 点击按钮，添加新用户
-    addUser () {
+    // 点击按钮，添加课程
+    addCourse () {
       this.$refs.addFormRef.validate(async valid => {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.addLoading = true
             let para = Object.assign({}, this.addForm)
-            addTeacher(para).then((res) => {
+            addCourse(para).then((res) => {
               // eslint-disable-next-line eqeqeq
               if (res.data.code == 200) {
                 this.addLoading = false
@@ -318,7 +298,7 @@ export default {
                   type: 'success'
                 })
                 this.addFormVisible = false
-                this.getUserList()
+                this.getCourseList()
               }
             })
           })
@@ -331,11 +311,18 @@ export default {
     },
     // 点击按钮添加学生
     handleAddStudent () {
-
+      let para = Object.assign({}, this.newStudents)
+      addCourseStudents(para).then((res) => {
+        this.getCourseList()
+      })
+      this.addTeacherVisible = false
     },
     // 点击按钮添加老师
     handleAddTeacher () {
-      this.courseList[0].teacherMembers += ' ' + this.teachers[0]
+      let para = Object.assign({}, this.newTeachers)
+      addCourseTeachers(para).then((res) => {
+        this.getCourseList()
+      })
       this.addTeacherVisible = false
     },
     addTeachers (index, row) {
@@ -349,20 +336,20 @@ export default {
     },
     // 删除
     handleDel: function (index, row) {
-      this.$confirm('确认删除该记录吗?', '提示', {
+      this.$confirm('确认删除该课程吗?', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {id: row.id}
-        removeTeacher(para).then((res) => {
-          if (res.data.code == 200) {
+        let para = {courseId: row.courseId}
+        removeCourse(para).then((res) => {
+          if (res.data.code == '200') {
             this.listLoading = false
             // NProgress.done();
             this.$message({
-              message: res.data.msg,
+              message: res.msg,
               type: 'success'
             })
-            this.getUserList()
+            this.getCourseList()
           }
         })
       }).catch(() => {
