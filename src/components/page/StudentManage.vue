@@ -119,7 +119,7 @@ export default {
       filters: {
         name: '' // 需要查询的名字
       },
-      students: [],
+      students: [{student_id:111}],
       total: 0,
       page: 1,
       listLoading: false,

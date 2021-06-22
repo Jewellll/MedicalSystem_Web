@@ -16,7 +16,12 @@ export const requireRegister = params => { return axios.post(`${base}/register`,
 
 //用户管理
 
-export const getUserListPage = params => { return http.get(`${base}/user/listpage`, { params: params }); };
+
+export const getUserListPage = params => { return http.get(`${base}/user/selectAllUser`,params).then(res => res.data); };
+
+export const getAllUserPage = params => { return http.get(`${base}/user/findAllUser`).then(res => res.data); };
+
+export const getUserListByRealName = params => { return http.get(`${base}/user/getUserByRealName/`+ params.realName).then(res => res.data); };
 
 export const removeUser = params => { return http.post(`${base}/user/remove`, params ).then(res => res.data); };
 

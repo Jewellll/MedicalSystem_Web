@@ -246,7 +246,7 @@ export default {
       getCourseListPage(param).then((res) => {
         this.$message.success(res.msg)
         this.total = res.count
-        this.caseList = res.data
+        this.courseList = res.data
         this.listLoading = false
       })
     },
@@ -328,11 +328,10 @@ export default {
     addTeachers (index, row) {
       this.addTeacherVisible = true
     },
-    // 显示编辑
+    // 课程详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCourseName', para.courseName)
-      this.$router.push({ path: '/courseDetail', query: {} })
+      this.$router.push({ path: '/courseDetail', params:para.courseId })
     },
     // 删除
     handleDel: function (index, row) {

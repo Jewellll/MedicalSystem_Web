@@ -224,6 +224,7 @@ export default {
       sels: [], // 列表选中列
       // 总数
       total: 0,
+        courseId: '',
       // 列表加载
       listLoading: false,
       teamListLoading: false,
@@ -248,11 +249,14 @@ export default {
     }
   },
   created () {
+      this.getParams()
     this.getCourseDetail()
   },
   methods: {
+      getParams(){
+          this.courseId=this.$route.params.courseId
+      },
     async getCourseDetail () {
-      this.queryInfo.courseName = this.$store.state.courseName
       this.listLoading = true
       this.teamListLoading = true
       getCourseDetailPage(this.queryInfo).then((res) => {
@@ -310,8 +314,7 @@ export default {
     // 查看
     caseView: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.caseName)
-      this.$router.push({ path: '/replyCase', query: {} })
+        this.$router.push({path:'/replyCase',params:{caseId:para.caseId}})
     },
     fileView: function (index, row) {
       let para = Object.assign({}, row)
