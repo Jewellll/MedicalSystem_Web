@@ -27,7 +27,7 @@
         </el-table>
     </div>
     <div class="allCourses">
-        <h2 style="position: relative;text-align: center;">所有课程</h2>
+        <h2 style="position: relative;text-align: center;">未加入课程</h2>
         <el-table
             :data="allCourses"
             style="width: 90%;margin-left: 5%"
@@ -58,7 +58,18 @@ export default {
       allCourses: []
     }
   },
+  created () {
+    this.addedCourses()
+    this.otherCourses()
+  },
   methods: {
+    addedCourses () {
+      let para = {studentId: JSON.parse(localStorage.getItem('user')).userId}
+
+    },
+    otherCourses () {
+
+    },
     handleDetail (index, row) {
       let para = Object.assign({}, row)
       this.$store.commit('setCourseName', para.courseName)
