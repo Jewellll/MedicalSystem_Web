@@ -32,10 +32,10 @@
             </div>
             <div class="content"><p>{{ item.content }}</p></div>
             <div class="control">
-        <span class="like" :class="{active: item.isLike}" @click="likeClick(item)">
-          <i class="iconfont icon-like"></i>
-          <span class="like-num">{{ item.likeNum > 0 ? item.likeNum + '人赞' : '赞' }}</span>
-        </span>
+<!--        <span class="like" :class="{active: item.isLike}" @click="likeClick(item)">-->
+<!--          <i class="iconfont icon-like"></i>-->
+<!--          <span class="like-num">{{ item.likeNum > 0 ? item.likeNum + '人赞' : '赞' }}</span>-->
+<!--        </span>-->
                 <span class="comment-reply" @click="showCommentInput(item)">
           <i class="iconfont icon-comment"></i>
           <span>回复</span>
@@ -71,7 +71,7 @@
                         </el-input>
                         <div class="btn-control">
                             <span class="cancel" @click="cancel">取消</span>
-                            <el-button class="btn" type="success" round @click="commitComment">确定</el-button>
+                            <el-button class="btn" type="success" round @click="commitComment(item)">确定</el-button>
                         </div>
                     </div>
                 </transition>
@@ -82,8 +82,8 @@
 
 <script>
 
-import {comments} from '../../mock/mockdata.js'
-import {getTeacherListPage, requestComment} from '../../api/api'
+// import {comments} from '../../mock/mockdata.js'
+import {getCommentList, getCourseDetailPage, getTeacherListPage, requestComment} from '../../api/api'
 
 export default {
     props: {
@@ -101,23 +101,38 @@ export default {
         }
     },
     computed: {},
+    created () {
+        this.getComments()
+    },
     methods: {
-        /**
-         * 点赞
-         */
-        likeClick (item) {
-            if (item.isLike === null) {
-                // Vue.$set(item, "isLike", true);
-                item.likeNum++
-            } else {
-                if (item.isLike) {
-                    item.likeNum--
-                } else {
-                    item.likeNum++
-                }
-                item.isLike = !item.isLike
-            }
+        async getComments () {
+            // // var param=this.$store.state.caseId
+            // var param= {caseId:'1'}
+            // getCommentList(param).then((res) => {
+            //     this.comments = res.data
+            //     this.$message.success(res.msg)
+            // })
+
+            getCourseDetailPage(param).then((res) => {
+                this.$message.success(res.msg)
+            })
         },
+        // /**
+        //  * 点赞
+        //  */
+        // likeClick (item) {
+        //     if (item.isLike === null) {
+        //         // Vue.$set(item, "isLike", true);
+        //         item.likeNum++
+        //     } else {
+        //         if (item.isLike) {
+        //             item.likeNum--
+        //         } else {
+        //             item.likeNum++
+        //         }
+        //         item.isLike = !item.isLike
+        //     }
+        // },
 
         /**
          * 点击取消按钮
@@ -129,17 +144,22 @@ export default {
         /**
          * 提交评论
          */
-        commitComment () {
+        commitComment (item) {
             console.log(this.inputComment)
             const param = {
                 caseId: 2,
-                parentId: 1,
-                content: 'asdsadsa',
-                fromId: 2,
-                fromName: 'yuhang'
+                parentId: item.parentId,
+                content: this.inputComment,
+                fromId: item.fromId,
+                fromName: item.fromName
             }
             requestComment(param).then((res) => {
-                console.log('成功')
+                console.log(res)
+                if(res.code==='200'){
+                    this.$message.success(res.msg)
+                    this.getComments()
+                }
+
             })
         },
 
@@ -156,9 +176,6 @@ export default {
             }
             this.showItemId = item.id
         }
-    },
-    created () {
-        console.log(this.comments)
     }
 }
 </script>

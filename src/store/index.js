@@ -11,8 +11,8 @@ export default new Vuex.Store({
          dicCode:'',
          isCollapse: true,
         // 课程中添加/编辑案例
-         caseName:'',
-        courseName:''
+         caseId:'',
+        courseId:''
 
 
     },
@@ -32,11 +32,11 @@ export default new Vuex.Store({
         setCollapse(state,data){
             state.isCollapse=data
         },
-        setCaseName(state,data){
-            state.caseName=data
+        setCaseId(state,data){
+            state.caseId=data
         },
-        setCourseName(state,data){
-            state.courseName=data
+        setCourseId(state,data){
+            state.courseId=data
         }
     },
     //异步操作
