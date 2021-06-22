@@ -58,9 +58,15 @@ export const addCourseTeachers = params => { return http.post(`${base}/course/in
 
 export const addCourseStudents = params => { return http.post(`${base}/course/insertCourseStudent`, params).then(res => res.data) }
 
+<<<<<<< HEAD
 export const findStudents = params => { return http.get(`${base}/user/findAllStudent`).then(res => res.data) }
 
 export const findTeachers = params => { return http.get(`${base}/user/findAllTeacher`).then(res => res.data) }
+=======
+export const findStudents = params => { return http.get(`${base}/user/findAllStudent`).then(res => res.data); };
+
+export const findTeachers = params => { return http.get(`${base}/user/findAllTeacher`).then(res => res.data); };
+>>>>>>> parent of 5e49a5b (Merge branch 'Jewel' into main)
 
 
 export const getCourseDetailPage = params => {}
