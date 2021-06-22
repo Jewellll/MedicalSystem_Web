@@ -149,10 +149,10 @@
 
 <script>
 import {
-  addTeacher,
-  batchRemoveTeacher,
-  editTeacher, getCaseListPage,
-  removeTeacher
+    addTeacher,
+    batchRemoveTeacher,
+    editTeacher, getCaseListPage, getCourseListPage,
+    removeTeacher
 } from '../../api/api'
 
 export default {
@@ -207,7 +207,7 @@ export default {
         pagesize: 5
       },
       // 获取的课程列表
-      courseList: [{courseName: 's', createTeacher: 'a', teacherMembers: 'aa'}],
+      courseList: [],
       sels: [], // 列表选中列
       // 总数
       total: 0,
@@ -260,11 +260,13 @@ export default {
   },
   methods: {
     async getCaseList () {
+        var param = {pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize }
       this.listLoading = true
-      getCaseListPage(this.queryInfo).then((res) => {
+      getCourseListPage(param).then((res) => {
+          this.$message.success(res.msg)
         console.log(res)
-        this.total = res.total
-        this.caseList = res.users
+        this.total = res.count
+        this.caseList = res.data
         this.listLoading = false
       })
     },

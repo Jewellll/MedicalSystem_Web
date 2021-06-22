@@ -1,23 +1,23 @@
 <template>
 <div class="manage-container">
     <div class="container">
-        <div class="title">
-            <h1>欢迎来到到云</h1>
-        </div>
+<!--        <div class="title">-->
+<!--            <h1>欢迎来到到云</h1>-->
+<!--        </div>-->
     <div class="info">
 <!--        <el-carousel :interval="5000" arrow="always" class="car">-->
 <!--            <el-carousel-item v-for="(img,index) in imgList" :key="index">-->
 <!--                <img v-bind:src="img.url">-->
 <!--            </el-carousel-item>-->
 <!--        </el-carousel>-->
-            <el-table :data="tableData" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"
-                      :row-style="{height:'25px'}" :cell-style="{padding:'1px'}"
-                      highlight-current-row class="table" >
-                <el-table-column prop="name" label="姓名" >
-                </el-table-column>
-                <el-table-column prop="card" label="学号">
-                </el-table-column>
-            </el-table>
+<!--            <el-table :data="tableData" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"-->
+<!--                      :row-style="{height:'25px'}" :cell-style="{padding:'1px'}"-->
+<!--                      highlight-current-row class="table" >-->
+<!--                <el-table-column prop="name" label="姓名" >-->
+<!--                </el-table-column>-->
+<!--                <el-table-column prop="card" label="学号">-->
+<!--                </el-table-column>-->
+<!--            </el-table>-->
 
     </div>
     </div>

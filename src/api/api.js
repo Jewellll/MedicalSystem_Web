@@ -49,7 +49,7 @@ export const removeStudent = params => { return http.get(`${base}/student/remove
 export const batchRemoveStudent = params => { return http.get(`${base}/student/batchremove`,  params).then(res => res.data); };
 
 //课程管理
-export const getCourseListPage = params => { return http.get(`${base}/course/listpage`,  params).then(res => res.data); };
+export const getCourseListPage = params => { return http.get(`${base}/course/findAllCourse/`+params.pageNum+'/'+params.pageSize).then(res => res.data); };
 
 export const editCourse = params => { return http.get(`${base}/course/edit`,  params).then(res => res.data); };
 
@@ -87,7 +87,7 @@ export const getCaseListPage = params => { return http.get(`${base}/case/listpag
 
 //课程详情
 
-export const getCourseDetailPage = params => { return http.get(`${base}/case/listpage`,  params).then(res => res.data); };
+
 
 //删除课程
 
@@ -95,6 +95,8 @@ export const removeCase = params => { return http.get(`${base}/case/remove`,  pa
 
 export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`,  params).then(res => res.data); };
 // 评论
+
+export const getCommentList = params => { return http.get(`${base}/comment/getComments/`+params.caseId).then(res => res.data); };
 
 export const requestComment = params => { return http.post(`${base}/comment/addComment`, params).then(res => res.data); };
 
