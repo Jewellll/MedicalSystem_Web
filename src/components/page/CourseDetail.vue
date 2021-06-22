@@ -54,6 +54,7 @@
                         <!-- 修改按钮 -->
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
                         <el-button type="primary"  size="mini" @click="caseView(scope.$index, scope.row)">案例详情</el-button>
+                        <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除案例</el-button>
                     </template>
@@ -119,13 +120,11 @@
                             style="text-align: left; display: inline-block"
                             v-model="addForm.members"
                             filterable
-                            :render-content="renderFunc"
                             :titles="['Source', 'Target']"
                             :format="{
         noChecked: '${total}',
         hasChecked: '${checked}/${total}'
       }"
-                            @change="handleChange"
                             :data="addForm.students">
                         </el-transfer>
                     </el-form-item>
@@ -163,7 +162,6 @@
             </el-dialog>
             <div class="submit">
                 <el-button type="primary" @click="back">返  回</el-button>
-                <!--                <el-button type="primary" :loading="addLoading" @click.native="addUser">提  交</el-button>-->
             </div>
         </div>
     </div>
@@ -220,7 +218,7 @@ export default {
             },
             editTeam: {
                 team_id: '',
-                members: [{id: '', studentname: ''}]
+                members: [{id: '', studentname: 'asd'}]
             }
         }
     },
@@ -288,7 +286,12 @@ export default {
         caseView: function (index, row) {
             let para = Object.assign({}, row)
             this.$store.commit('setCaseName', para.caseName);
-            this.$router.push({ path: "/caseDetail", query: {} });
+            this.$router.push({ path: "/replyCase", query: {} });
+        },
+       fileView: function (index, row) {
+            let para = Object.assign({}, row)
+            this.$store.commit('setCaseName', para.caseName);
+            this.$router.push({ path: "/fileView", query: {} });
         },
         //删除
         handleDel: function (index, row) {
@@ -355,6 +358,7 @@ export default {
         handleTeam (index, row) {
             this.editTeamVisible = true
             this.editTeam = Object.assign({}, row)
+            this.editTeam.members=[{studentname: '刘洋'}]
         },
         handleDelTeam (index, row) {
             this.editTeam.members.splice(index, 1)

@@ -259,11 +259,6 @@ export default {
     this.getCaseList()
   },
   methods: {
-    // 性别显示转换
-    formatSex: function (row, column) {
-      // eslint-disable-next-line eqeqeq
-      return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
-    },
     async getCaseList () {
       this.listLoading = true
       getCaseListPage(this.queryInfo).then((res) => {

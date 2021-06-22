@@ -170,7 +170,7 @@ export default {
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
       this.$store.commit('setCaseName', para.caseName)
-      this.$router.push('/replyCase')
+      this.$router.push('/caseDetail')
     },
     // 删除
     handleDel: function (index, row) {

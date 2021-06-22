@@ -25,20 +25,21 @@
             </div>
             <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" @selection-change="selsChange"
                       :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
-                <el-table-column type="selection" width="55">
+                <el-table-column type="selection" width="40px">
                 </el-table-column>
                 <el-table-column type="index"></el-table-column>
-                <el-table-column prop="caseId" label="案例号" width="200px"></el-table-column>
-                <el-table-column prop="caseName" label="案例名"></el-table-column>
-                <el-table-column prop="courseName" label="课程名"></el-table-column>
-                <el-table-column prop="teacherId" label="创建老师"></el-table-column>
-                <el-table-column prop="createTime" label="创建时间"></el-table-column>
-                <el-table-column prop="desc" label="案例是否发布" width="60px"></el-table-column>
+                <el-table-column prop="caseId" label="案例号" width="100px"></el-table-column>
+                <el-table-column prop="caseName" label="案例名" width="120px"></el-table-column>
+                <el-table-column prop="courseName" label="课程名" width="120px"></el-table-column>
+                <el-table-column prop="teacherId" label="创建老师" width="200px"></el-table-column>
+                <el-table-column prop="createTime" label="创建时间"width="170px"></el-table-column>
+                <el-table-column prop="desc" label="案例是否发布" width="50px"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
                         <el-button type="primary"  size="mini" @click="caseDetail(scope.$index, scope.row)">案例详情</el-button>
+                        <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -166,10 +167,6 @@ export default {
     this.getCaseList()
   },
   methods: {
-    // 性别显示转换
-    formatSex: function (row, column) {
-      return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
-    },
     async getCaseList () {
       this.listLoading = true
       getCaseListPage(this.queryInfo).then((res) => {
@@ -247,7 +244,12 @@ export default {
       caseDetail: function (index, row) {
           let para = Object.assign({}, row)
           this.$store.commit('setCaseName', para.caseName)
-          this.$router.push('/caseDetail')
+          this.$router.push('/replyCase')
+      },
+      fileView: function (index, row) {
+          let para = Object.assign({}, row)
+          this.$store.commit('setCaseName', para.caseName)
+          this.$router.push('/fileView')
       },
     // 删除
     handleDel: function (index, row) {

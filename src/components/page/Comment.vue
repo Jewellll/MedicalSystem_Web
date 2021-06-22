@@ -8,13 +8,13 @@
                     <img class="avatar" src="../../assets/img/img4.jpg" width="36" height="36" alt=""/>
                 </div>
                 <div class="input">
-                <el-input class="gray-bg-input"
-                          v-model="userComment"
-                          type="textarea"
-                          :rows="1"
-                          autofocus
-                          placeholder="写下你的评论">
-                </el-input>
+                    <el-input class="gray-bg-input"
+                              v-model="userComment"
+                              type="textarea"
+                              :rows="1"
+                              autofocus
+                              placeholder="写下你的评论">
+                    </el-input>
                 </div>
             </div>
             <div class="btn-control">
@@ -97,7 +97,7 @@ export default {
         return {
             inputComment: '',
             showItemId: '',
-            userComment:''
+            userComment: ''
         }
     },
     computed: {},
@@ -139,7 +139,7 @@ export default {
                 fromName: 'yuhang'
             }
             requestComment(param).then((res) => {
-               console.log('成功')
+                console.log('成功')
             })
         },
 
@@ -166,28 +166,36 @@ export default {
 <style scoped lang="scss">
 
 @import "src/css/comment";
-.user{
+
+.user {
     width: 100%;
-    .input-user{
+
+    .input-user {
         width: 100%;
-        .avatar-user{
+
+        .avatar-user {
             width: 6%;
             display: inline-block;
             vertical-align: -0.2em;
-            .avatar{
+
+            .avatar {
                 border-radius: 50%;
             }
         }
-        .input{
-            width: 91%;display: inline-block
+
+        .input {
+            width: 91%;
+            display: inline-block
         }
     }
-    .btn-control{
+
+    .btn-control {
         text-align: right;
         margin-top: 0.6em;
         margin-right: 0.5em;
     }
 }
+
 .container {
     width: 100%;
     padding: 0 10px;

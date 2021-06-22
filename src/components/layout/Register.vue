@@ -180,10 +180,10 @@ export default {
                     const regParams = this.regForm
                      requireRegister(regParams).then(res => {
                         let {msg, code,} = res
-                        if (code !== 200) {
-                            this.$message.error("注册失败");
-                        } else {
-                            this.$message('注册成功')
+                        if (code !== '101') {
+                            this.$message.error(msg);
+                        } else if(code === '101'){
+                            this.$message(msg)
                             var path = this.$route.query.redirect
                             this.$router.push( "/login");
                         }

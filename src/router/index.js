@@ -25,6 +25,7 @@ import studentHome from '../components/page/studentHome'
 import CourseDetail from '../components/page/CourseDetail'
 import EditCases from '../components/page/EditCases'
 import StudentCourseDetail from "../components/page/StudentCourseDetail";
+import FileView from '../components/page/FileView'
 
 Vue.use(Router)
 
@@ -127,6 +128,15 @@ export default new Router({
             requireAuth: true
           }
         },
+          {
+              path: '/fileView',
+              name: 'fileView',
+              component: FileView,
+              meta: {
+                  title: '查看提交文件',
+                  requireAuth: true
+              }
+          },
         {
           path: '/userManage',
           name: 'UserManage',
