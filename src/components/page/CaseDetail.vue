@@ -45,7 +45,7 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                <Comment :comments="commentData" :getComments="getComments"></Comment>
+                <Comment :comments="commentData"></Comment>
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
@@ -132,8 +132,8 @@
 </template>
 
 <script>
-import {getCommentList, getTeacherListPage} from '../../api/api'
-// import {comments} from '../../mock/mockdata'
+import {getTeacherListPage} from '../../api/api'
+import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
 export default {
     components: {
@@ -165,7 +165,6 @@ export default {
                 require('../../assets/img/CaseImg/Case02-9.png'),
                 require('../../assets/img/CaseImg/Case02-10.png')
             ],
-            caseId: '',
             // 附件
             dialogImageUrl: '',
             dialogVisible: false,
@@ -182,31 +181,16 @@ export default {
                 }]
         }
     },
-    created () {
-        // this.getParams()
-        // this.commentData = comments.data
-        this.getComments()
-    },
+    // created () {
+    //     this.getUserList()
+    // },
     methods: {
-        getParams(){
-            this.caseId=this.$route.params.caseId
-        },
         async getUserList () {
             this.listLoading = true
             var param=this.$store.state.courseName
             getTeacherListPage(param).then((res) => {
                 this.userList = res.users
                 this.listLoading = false
-            })
-        },
-        //评论
-        async getComments () {
-            // var param= {caseId:this.caseId}
-            var param= {caseId:1}
-            getCommentList(param).then((res) => {
-                console.log(res)
-                this.commentData = res.data
-                this.$message.success(res.msg)
             })
         },
         // 附件
@@ -245,6 +229,9 @@ export default {
         beforeRemove (file, fileList) {
             return this.$confirm(`确定移除 ${file.name}？`)
         },
+    },
+    created () {
+        this.commentData = comments.data
     }
 }
 </script>

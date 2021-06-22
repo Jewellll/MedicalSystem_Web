@@ -81,11 +81,6 @@ export default {
                     title: '教师管理'
                 },
                 {
-                    icon: 'el-icon-collection',
-                    index: 'userManage',
-                    title: '用户管理'
-                },
-                {
                     icon: 'el-icon-notebook-1',
                     index: 'studentManage',
                     title: '学生管理'
