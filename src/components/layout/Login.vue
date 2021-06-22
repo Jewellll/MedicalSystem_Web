@@ -106,13 +106,14 @@ export default {
                     const loginParams = {userName: this.loginForm.username, passWord: this.loginForm.password}
                     requestLogin(loginParams).then(res => {
                         this.logining = false;
-                        let { msg, code, user,token } = res;
+                        let { msg, code,token } = res;
                         if (code == 300) {
                             this.$message.error(msg);
                         } else if(code=='200'){
-                            _this.$store.commit('login', user);
+                            _this.$store.commit('login', res.data);
                             _this.$store.commit('login2', token);
                             _this.$router.push({ path: '/home' });
+                            this.$message.success(msg);
                         }else if(code == 400){
                             this.$message.error(msg);
                         }

@@ -243,8 +243,7 @@ export default {
       // 查看
       caseDetail: function (index, row) {
           let para = Object.assign({}, row)
-          this.$store.commit('setCaseName', para.caseName)
-          this.$router.push('/replyCase')
+          this.$router.push({path:'/replyCase',params:{caseId:para.caseId}})
       },
       fileView: function (index, row) {
           let para = Object.assign({}, row)
