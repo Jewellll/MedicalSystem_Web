@@ -51,11 +51,17 @@ export const batchRemoveStudent = params => { return http.get(`${base}/student/b
 //课程管理
 export const getCourseListPage = params => { return http.get(`${base}/course/findAllCourse/`+params.pageNum+'/'+params.pageSize).then(res => res.data); };
 
-export const editCourse = params => { return http.get(`${base}/course/edit`,  params).then(res => res.data); };
+// export const editCourse = params => { return http.get(`${base}/course/edit`,  params).then(res => res.data); };
 
-export const addCourse = params => { return http.get(`${base}/course/add`,  params).then(res => res.data); };
+export const addCourse = params => { return http.get(`${base}/course/insertCourse`,  params).then(res => res.data); };
 
-export const removeCourse = params => { return http.get(`${base}/course/remove`,  params).then(res => res.data); };
+export const addCourseTeachers = params => { return http.get(`${base}/course/insertCourseTeacher`,  params).then(res => res.data); };
+
+export const addCourseStudents = params => { return http.get(`${base}/course/insertCourseStudent`,  params).then(res => res.data);};
+
+export const getCourseDetailPage = params => {return}
+
+export const removeCourse = params => { return http.get(`${base}/course/deleteCourse/`+ params.courseId).then(res => res.data); };
 
 export const batchRemoveCourse = params => { return http.get(`${base}/course/batchremove`,  params).then(res => res.data); };
 
