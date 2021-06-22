@@ -378,7 +378,7 @@ export default {
     },
     // 团队中添加学生
     addStudent () {
-      // nerMember里存的是key值，需要调用接口将key值转换为姓名
+      // newMember里存的是key值，需要调用接口将key值转换为姓名
       for (let i = 0; i < this.editTeam.newMembers.length; i++) {
         this.editTeam.members.push({studentname: this.editTeam.newMembers[i]})
       }
