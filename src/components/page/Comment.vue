@@ -1,7 +1,6 @@
 <!--评论模块-->
 <template>
     <div class="container">
-
         <div class="user">
             <div class="input-user">
                 <div class="avatar-user">
@@ -18,7 +17,7 @@
                 </div>
             </div>
             <div class="btn-control">
-                <el-button size="small" class="btn" type="primary" @click="commitComment">确定</el-button>
+                <el-button size="small" class="btn" type="primary" @click="userSubmit">确定</el-button>
             </div>
         </div>
 
@@ -32,10 +31,6 @@
             </div>
             <div class="content"><p>{{ item.content }}</p></div>
             <div class="control">
-<!--        <span class="like" :class="{active: item.isLike}" @click="likeClick(item)">-->
-<!--          <i class="iconfont icon-like"></i>-->
-<!--          <span class="like-num">{{ item.likeNum > 0 ? item.likeNum + '人赞' : '赞' }}</span>-->
-<!--        </span>-->
                 <span class="comment-reply" @click="showCommentInput(item)">
           <i class="iconfont icon-comment"></i>
           <span>回复</span>
@@ -45,7 +40,7 @@
                 <div class="item" v-for="reply in item.reply" :key="reply.id">
                     <div class="reply-content">
                         <span class="from-name">{{ reply.fromName }}</span><span>: </span>
-                        <span class="to-name">@{{ reply.toName }}</span>
+                        <span class="to-name">{{ reply.toName }}</span>
                         <span>{{ reply.content }}</span>
                     </div>
                     <div class="reply-bottom">
@@ -56,7 +51,7 @@
             </span>
                     </div>
                 </div>
-                <div class="write-reply" v-if="item.reply.length > 0" @click="showCommentInput(item)">
+                <div class="write-reply" v-if="item.reply!=null&&item.reply.length > 0" @click="showCommentInput(item)">
                     <i class="el-icon-edit"></i>
                     <span class="add-comment">添加新评论</span>
                 </div>
@@ -82,15 +77,21 @@
 
 <script>
 
-// import {comments} from '../../mock/mockdata.js'
-import {getCommentList, getCourseDetailPage, getTeacherListPage, requestComment} from '../../api/api'
-
+import { requestComment} from '../../api/api'
 export default {
     props: {
         comments: {
             type: Array,
             required: true
-        }
+        },
+        getComments: {
+            type: Function,
+            default: null
+        },
+        // caseId:{
+        //     type:Number,
+        //     required: true
+        // }
     },
     components: {},
     data () {
@@ -102,62 +103,56 @@ export default {
     },
     computed: {},
     created () {
-        this.getComments()
     },
     methods: {
-        async getComments () {
-            // // var param=this.$store.state.caseId
-            // var param= {caseId:'1'}
-            // getCommentList(param).then((res) => {
-            //     this.comments = res.data
-            //     this.$message.success(res.msg)
-            // })
-
-            getCourseDetailPage(param).then((res) => {
-                this.$message.success(res.msg)
-            })
-        },
-        // /**
-        //  * 点赞
-        //  */
-        // likeClick (item) {
-        //     if (item.isLike === null) {
-        //         // Vue.$set(item, "isLike", true);
-        //         item.likeNum++
-        //     } else {
-        //         if (item.isLike) {
-        //             item.likeNum--
-        //         } else {
-        //             item.likeNum++
-        //         }
-        //         item.isLike = !item.isLike
-        //     }
-        // },
-
         /**
          * 点击取消按钮
          */
         cancel () {
             this.showItemId = ''
         },
-
-        /**
-         * 提交评论
-         */
-        commitComment (item) {
-            console.log(this.inputComment)
+        //新增评论
+        userSubmit (item) {
+            var user =JSON.parse(localStorage.getItem('user'))
             const param = {
-                caseId: 2,
-                parentId: item.parentId,
-                content: this.inputComment,
-                fromId: item.fromId,
-                fromName: item.fromName
+                caseId: 1,
+                // caseId: this.caseId,
+                content: this.userComment,
+                fromId: user.userId,
+                fromName: user.realName
             }
             requestComment(param).then((res) => {
                 console.log(res)
                 if(res.code==='200'){
                     this.$message.success(res.msg)
                     this.getComments()
+                }else if(res.code==='400'){
+                    this.$message.error(res.msg)
+                }
+
+            })
+        },
+        /**
+         * 评论别人
+         */
+        commitComment (item) {
+            var user =JSON.parse(localStorage.getItem('user'))
+            const param = {
+                caseId: 1,
+                // aseId: this.caseId,
+                parentId: item.id,
+                content: this.inputComment,
+                fromId: user.userId,
+                fromName: user.realName
+            }
+            requestComment(param).then((res) => {
+                console.log(res)
+                if(res.code==='200'){
+                    this.$message.success(res.msg)
+                    this.getComments()
+                    this.showItemId = ''
+                }else if(res.code==='400'){
+                    this.$message.error(res.msg)
                 }
 
             })

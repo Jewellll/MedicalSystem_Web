@@ -87,7 +87,7 @@
             <el-divider></el-divider>
             <div class="comment layout">
                 <div class="comment-box">
-                <Comment :comments="commentData"></Comment>
+                <Comment :comments="commentData" :getComments="getComments"></Comment>
                 </div>
             </div>
         </div>
@@ -105,8 +105,8 @@
 //     getTeacherListPage,
 //     removeTeacher
 // } from '../../api/api'
-import {getTeacherListPage} from '../../api/api'
-import {comments} from '../../mock/mockdata'
+import {getCommentList, getTeacherListPage} from '../../api/api'
+// import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
 
 export default {
@@ -148,6 +148,7 @@ export default {
             dialogVisible: false,
             disabled: false,
             commentData: [],
+            caseId: '',
             // 文件上传
             fileList: [{
                 name: 'food.jpeg',
@@ -159,10 +160,15 @@ export default {
                 }]
         }
     },
-    // created () {
-    //     this.getUserList()
-    // },
+    created () {
+        // this.getParams()
+        // this.commentData = comments.data
+        this.getComments()
+    },
     methods: {
+        getParams(){
+            this.caseId=this.route.params.caseId
+        },
         async getUserList () {
             this.listLoading = true
             // eslint-disable-next-line no-undef
@@ -171,6 +177,16 @@ export default {
                 this.total = res.data.total
                 this.userList = res.data.users
                 this.listLoading = false
+            })
+        },
+        //评论
+        async getComments () {
+            // var param=this.$store.state.caseId
+            var param= {caseId:1}
+            getCommentList(param).then((res) => {
+                console.log(res)
+                this.commentData = res.data
+                this.$message.success(res.msg)
             })
         },
         // 附件
@@ -217,9 +233,6 @@ export default {
         //         this.imgPreview.show = true
         //     }
         // }
-    },
-    created () {
-        this.commentData = comments.data
     }
 }
 </script>

@@ -4,7 +4,7 @@
 <!--            医疗</div>-->
         <div class="user">
             <div class="username">
-                你好，{{ userInfo.name }}！
+                你好，{{ userInfo.realName }}！
             </div>
             <div class="user-img">
                 <img :src="this.userInfo.avatar"/>
