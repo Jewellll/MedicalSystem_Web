@@ -33,9 +33,9 @@
                 <el-table-column type="index"></el-table-column>
                 <el-table-column prop="courseId" label="课程号" width="100px"></el-table-column>
                 <el-table-column prop="courseName" label="课程名" width="150px"></el-table-column>
-                <el-table-column prop="createTeacher" label="创建老师" width="100px"></el-table-column>
-                <el-table-column prop="teacherMembers" label="教学老师" width="150px"></el-table-column>
-                <el-table-column prop="createtime" label="创建时间" width="200px"></el-table-column>
+                <el-table-column prop="creatTeacher" label="创建老师" width="100px"></el-table-column>
+                <el-table-column prop="teacherNumbers" label="教学老师" width="150px"></el-table-column>
+                <el-table-column prop="creatTime" label="创建时间" width="200px"></el-table-column>
                 <el-table-column prop="desc" label="课程状态" width="100px"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
@@ -67,17 +67,12 @@
             title="添加课程"
             :visible.sync="addFormVisible"
             width="40%"
-            @close="addDialogClosed" >
+            >
             <!-- 内容的主体区域 -->
             <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
                 <el-form-item label="课程名">
                     <el-col :span="8">
                         <el-input v-model="addForm.courseName"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="创建老师">
-                    <el-col :span="14">
-                        <el-input v-model="addForm.createTeacher"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="课程描述">
@@ -89,7 +84,7 @@
             <!-- 底部区域 -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addFormVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="addCourse">确 定</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="newCourse">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -98,7 +93,7 @@
             title="添加学生"
             :visible.sync="addStudentVisible"
             width="100%"
-            @close="addDialogClosed" >
+             >
             <!-- 内容的主体区域 -->
             <el-transfer
                 style="text-align: left; display: inline-block"
@@ -109,7 +104,7 @@
         noChecked: '${total}',
         hasChecked: '${checked}/${total}'
       }"
-                :data="data">
+                :data="originStudents">
             </el-transfer>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addStudentVisible = false">取 消</el-button>
@@ -121,7 +116,7 @@
             title="添加老师"
             :visible.sync="addTeacherVisible"
             width="100%"
-            @close="addDialogClosed" >
+             >
             <!-- 内容的主体区域 -->
             <el-transfer
                 style="text-align: left; display: inline-block"
@@ -132,11 +127,11 @@
         noChecked: '${total}',
         hasChecked: '${checked}/${total}'
       }"
-                :data="data">
+                :data="originTeachers">
             </el-transfer>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addTeacherVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="handleAddTeacher()">确 定</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="handleAddTeacher">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -145,7 +140,7 @@
 <script>
 import {
   addCourse, addCourseStudents, addCourseTeachers,
-  batchRemoveTeacher,
+  batchRemoveTeacher, findStudents, findTeachers,
   getCourseListPage, removeCourse
 } from '../../api/api'
 
@@ -174,21 +169,10 @@ export default {
       // 验证不通过，不合法
       callback(new Error('请输入合法的手机号'))
     }
-    // data初始化
-    const generateData = _ => {
-      const data = []
-      for (let i = 1; i <= 15; i++) {
-        // 右边穿梭框传过去的是key值
-        data.push({
-          key: i + '123',
-          label: `学生${i} `,
-          disabled: i % 4 === 0
-        })
-      }
-      return data
-    }
+
     return {
-      data: generateData(),
+      originStudents: [],
+      originTeachers: [],
       newStudents: {
         courseId: '',
         courseName: '',
@@ -223,7 +207,6 @@ export default {
       // 添加用户的表单数据
       addForm: {
         courseName: '',
-        createTeacher: '',
         courseDesc: ''
       },
       // 添加表单的验证规则对象
@@ -246,7 +229,7 @@ export default {
       getCourseListPage(param).then((res) => {
         this.$message.success(res.msg)
         this.total = res.count
-        this.caseList = res.data
+        this.courseList = res.data
         this.listLoading = false
       })
     },
@@ -277,21 +260,19 @@ export default {
       }
       this.$message.success('更新用户状态成功！')
     },
-    // 监听添加用户对话框的关闭事件
-    addDialogClosed () {
-      this.$refs.addFormRef.resetFields()
-      // this.$refs.editForm.resetFields()
-    },
+
     // 点击按钮，添加课程
-    addCourse () {
+    newCourse () {
       this.$refs.addFormRef.validate(async valid => {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.addLoading = true
             let para = Object.assign({}, this.addForm)
+            para.teacherId = JSON.parse(localStorage.getItem('user')).userId
+            console.log(para)
             addCourse(para).then((res) => {
               // eslint-disable-next-line eqeqeq
-              if (res.data.code == 200) {
+              if (res.code == 200) {
                 this.addLoading = false
                 this.$message({
                   message: '新增成功',
@@ -307,27 +288,67 @@ export default {
     },
     // 添加学生
     addStudent (index, row) {
+      findStudents().then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          this.originStudents.push({
+            key: res.data[i].userId,
+            label: res.data[i].userName
+          })
+        }
+        // console.log(this.originStudents)
+      })
       this.addStudentVisible = true
     },
     // 点击按钮添加学生
     handleAddStudent () {
-      let para = Object.assign({}, this.newStudents)
+      let para = {courseId: this.newStudents.courseId, courseName: this.newStudents.courseName, courseStudents: []}
+      for (let i = 0; i < this.newStudents.courseStudents.length; i++) {
+        para.courseStudents.push({
+          studentId: this.newStudents.courseStudents[i]
+        })
+      }
+      console.log(para.courseStudents)
+      this.addLoading = true
       addCourseStudents(para).then((res) => {
-        this.getCourseList()
+        if (res.code == '200') {
+          this.addLoading = false
+          this.originStudents = []
+          this.getCourseList()
+        }
       })
-      this.addTeacherVisible = false
+      this.addStudentVisible = false
+    },
+    addTeachers (index, row) {
+      findTeachers().then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          this.originTeachers.push({
+            key: res.data[i].userId,
+            label: res.data[i].userName
+          })
+        }
+      })
+      this.addTeacherVisible = true
     },
     // 点击按钮添加老师
     handleAddTeacher () {
-      let para = Object.assign({}, this.newTeachers)
+      let para = {courseId: this.newTeachers.courseId, courseName: this.newTeachers.courseName, courseTeachers: []}
+      for (let i = 0; i < this.newTeachers.courseTeachers.length; i++) {
+        para.courseTeachers.push({
+          teacherId: this.newTeachers.courseTeachers[i]
+        })
+      }
+      console.log(para.courseTeachers)
+      this.addLoading = true
       addCourseTeachers(para).then((res) => {
-        this.getCourseList()
+        if (res.code == '200') {
+          this.addLoading = false
+          this.originTeachers = []
+          this.getCourseList()
+        }
       })
       this.addTeacherVisible = false
     },
-    addTeachers (index, row) {
-      this.addTeacherVisible = true
-    },
+
     // 显示编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
@@ -341,8 +362,9 @@ export default {
       }).then(() => {
         this.listLoading = true
         let para = {courseId: row.courseId}
+        console.log(row.courseId)
         removeCourse(para).then((res) => {
-          if (res.data.code == '200') {
+          if (res.code == '200') {
             this.listLoading = false
             // NProgress.done();
             this.$message({
