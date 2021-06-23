@@ -15,7 +15,7 @@
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserByRealName()"></el-button>
+                            <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -40,9 +40,13 @@
                 </el-table-column>
                 <el-table-column prop="phone" label="手机号">
                 </el-table-column>
+                <el-table-column prop="email" label="邮箱">
+                </el-table-column>
                 <el-table-column prop="department" label="科室">
                 </el-table-column>
                 <el-table-column prop="title" label="职称" >
+                </el-table-column>
+                <el-table-column prop="passWord" label="密码" >
                 </el-table-column>
                 <el-table-column prop="roleId" label="角色" :formatter="formatRole">
                 </el-table-column>
@@ -77,33 +81,61 @@
             @close="addDialogClosed" >
             <!-- 内容的主体区域 -->
             <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="用户名" prop="username">
+                <el-form-item label="用户名" prop="userName">
                     <el-col :span="8">
-                        <el-input v-model="addForm.name" ></el-input>
+                        <el-input v-model="addForm.userName" ></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="角色" prop="loginType">
+                <el-form-item label="姓名" prop="realName">
                     <el-col :span="8">
-                        <el-input v-model="addForm.loginType"></el-input>
+                        <el-input v-model="addForm.realName"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="性别">
-                    <el-col :span="14">
-                        <el-radio-group v-model="addForm.sex">
+                <el-form-item label="性别" prop="sex">
+                    <el-col :span="8">
+                        <el-radio-group v-model="addForm.sex" >
                             <el-radio class="radio" label="1">男</el-radio>
                             <el-radio class="radio" label="2">女</el-radio>
-                            <el-radio class="radio" label="0">未知</el-radio>
                         </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                    <el-col :span="14">
+                        <el-input v-model="addForm.phone"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-col :span="14">
-                        <el-input v-model="addForm.email"></el-input>
+                    <el-input type="text" v-model="addForm.email" placeholder="请输入邮箱"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="手机号" prop="telphone">
+                <el-form-item label="科室" prop="department">
+                    <el-col :span="8">
+                    <el-select v-model="addForm.department" placeholder="请选择科室">
+                        <el-option
+                            v-for="item in department"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="职称" prop="title">
+                    <el-col :span="8">
+                        <el-select v-model="addForm.title" placeholder="请选择职称">
+                            <el-option
+                                v-for="item in title"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="密码" prop="passWord">
                     <el-col :span="14">
-                        <el-input v-model="addForm.telphone"></el-input>
+                        <el-input v-model="addForm.passWord"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -117,33 +149,61 @@
         <!--编辑界面-->
         <el-dialog title="编辑"  width="40%" :visible.sync="editFormVisible" :close-on-click-modal="false">
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="用户名" prop="username">
+                <el-form-item label="用户名" prop="userName">
                     <el-col :span="8">
-                        <el-input v-model="editForm.username" auto-complete="off"></el-input>
+                        <el-input v-model="editForm.userName" ></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="角色" prop="loginType">
+                <el-form-item label="姓名" prop="realName">
                     <el-col :span="8">
-                        <el-input v-model="editForm.loginType"></el-input>
+                        <el-input v-model="editForm.realName"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="手机号" prop="telphone">
-                    <el-col :span="14">
-                        <el-input v-model="editForm.telphone" auto-complete="off"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="性别">
-                    <el-col :span="14">
+                <el-form-item label="性别" prop="sex">
+                    <el-col :span="8">
                         <el-radio-group v-model="editForm.sex">
-                            <el-radio class="radio" :label="1">男</el-radio>
-                            <el-radio class="radio" :label="2">女</el-radio>
-                            <el-radio class="radio" :label="0">未知</el-radio>
+                            <el-radio class="radio" label="1">男</el-radio>
+                            <el-radio class="radio" label="2">女</el-radio>
                         </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                    <el-col :span="14">
+                        <el-input v-model="editForm.phone"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-col :span="14">
-                        <el-input v-model="editForm.email"></el-input>
+                        <el-input type="text" v-model="editForm.email" placeholder="请输入邮箱"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="科室" prop="department">
+                    <el-col :span="8">
+                        <el-select v-model="editForm.department" placeholder="请选择科室">
+                            <el-option
+                                v-for="item in department"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="职称" prop="title">
+                    <el-col :span="8">
+                        <el-select v-model="editForm.title" placeholder="请选择职称">
+                            <el-option
+                                v-for="item in title"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="密码" prop="passWord">
+                    <el-col :span="14">
+                        <el-input v-model="editForm.passWord"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -159,7 +219,7 @@
 import {
     addUser,
     batchRemoveUser,
-    editUser, getAllUserPage, getCourseListPage, getUserListByRealName,
+    editUser, getAllUserPage, getCourseListPage, getUserListByRealName, getUserListByUserName,
     getUserListPage,
     removeUser
 } from '../../api/api'
@@ -189,6 +249,40 @@ export default {
       callback(new Error('请输入合法的手机号'))
     }
     return {
+        title: [{
+            value: '住院医师',
+            label: '住院医师'
+        }, {
+            value: '主治医师',
+            label: '主治医师'
+        }, {
+            value: '副主任医师',
+            label: '副主任医师'
+        }, {
+            value: '主任医师',
+            label: '主任医师'
+        }, {
+            value: '助理医师',
+            label: '助理医师'
+        },
+        ],
+        department: [{
+            value: '心脏内科',
+            label: '心脏内科'
+        }, {
+            value: '心胸外科',
+            label: '心胸外科'
+        }, {
+            value: '妇产科',
+            label: '妇产科'
+        }, {
+            value: '骨科',
+            label: '骨科'
+        }, {
+            value: '麻醉科',
+            label: '麻醉科'
+        },
+        ],
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
@@ -210,15 +304,18 @@ export default {
       addLoading: false,
       // 添加用户的表单数据
       addForm: {
-        username: '',
-        telphone: '',
-        loginType: '',
+        userName: '',
+          realName:'',
+        phone: '',
+        department: '',
         sex: '0',
-        email: ''
+        passWord: '',
+          title:'',
+          email:''
       },
       // 添加表单的验证规则对象
       addFormRules: {
-        username: [
+          userName: [
           {required: true, message: '请输入用户名', trigger: 'blur'},
           {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
         ],
@@ -229,10 +326,16 @@ export default {
           {required: true, message: '请输入邮箱', trigger: 'blur'},
           {validator: checkEmail, trigger: 'blur'}
         ],
-        loginType: [
-          {required: true, message: '请输入角色类型', trigger: 'blur'}
+        realName: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
         ],
-        telphone: [
+          department: [
+              {required: true, message: '请选择科室', trigger: 'blur'},
+          ],
+          passWord: [
+              {required: true, message: '请选择科室', trigger: 'blur'},
+          ],
+        phone: [
           {required: true, message: '请输入手机号', trigger: 'blur'},
           {validator: checkMobile, trigger: 'blur'}
         ]
@@ -241,31 +344,40 @@ export default {
       editLoading: false,
       editFormVisible: false,
       editForm: {
-        username: '',
-        telphone: '',
-        loginType: '',
-        sex: '',
-        email: ''
+          userName: '',
+          realName:'',
+          phone: '',
+          department: '',
+          sex: '0',
+          passWord: '',
+          title:'',
+          email:''
       },
       editFormRules: {
-        username: [
-          {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
-        ],
-        sex: [
-          {required: true, message: '请输入性别', trigger: 'blur'}
-        ],
-        email: [
-          {required: true, message: '请输入邮箱', trigger: 'blur'},
-          {validator: checkEmail, trigger: 'blur'}
-        ],
-        loginType: [
-          {required: true, message: '请输入角色类型', trigger: 'blur'}
-        ],
-        telphone: [
-          {required: true, message: '请输入手机号', trigger: 'blur'},
-          {validator: checkMobile, trigger: 'blur'}
-        ]
+          userName: [
+              {required: true, message: '请输入用户名', trigger: 'blur'},
+              {min: 2, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+          ],
+          sex: [
+              {required: true, message: '请输入性别', trigger: 'blur'}
+          ],
+          email: [
+              {required: true, message: '请输入邮箱', trigger: 'blur'},
+              {validator: checkEmail, trigger: 'blur'}
+          ],
+          realName: [
+              {required: true, message: '请输入姓名', trigger: 'blur'},
+          ],
+          department: [
+              {required: true, message: '请选择科室', trigger: 'blur'},
+          ],
+          passWord: [
+              {required: true, message: '请选择科室', trigger: 'blur'},
+          ],
+          phone: [
+              {required: true, message: '请输入手机号', trigger: 'blur'},
+              {validator: checkMobile, trigger: 'blur'}
+          ]
       }
     }
   },
@@ -275,37 +387,36 @@ export default {
   methods: {
     // 性别显示转换
     formatSex: function (row, column) {
-      return row.sex == 1 ? '男' : row.sex == 2 ? '女' : '未知'
+      return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知'
     },
       formatRole: function (row, column) {
           return row.roleId == 1 ? '学生' : row.sex == 2 ? '教师' : '管理员'
       },
     async getUserList () {
-
-        // var param = {pagenum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
-        // this.listLoading = true
-        // getUserListPage(param).then((res) => {
-        //     this.$message.success(res.msg)
-        //     this.total = res.count
-        //     this.userList = res.data
-        //     this.listLoading = false
-        // })
-        getAllUserPage().then((res) => {
-            this.$message.success(res.msg)
-            this.total = res.count
-            this.userList = res.data
-            this.listLoading = false
+        var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
+        this.listLoading = true
+        getUserListPage(param).then((res) => {
+            console.log(res)
+            if(res.code==='200') {
+                this.$message.success(res.msg)
+                this.total = res.data.pageInfo.total
+                this.userList = res.data.pageInfo.list
+                this.listLoading = false
+            }
         })
     },
       //查找
-      getUserByRealName(){
+      getUserByUserName(){
           this.listLoading = true
-          var param = {realName: this.queryInfo.query}
+          var param = {username: this.queryInfo.query}
           console.log(param)
-          getUserListByRealName(param).then((res) => {
-              this.total = res.count
-              this.userList = res.data
-              this.listLoading = false
+          getUserListByUserName(param).then((res) => {
+              if(res.code==='200') {
+                  this.$message.success(res.msg)
+                  this.total = res.count
+                  this.userList=Array(res.data)
+                  this.listLoading = false
+              }
           })
       },
     // 监听 pageSize 改变的事件
@@ -375,10 +486,10 @@ export default {
             this.editLoading = true
             let para = Object.assign({}, this.editForm)
             editUser(para).then((res) => {
-              if (res.data.code == 200) {
+              if (res.code == 200) {
                 this.editLoading = false
                 this.$message({
-                  message: res.data.msg,
+                  message: res.msg,
                   type: 'success'
                 })
                 this.editFormVisible = false
@@ -395,20 +506,15 @@ export default {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {id: row.id}
+        let para = {userId: row.userId}
         removeUser(para).then((res) => {
-          if (res.data.code == 200) {
+          if (res.code == 200) {
             this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
+            this.$message({message: res.msg, type: 'success'})
             this.getUserList()
           }
         })
       }).catch(() => {
-
       })
     },
     // 选择多行
