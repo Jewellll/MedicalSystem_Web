@@ -66,7 +66,11 @@ export const findStudents = params => { return http.get(`${base}/user/findAllStu
 
 export const findTeachers = params => { return http.get(`${base}/user/findAllTeacher`).then(res => res.data) }
 
+export const findAddedCourse = params => { return http.get(`${base}/course/findCourseBySId/` + params.studentId).then(res => res.data) }
 
+export const findOtherCourse = params => { return http.get(`${base}/course/findUnjoinCourseBySId/` + params.studentId).then(res => res.data) }
+
+export const addCoursePost = params => { return http.post(`${base}/course/insertApproveRequest`, params).then(res => res.data) }
 
 export const getCourseDetailPage = params => {}
 
