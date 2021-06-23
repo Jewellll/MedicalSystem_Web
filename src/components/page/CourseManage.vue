@@ -180,6 +180,7 @@ export default {
       },
       newTeachers: {
         courseId: '',
+        teacherId: '',
         courseName: '',
         courseTeachers: []
       },
@@ -288,6 +289,8 @@ export default {
     },
     // 添加学生
     addStudent (index, row) {
+      this.newStudents.courseId = row.courseId
+      this.newStudents.courseName = row.courseName
       findStudents().then((res) => {
         for (let i = 0; i < res.data.length; i++) {
           this.originStudents.push({
@@ -307,7 +310,6 @@ export default {
           studentId: this.newStudents.courseStudents[i]
         })
       }
-      console.log(para.courseStudents)
       this.addLoading = true
       addCourseStudents(para).then((res) => {
         if (res.code == '200') {
@@ -319,6 +321,8 @@ export default {
       this.addStudentVisible = false
     },
     addTeachers (index, row) {
+      this.newTeachers.courseId = row.courseId
+      this.newTeachers.courseName = row.courseName
       findTeachers().then((res) => {
         for (let i = 0; i < res.data.length; i++) {
           this.originTeachers.push({
@@ -331,15 +335,16 @@ export default {
     },
     // 点击按钮添加老师
     handleAddTeacher () {
-      let para = {courseId: this.newTeachers.courseId, courseName: this.newTeachers.courseName, courseTeachers: []}
+      let para = {courseId: this.newTeachers.courseId, teacherId: JSON.parse(localStorage.getItem('user')).userId, courseName: this.newTeachers.courseName, courseTeachers: []}
       for (let i = 0; i < this.newTeachers.courseTeachers.length; i++) {
         para.courseTeachers.push({
           teacherId: this.newTeachers.courseTeachers[i]
         })
       }
-      console.log(para.courseTeachers)
+      console.log(para)
       this.addLoading = true
       addCourseTeachers(para).then((res) => {
+        console.log(res.code)
         if (res.code == '200') {
           this.addLoading = false
           this.originTeachers = []
@@ -352,8 +357,7 @@ export default {
     // 显示编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCourseName', para.courseName)
-      this.$router.push({ path: '/courseDetail', query: {} })
+      this.$router.push({ path: '/courseDetail', query: {courseId: para.courseId} })
     },
     // 删除
     handleDel: function (index, row) {
