@@ -75,21 +75,21 @@ export default {
                     index: 'studentHome',
                     title: '学生首页'
                 },
-                {
-                    icon: 'el-icon-collection',
-                    index: 'teacherManage',
-                    title: '教师管理'
-                },
+                // {
+                //     icon: 'el-icon-collection',
+                //     index: 'teacherManage',
+                //     title: '教师管理'
+                // },
                 {
                     icon: 'el-icon-collection',
                     index: 'userManage',
                     title: '用户管理'
                 },
-                {
-                    icon: 'el-icon-notebook-1',
-                    index: 'studentManage',
-                    title: '学生管理'
-                },
+                // {
+                //     icon: 'el-icon-notebook-1',
+                //     index: 'studentManage',
+                //     title: '学生管理'
+                // },
                 {
                     icon: 'el-icon-data-analysis',
                     index: 'courseManage',

@@ -36,15 +36,16 @@
                     <el-avatar :size="90" src="" @error="errorHandler">
                         <img :src="this.userInfo.avatar"/>
                     </el-avatar>
-                    <span class="sender">姓名： {{ userInfo.name }}</span>
-                    <span class="sender">身份：  {{ userInfo.login_type }}</span>
-                    <span class="sender">注册时间： {{ userInfo.create_time }}</span>
+                    <span class="sender">姓名： {{ userInfo.realName }}</span>
+                    <span class="sender">角色：  {{ userInfo.roleId}}</span>
+                    <span class="sender">职称：  {{ userInfo.title }}</span>
+                    <span class="sender">注册时间： {{ userInfo.creatTime }}</span>
                 </div>
                 <el-divider></el-divider>
                 <div class="Info">
-                    <span class="sender">用户名： {{ userInfo.username }}</span>
+                    <span class="sender">用户名： {{ userInfo.userName }}</span>
                     <span class="sender">性别：  {{ sex }}</span>
-                    <span class="sender">手机号： {{ userInfo.telphone }}</span>
+                    <span class="sender">手机号： {{ userInfo.phone }}</span>
                     <span class="sender">邮箱： {{ userInfo.email }}</span>
 <!--                <div class="personal-relation">-->
 <!--                    <div class="relation-item">用户名:-->
