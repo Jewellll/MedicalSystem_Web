@@ -46,8 +46,8 @@
                 <el-input type="password" v-model="regForm.checkPassword" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
             </el-form-item>
             <el-form-item label="角色" prop="roleId">
-                <el-radio v-model="regForm.roleId" label="1">学生</el-radio>
-                <el-radio v-model="regForm.roleId" label="2">教师</el-radio>
+                <el-radio v-model="regForm.roleId" label="1">教师</el-radio>
+                <el-radio v-model="regForm.roleId" label="2">学生</el-radio>
             </el-form-item>
             <el-form-item label-width="0px">
                 <el-button type="primary" style="width: 100%;border: none"
@@ -77,6 +77,16 @@ export default {
             }
 
             cb(new Error('请输入合法的邮箱'))
+        };
+        var checkUsername = (rule, value, cb) => {
+            // 验证邮箱的正则表达式
+            const regEmail = /^[A-Za-z0-9]+$/
+
+            if (regEmail.test(value)) {
+                // 合法的邮箱
+                return cb()
+            }
+            cb(new Error('请输入字母或数字'))
         };
         // 自定义验证手机号规则，后在addeFormRules中使用
         var checkMobile = (rule, value, cb) => {
@@ -155,7 +165,8 @@ export default {
                 roleId:'0'
             },
             rules: {
-                userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+                userName: [{ required: true, message: "请输入用户名", trigger: "blur" },
+                    { validator: checkUsername, trigger: 'blur' }],
                 realName: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
                 phone: [{ required: true, message: "请输入手机号", trigger: "blur" },
                     { validator: checkMobile, trigger: 'blur' }],

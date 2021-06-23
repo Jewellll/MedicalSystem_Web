@@ -93,20 +93,11 @@ export const editDictionary = params => { return http.get(`${base}/dictionary/ed
 
 // 案例管理
 
-export const getCaseListPage = params => { return http.get(`${base}/case/listpage`, params).then(res => res.data) }
+export const getCaseListPage = params => { return http.get(`${base}/case/findCasesByPage/`+params.pageNum+'/'+params.pageSize).then(res => res.data) }
 
-// export const editTeacher = params => { return http.get(`${base}/teacher/edit`, { params: params }); };
-// export const addTeacher = params => { return http.get(`${base}/teacher/add`, { params: params }); };
-// export const removeTeacher = params => { return http.get(`${base}/teacher/remove`, { params: params }); };
-// export const batchRemoveTeacher = params => { return http.get(`${base}/teacher/batchremove`, { params: params }); };
+export const getCaseListByCaseName = params => { return http.get(`${base}/case/findCasesbycaseName/`+params.caseName).then(res => res.data) }
 
-// 创建案例
-
-// 课程详情
-
-// 删除课程
-
-export const removeCase = params => { return http.get(`${base}/case/remove`, params).then(res => res.data) }
+export const removeCase = params => { return http.get(`${base}/case/deletecase/`+params.caseId).then(res => res.data) }
 
 export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
 // 评论

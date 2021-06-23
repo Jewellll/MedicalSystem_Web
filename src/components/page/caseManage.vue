@@ -14,8 +14,8 @@
             <div class="toolbar">
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
+                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserByUserName()">
+                            <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -63,10 +63,10 @@
 
 <script>
 import {
-  addTeacher, batchRemoveCase,
-  batchRemoveTeacher,
-  editTeacher, getCaseListPage, removeCase,
-  removeTeacher
+    addTeacher, batchRemoveCase,
+    batchRemoveTeacher,
+    editTeacher, getCaseListByCaseName, getCaseListPage, getUserListByUserName, removeCase,
+    removeTeacher
 } from '../../api/api'
 
 export default {
@@ -169,13 +169,28 @@ export default {
   methods: {
     async getCaseList () {
       this.listLoading = true
-      getCaseListPage(this.queryInfo).then((res) => {
-        console.log(res)
+        var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
+      getCaseListPage(param).then((res) => {
+          this.$message.success(res.msg)
         this.total = res.total
-        this.caseList = res.users
+        this.caseList = res.data
         this.listLoading = false
       })
     },
+      //查找
+      getUserByUserName(){
+          this.listLoading = true
+          var param = {username: this.queryInfo.query}
+          getCaseListByCaseName(param).then((res) => {
+              if(res.code==='200') {
+                  console.log(res)
+                  this.$message.success(res.msg)
+                  this.total = res.total
+                  this.userList=res.data
+                  this.listLoading = false
+              }
+          })
+      },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
       //   console.log(newSize)
@@ -190,7 +205,7 @@ export default {
       //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
       this.queryInfo.pagenum = newPage
       //  修改完以后，重新发起请求获取一次数据
-      this.getUserList()
+      this.getCaseList()
     },
     // 监听 switch 开关状态的改变
     async userStateChange (userInfo) {
@@ -207,31 +222,6 @@ export default {
     addDialogClosed () {
       this.$refs.addFormRef.resetFields()
       this.$refs.editForm.resetFields()
-    },
-    // 点击按钮，添加案例
-    addCase () {
-      this.$router.push('createCases')
-    },
-    addUser () {
-      this.$refs.addFormRef.validate(async valid => {
-        if (valid) {
-          this.$confirm('确认提交吗？', '提示', {}).then(() => {
-            this.addLoading = true
-            let para = Object.assign({}, this.addForm)
-            addTeacher(para).then((res) => {
-              if (res.data.code == 200) {
-                this.addLoading = false
-                this.$message({
-                  message: '新增成功',
-                  type: 'success'
-                })
-                this.addFormVisible = false
-                this.getUserList()
-              }
-            })
-          })
-        }
-      })
     },
     // 编辑
     handleEdit: function (index, row) {
@@ -256,16 +246,16 @@ export default {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {id: row.id}
+        let para = {caseId: row.caseId}
         removeCase(para).then((res) => {
-          if (res.data.code == 200) {
+          if (res.code == 200) {
             this.listLoading = false
-            // NProgress.done();
+            this.$message.success(res.msg)
             this.$message({
-              message: res.data.msg,
+              message: res.msg,
               type: 'success'
             })
-            this.getUserList()
+            this.getCaseList()
           }
         })
       }).catch(() => {
@@ -292,7 +282,7 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-            this.getUserList()
+            this.getCaseList()
           }
         })
       }).catch(() => {
