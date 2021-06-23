@@ -62,8 +62,6 @@ export const findStudents = params => { return http.get(`${base}/user/findAllStu
 
 export const findTeachers = params => { return http.get(`${base}/user/findAllTeacher`).then(res => res.data) }
 
-
-
 export const getCourseDetailPage = params => {}
 
 export const removeCourse = params => { return http.post(`${base}/course/deleteCourse/` + params.courseId).then(res => res.data) }
