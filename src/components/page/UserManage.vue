@@ -282,20 +282,20 @@ export default {
       },
     async getUserList () {
 
-        var param = {pagenum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
-        this.listLoading = true
-        getUserListPage(param).then((res) => {
-            this.$message.success(res.msg)
-            this.total = res.count
-            this.userList = res.data
-            this.listLoading = false
-        })
-        // getAllUserPage().then((res) => {
+        // var param = {pagenum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
+        // this.listLoading = true
+        // getUserListPage(param).then((res) => {
         //     this.$message.success(res.msg)
         //     this.total = res.count
         //     this.userList = res.data
         //     this.listLoading = false
         // })
+        getAllUserPage().then((res) => {
+            this.$message.success(res.msg)
+            this.total = res.count
+            this.userList = res.data
+            this.listLoading = false
+        })
     },
       //查找
       getUserByRealName(){
