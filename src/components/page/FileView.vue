@@ -35,7 +35,7 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
-                        <el-button type="primary" icon="el-icon-download" size="mini" @click="handleEdit(scope.$index, scope.row)"></el-button>
+                        <el-button type="primary" icon="el-icon-download" size="mini" @click="download(scope.$index, scope.row)"></el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDel(scope.$index, scope.row)"></el-button>
                     </template>
@@ -116,70 +116,9 @@ export default {
             //  修改完以后，重新发起请求获取一次数据
             this.getUserList()
         },
-        // 监听 switch 开关状态的改变
-        async userStateChange (userInfo) {
-            console.log(userInfo)
-            const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
-            if (res.meta.status !== 200) {
-                // 更新失败，将状态返回初始状态
-                this.userInfo.mg_state = !this.userInfo.mg_state
-                this.$message.error('更新用户状态失败！')
-            }
-            this.$message.success('更新用户状态成功！')
-        },
-        // 监听添加用户对话框的关闭事件
-        addDialogClosed () {
-            this.$refs.addFormRef.resetFields()
-            this.$refs.editForm.resetFields()
-        },
-        // 点击按钮，添加新用户
-        addUser () {
-            this.$refs.addFormRef.validate(async valid => {
-                if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.addLoading = true
-                        let para = Object.assign({}, this.addForm)
-                        addTeacher(para).then((res) => {
-                            if(res.data.code==200) {
-                                this.addLoading = false
-                                this.$message({
-                                    message: '新增成功',
-                                    type: 'success'
-                                })
-                                this.addFormVisible = false
-                                this.getUserList()
-                            }
-                        })
-                    })
-                }
-            })
-        },
-        //显示编辑
-        handleEdit: function (index, row) {
-            this.editFormVisible = true
-            this.editForm = Object.assign({}, row)
-        },
-        //编辑提交
-        editSubmit: function () {
-            this.$refs.editForm.validate((valid) => {
-                if (valid) {
-                    this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                        this.editLoading = true
-                        let para = Object.assign({}, this.editForm)
-                        editTeacher(para).then((res) => {
-                            if(res.data.code==200) {
-                                this.editLoading = false
-                                this.$message({
-                                    message: res.data.msg,
-                                    type: 'success'
-                                })
-                                this.editFormVisible = false
-                                this.getUserList()
-                            }
-                        })
-                    })
-                }
-            })
+        //下载
+        download: function (index, row) {
+            const param = Object.assign({}, row)
         },
         //删除
         handleDel: function (index, row) {

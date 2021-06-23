@@ -100,6 +100,10 @@ export const getCaseListByCaseName = params => { return http.get(`${base}/case/f
 export const removeCase = params => { return http.get(`${base}/case/deletecase/`+params.caseId).then(res => res.data) }
 
 export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
+
+export const getCaseDetail = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
+
+export const getReplyCaseDetail = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
 // 评论
 
 export const getCommentList = params => { return http.get(`${base}/comment/getComments/` + params.caseId).then(res => res.data) }
@@ -113,3 +117,7 @@ export const getCaseToEdit = params => { return http.post(`${base}/case/getCase`
 export const editCse = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }
 
 export const addCase = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }
+
+//文件
+
+export const downloadFile = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }

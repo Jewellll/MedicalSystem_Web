@@ -13,17 +13,18 @@
                 <h1 style="position: relative;left: -35%;">简要病史</h1>
                 <div class="box">
                     <el-scrollbar>
-                        <p>患者，女，33岁</p>
-                        <p>主诉：左髋部肿物伴疼痛4月余</p>
-                        <p>既往史：2013年直肠腺癌，术前短程快速放疗（共DT3900CGY/13F）；2018年左髋部疼痛，复查MRI股骨头颈及大小转子占位性病变，活检病理“疑癌”。2019年左髋关节病理性骨折，2019年5月外院行“人工左髋关节置换术”，外院病理示“骨脂肪硬化性纤维黏液瘤”；</p>
-                        <p>影像学：2019年12月MRI显示：左髋关节置换术后，左侧髂骨翼、左髋人工关节周围软组织多发占位，考虑恶性肿瘤，转移瘤可能大，2020年1月转诊我院</p>
-                        <p>2020年3月我院胸部CT平扫：左肺及右肺中叶多发小结节</p>
-                        <p>2020年3月行左上肺肿物切除术</p>
-                        <p>2020年4月行左髋外侧肿块切除术</p>
-                        <p>女，10岁，发现左侧大腿根部内侧肿物。</p>
-                        <p><b>免疫组化:</b></p>
-                        <p>阳性指标（FLI-1、CD99、NKX2.2、KI67）</p>
-                        <p>阴性指标（CK、Vimentin、LCA、MPO、TdT、Desmin、CD56、TLE-1、S100、CD3、CD20）</p>
+                        <p>{{this.case.caseDesc}}</p>
+<!--                        <p>患者，女，33岁</p>-->
+<!--                        <p>主诉：左髋部肿物伴疼痛4月余</p>-->
+<!--                        <p>既往史：2013年直肠腺癌，术前短程快速放疗（共DT3900CGY/13F）；2018年左髋部疼痛，复查MRI股骨头颈及大小转子占位性病变，活检病理“疑癌”。2019年左髋关节病理性骨折，2019年5月外院行“人工左髋关节置换术”，外院病理示“骨脂肪硬化性纤维黏液瘤”；</p>-->
+<!--                        <p>影像学：2019年12月MRI显示：左髋关节置换术后，左侧髂骨翼、左髋人工关节周围软组织多发占位，考虑恶性肿瘤，转移瘤可能大，2020年1月转诊我院</p>-->
+<!--                        <p>2020年3月我院胸部CT平扫：左肺及右肺中叶多发小结节</p>-->
+<!--                        <p>2020年3月行左上肺肿物切除术</p>-->
+<!--                        <p>2020年4月行左髋外侧肿块切除术</p>-->
+<!--                        <p>女，10岁，发现左侧大腿根部内侧肿物。</p>-->
+<!--                        <p><b>免疫组化:</b></p>-->
+<!--                        <p>阳性指标（FLI-1、CD99、NKX2.2、KI67）</p>-->
+<!--                        <p>阴性指标（CK、Vimentin、LCA、MPO、TdT、Desmin、CD56、TLE-1、S100、CD3、CD20）</p>-->
                     </el-scrollbar>
                 </div>
             </div>
@@ -49,72 +50,66 @@
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
-                <el-upload
-                    :limit="3"
-                    :on-exceed="handleExceed"
-                    ref="pictureUpload"
-                    action="#"
-                    list-type="picture-card"
-                    :auto-upload="false">
-                    <i slot="default" class="el-icon-plus"></i>
-                    <div slot="file" slot-scope="{file}">
-                        <img class="el-upload-list__item-thumbnail" src="../../assets/img/file.jpeg" alt="">
-                        <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                    <i class="el-icon-zoom-in"></i>
-                    </span>
-                   <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-                   <i class="el-icon-download"></i>
-                   </span>
-                   <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove1(file)">
-                   <i class="el-icon-delete"></i>
-                   </span>
-                            <span>{{ file.name }}</span>
-                   </span>
-                    </div>
-                </el-upload>
-                <el-dialog :visible.sync="dialogVisible">
-                    <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
+                <el-table style="width:70%;left: 15%" :data="fileList1" :stripe="true" :border="true" v-loading="listLoading" size="small"
+                          :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="fileName" label="文件名"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <!-- 修改按钮 -->
+                            <el-button type="primary" icon="el-icon-download" size="mini" @click="download(scope.$index, scope.row)"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
             <div class="question layout">
                 <el-divider class="divider1"></el-divider>
                 <h2 style="position: relative;left: -40%">思考</h2>
                 <div class="think">
                     <el-scrollbar>
-                        <p>1、影像学磁共振表现？</p>
-                        <p>2、最常见放疗后差分化梭形细胞肉瘤</p>
-                        <p>3、放疗后血管肉瘤病理诊断标准</p>
+                        <p>{{this.case.thinking}}</p>
+<!--                        <p>1、影像学磁共振表现？</p>-->
+<!--                        <p>2、最常见放疗后差分化梭形细胞肉瘤</p>-->
+<!--                        <p>3、放疗后血管肉瘤病理诊断标准</p>-->
                     </el-scrollbar>
                 </div>
             </div>
             <div class="submit layout">
                 <el-divider></el-divider>
                 <h4 style="position: relative;left: -33%">提交诊断或治疗方案</h4>
-                <div class="upload1">
+<!--                <div class="upload1">-->
+<!--                    <el-upload-->
+<!--                        :headers="headers"-->
+<!--                        class="upload-demo"-->
+<!--                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=123&studentId=456"-->
+<!--                        :on-preview="handlePreview"-->
+<!--                        :on-remove="handleRemove"-->
+<!--                        :before-remove="beforeRemove"-->
+<!--                        multiple-->
+<!--                        :limit="3"-->
+<!--                        :on-exceed="handleExceed"-->
+<!--                        :file-list="fileList">-->
+<!--                        <el-button size="middle" type="primary">点击上传</el-button>-->
+<!--                        <div slot="tip" class="el-upload__tip" style="color:#c1c1c1">只能上传jpg/png文件，且不超过500kb <br>-->
+<!--                            支持扩展名：.rar .zip .doc .docx .pdf .jpg... <br>诊断结果以文本形式提交，治疗方案以word、pdf、ppt形式提交-->
+<!--                        </div>-->
+<!--                    </el-upload>-->
+<!--                </div>-->
+                <div class="upload2">
                     <el-upload
+                        drag
                         class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :headers="headers"
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
                         :before-remove="beforeRemove"
-                        multiple
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :multiple="true"
                         :limit="3"
-                        :on-exceed="handleExceed"
+                        :on-exceed="exceedFile"
+                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=123&studentId=456"
                         :file-list="fileList">
-                        <el-button size="middle" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip" style="color:#c1c1c1">只能上传jpg/png文件，且不超过500kb <br>
-                            支持扩展名：.rar .zip .doc .docx .pdf .jpg... <br>诊断结果以文本形式提交，治疗方案以word、pdf、ppt形式提交
-                        </div>
-                    </el-upload>
-                </div>
-                <div class="upload2">
-                    <el-upload
-                        class="upload-demo"
-                        drag
-                        :on-preview="handlePreview"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        multiple>
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         <div class="el-upload__tip" slot="tip" style="color:#c1c1c1">支持扩展名：.rar .zip .doc .docx .pdf
@@ -132,7 +127,7 @@
 </template>
 
 <script>
-import {getCommentList, getTeacherListPage} from '../../api/api'
+import {downloadFile, getCaseDetail, getCommentList, getTeacherListPage} from '../../api/api'
 // import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
 export default {
@@ -141,6 +136,14 @@ export default {
     },
     data () {
         return {
+            //上传
+            limitNum: 3,
+            headers: { Authorization: localStorage.getItem('token') },
+            fileList:[],
+            //附件
+            listLoading:false,
+            fileList1:[{fileName:'sss'},{fileName:'sss'}
+            ,{fileName:'sss'}],
             urls: [
                 require('../../assets/img/CaseImg/Case02-1.png'),
                 require('../../assets/img/CaseImg/Case02-2.png'),
@@ -165,21 +168,12 @@ export default {
                 require('../../assets/img/CaseImg/Case02-9.png'),
                 require('../../assets/img/CaseImg/Case02-10.png')
             ],
-            caseId: '',
-            // 附件
-            dialogImageUrl: '',
-            dialogVisible: false,
-            disabled: false,
-            commentData: [],
-            // 文件上传
-            fileList: [{
-                name: 'food.jpeg',
-                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+            case:{
+                caseDesc:'',
+                thinking:'',
             },
-                {
-                    name: 'food2.jpeg',
-                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }]
+            caseId: '',
+            commentData: [],
         }
     },
     created () {
@@ -193,16 +187,17 @@ export default {
         },
         async getUserList () {
             this.listLoading = true
-            var param=this.$store.state.courseName
-            getTeacherListPage(param).then((res) => {
-                this.userList = res.users
+            const param={caseId:this.caseId}
+            getCaseDetail(param).then((res) => {
+                console.log(res)
+                this.case = res.data
                 this.listLoading = false
             })
         },
         //评论
         async getComments () {
             // var param= {caseId:this.caseId}
-            var param= {caseId:1}
+            const param= {caseId:1}
             getCommentList(param).then((res) => {
                 console.log(res)
                 this.commentData = res.data
@@ -210,27 +205,40 @@ export default {
             })
         },
         // 附件
-        // 删除
-        handleRemove1 (file) {
-            this.$refs.pictureUpload.handleRemove(file)
+        download: function (index, row) {
+            var param = Object.assign({}, row)
+            downloadFile(param).then((res)=>{
+                if(res.code==='200'){
+                    console.log(res)
+                    this.$message.success(res.msg)
+                }
+            })
         },
-        handlePictureCardPreview (file) {
-            this.dialogImageUrl = file.url
-            this.dialogVisible = true
-            console.log(file.name)
+// 文件超出个数限制时的钩子
+        exceedFile(files, fileList) {
+            this.$notify.warning({
+                title: '警告',
+                message: `只能选择 ${this.limitNum} 个文件，当前共选择了 ${files.length + fileList.length} 个`
+            });
         },
-        handleDownload (file) {
-            console.log(file)
-            var a = document.createElement('a')
-            var event = new MouseEvent('click')
-            a.download = file.name
-            a.href = file.url
-            a.dispatchEvent(event)
+        // 文件上传成功时的钩子
+        handleSuccess(res, file, fileList) {
+            this.$notify.success({
+                title: '成功',
+                message: `文件上传成功`
+            });
+        },
+        // 文件上传失败时的钩子
+        handleError(err, file, fileList) {
+            this.$notify.error({
+                title: '错误',
+                message: `文件上传失败`
+            });
         },
         handleRemove (file, fileList) {
-            console.log(file, fileList)
+            this.$refs.pictureUpload.handleRemove(file)
         },
-        // 下载文件
+        // 预览下载文件
         handlePreview (file) {
             var a = document.createElement('a')
             var event = new MouseEvent('click')
@@ -239,12 +247,9 @@ export default {
             a.dispatchEvent(event)
             console.log(file.url)
         },
-        handleExceed (files, fileList) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-        },
         beforeRemove (file, fileList) {
             return this.$confirm(`确定移除 ${file.name}？`)
-        },
+        }
     }
 }
 </script>
