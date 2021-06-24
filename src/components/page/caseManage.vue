@@ -173,7 +173,7 @@ export default {
       getCaseListPage(param).then((res) => {
           this.$message.success(res.msg)
         this.total = res.total
-        this.caseList = res.data
+        this.caseList = [{caseName:"思考"}]
         this.listLoading = false
       })
     },
@@ -226,9 +226,7 @@ export default {
     // 编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.caseName)
-        this.$store.commit('setCaseName', para.courseName)
-      this.$router.push({ path: '/editCases', query: {} })
+        this.$router.push({path:'/editCases',params:{caseId:para.caseId}})
     },
       // 查看
       caseDetail: function (index, row) {
@@ -237,8 +235,7 @@ export default {
       },
       fileView: function (index, row) {
           let para = Object.assign({}, row)
-          this.$store.commit('setCaseName', para.caseName)
-          this.$router.push('/fileView')
+          this.$router.push({path:'/fileView',params:{caseId:para.caseId}})
       },
     // 删除
     handleDel: function (index, row) {
@@ -268,20 +265,16 @@ export default {
     },
     // 批量删除
     batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString()
+      var ids = this.sels.map(item => item.caseId).toString()
       this.$confirm('确认删除选中记录吗？', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {ids: ids}
+        let para = {caseIdList: ids}
         batchRemoveCase(para).then((res) => {
-          if (res.data.code == 200) {
+          if (res.code == 200) {
             this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
+            this.$message.success(res.msg)
             this.getCaseList()
           }
         })

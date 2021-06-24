@@ -179,6 +179,7 @@ export default {
     created () {
         // this.getParams()
         // this.commentData = comments.data
+        this.getUserList ()
         this.getComments()
     },
     methods: {

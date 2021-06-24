@@ -99,24 +99,24 @@ export const getCaseListByCaseName = params => { return http.get(`${base}/case/f
 
 export const removeCase = params => { return http.get(`${base}/case/deletecase/`+params.caseId).then(res => res.data) }
 
-export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
+export const batchRemoveCase = params => { return http.get(`${base}/case/batchdeletecase`, params).then(res => res.data) }
 
-export const getCaseDetail = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
+export const getCaseDetail = params => { return http.get(`${base}/findCasesbycaseId/`+ params.caseId).then(res => res.data) }
 
-export const getReplyCaseDetail = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
+export const getReplyCaseDetail = params => { return http.get(`${base}/findCasesbycaseId/`+ params.caseId).then(res => res.data) }
 // 评论
 
 export const getCommentList = params => { return http.get(`${base}/comment/getComments/` + params.caseId).then(res => res.data) }
 
 export const requestComment = params => { return http.post(`${base}/comment/addComment`, params).then(res => res.data) }
 
-// 编辑案例
+// 编辑添加案例
 
-export const getCaseToEdit = params => { return http.post(`${base}/case/getCase`, params).then(res => res.data) }
+export const getCaseToEdit = params => { return http.post(`${base}/case/findCasesbycaseId/`+ params.caseId).then(res => res.data) }
 
-export const editCse = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }
+export const editCse = params => { return http.post(`${base}/case/updatecase`, params).then(res => res.data) }
 
-export const addCase = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }
+export const addCase = params => { return http.post(`${base}/case/insertcase`, params).then(res => res.data) }
 
 //文件
 
