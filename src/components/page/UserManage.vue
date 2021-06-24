@@ -412,7 +412,7 @@ export default {
           getUserListByUserName(param).then((res) => {
               if(res.code==='200') {
                   this.$message.success(res.msg)
-                  this.total = res.count
+                  this.total = res.data.pageInfo.total
                   this.userList=Array(res.data)
                   this.listLoading = false
               }

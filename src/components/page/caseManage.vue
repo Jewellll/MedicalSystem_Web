@@ -172,21 +172,22 @@ export default {
         var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
       getCaseListPage(param).then((res) => {
           this.$message.success(res.msg)
+          console.log(res)
         this.total = res.total
-        this.caseList = [{caseName:"思考"}]
+        this.caseList = res.data
         this.listLoading = false
       })
     },
       //查找
       getUserByUserName(){
           this.listLoading = true
-          var param = {username: this.queryInfo.query}
+          var param = {caseName: this.queryInfo.query}
           getCaseListByCaseName(param).then((res) => {
               if(res.code==='200') {
                   console.log(res)
                   this.$message.success(res.msg)
                   this.total = res.total
-                  this.userList=res.data
+                  this.caseList=res.data
                   this.listLoading = false
               }
           })
@@ -226,16 +227,19 @@ export default {
     // 编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-        this.$router.push({path:'/editCases',params:{caseId:para.caseId}})
+        this.$router.push({path:'/editCases',query:{caseId:para.caseId}})
     },
       // 查看
       caseDetail: function (index, row) {
           let para = Object.assign({}, row)
-          this.$router.push({path:'/replyCase',params:{caseId:para.caseId}})
+          this.$router.push({path:'/replyCase',query:{caseId:para.caseId}})
       },
       fileView: function (index, row) {
+        console.log(row)
           let para = Object.assign({}, row)
-          this.$router.push({path:'/fileView',params:{caseId:para.caseId}})
+          console.log(para.caseId)
+          console.log(row.caseId)
+          this.$router.push({path:'/fileView',query:{caseId:para.caseId}})
       },
     // 删除
     handleDel: function (index, row) {

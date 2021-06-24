@@ -37,9 +37,9 @@
                         <img :src="this.userInfo.avatar"/>
                     </el-avatar>
                     <span class="sender">姓名： {{ userInfo.realName }}</span>
-                    <span class="sender">角色：  {{ userInfo.roleId}}</span>
+                    <span class="sender">角色：  {{ role}}</span>
+                    <span class="sender">科室：  {{ userInfo.department }}</span>
                     <span class="sender">职称：  {{ userInfo.title }}</span>
-                    <span class="sender">注册时间： {{ userInfo.creatTime }}</span>
                 </div>
                 <el-divider></el-divider>
                 <div class="Info">
@@ -47,26 +47,6 @@
                     <span class="sender">性别：  {{ sex }}</span>
                     <span class="sender">手机号： {{ userInfo.phone }}</span>
                     <span class="sender">邮箱： {{ userInfo.email }}</span>
-<!--                <div class="personal-relation">-->
-<!--                    <div class="relation-item">用户名:-->
-<!--                        <div style="float: right; padding-right:70px;">{{ userInfo.username }}</div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="personal-relation">-->
-<!--                    <div class="relation-item">性别:-->
-<!--                        <div style="float: right; padding-right:70px;">{{ sex }}</div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="personal-relation">-->
-<!--                    <div class="relation-item">手机号:-->
-<!--                        <div style="float: right; padding-right:70px;">{{ userInfo.telphone }}</div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="personal-relation">-->
-<!--                    <div class="relation-item">邮箱:-->
-<!--                        <div style="float: right; padding-right:70px;">{{ userInfo.email }}</div>-->
-<!--                    </div>-->
-<!--                </div>-->
                 </div>
             </div>
             <el-button style="width: 50%;margin-top: 100px" @click.native="edit = true" type="primary">修改信息</el-button>
@@ -87,14 +67,14 @@
                     </div>
                     <input type="file" accept="image/*" @change="handleFile" class="hiddenInput"/>
                 </div>
-                <el-form-item label="姓名" prop="name">
+                <el-form-item label="姓名" prop="realName">
                     <el-col :span="8">
-                    <el-input v-model="userForm.name" auto-complete="off"></el-input>
+                    <el-input v-model="userForm.realName" auto-complete="off"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="用户名" prop="username">
+                <el-form-item label="用户名" prop="userName">
                     <el-col :span="8">
-                    <el-input v-model="userForm.username" auto-complete="off"></el-input>
+                    <el-input v-model="userForm.userName" auto-complete="off"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="性别" prop="sex">
@@ -105,12 +85,36 @@
                     </el-radio-group>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="手机号" prop="telphone">
+                <el-form-item label="职称" prop="title">
                     <el-col :span="14">
-                    <el-input v-model="userForm.telphone" auto-complete="off"></el-input>
+                    <el-select v-model="userForm.title" placeholder="请选择职称">
+                        <el-option
+                            v-for="item in title"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="邮箱" prop="name">
+                <el-form-item label="科室" prop="department">
+                    <el-col :span="14">
+                    <el-select v-model="userForm.department" placeholder="请选择科室">
+                        <el-option
+                            v-for="item in department"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                    <el-col :span="14">
+                    <el-input v-model="userForm.phone" auto-complete="off"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
                     <el-col :span="14">
                     <el-input v-model="userForm.email" auto-complete="off"></el-input>
                     </el-col>
@@ -131,26 +135,65 @@ export default {
     name: 'Header',
     data () {
         return {
+            title: [{
+                value: '住院医师',
+                label: '住院医师'
+            }, {
+                value: '主治医师',
+                label: '主治医师'
+            }, {
+                value: '副主任医师',
+                label: '副主任医师'
+            }, {
+                value: '主任医师',
+                label: '主任医师'
+            }, {
+                value: '助理医师',
+                label: '助理医师'
+            },
+            ],
+            department: [{
+                value: '心脏内科',
+                label: '心脏内科'
+            }, {
+                value: '心胸外科',
+                label: '心胸外科'
+            }, {
+                value: '妇产科',
+                label: '妇产科'
+            }, {
+                value: '骨科',
+                label: '骨科'
+            }, {
+                value: '麻醉科',
+                label: '麻醉科'
+            },
+            ],
             userInfo: {
                 name: '',
-                username:'',
+                userName:'',
                 avatar: '',
                 sex: -1,
-                telphone: '',
+                title:'',
+                phone: '',
                 email: '',
-                create_time: '',
-                login_type: ''
+                creatTime: '',
+                roleId: -1
             },
             userForm: {
                 name: '',
-                username:'',
+                userName:'',
                 avatar: '',
-                sex: '',
-                telphone: '',
+                title:'',
+                department:'',
+                sex: -1,
+                phone: '',
                 email: '',
-                login_type: ''
+                creatTime: '',
+                roleId: -1
             },
             rules: {
+
                 name: [
                     {required: true, message: '请输入姓名', trigger: 'blur'}
                 ],
@@ -163,13 +206,14 @@ export default {
                 sex: [
                     {required: true, message: '请选择性别', trigger: 'blur'}
                 ],
+                department: [
+                    {required: true, message: '请选择科室', trigger: 'blur'}
+                ],
                 telphone: [
                     {required: true, message: '请输入手机号', trigger: 'blur'}
-                ],
-                email: [
-                    {required: true, message: '请输入邮箱', trigger: 'blur'}
                 ]
             },
+            role:'',
             sex: '',
             edit: false,    //修改个人信息
             view: false,     //展示个人信息
@@ -193,8 +237,7 @@ export default {
             this.$refs.userInfo.validate((valid) => {
                 if (valid) {
                     this.logining = true
-                    const editParams = {username: this.userForm.username, name:this.userForm.name,sex:this.userForm.sex,telphone:this.userForm.telphone,
-                    email:this.userForm.email}
+                    const editParams =this.userForm
                     editUserInfo(editParams).then(data => {
                         this.logining = false
                         let {msg, code, user, token} = data
@@ -213,12 +256,21 @@ export default {
             })
         },
         formatSex: function (user) {
-            if (this.userInfo.sex == 1) {
+            if (user.sex === 1) {
                 this.sex = '男'
-            } else if (this.userInfo.sex == 0) {
+            } else if (user.sex === 0) {
                 this.sex = '女'
             } else {
                 this.sex = '未知'
+            }
+        },
+        formatRoleId: function (user) {
+            if (user.roleId === 1) {
+                this.role = '教师'
+            } else if (user.roleId === 2) {
+                this.roleId = '学生'
+            } else if(user.roleId === 0){
+                this.role= '管理员'
             }
         },
         handleClose (done) {
@@ -252,6 +304,7 @@ export default {
             user = JSON.parse(user)
             this.userInfo = user
             this.formatSex(user)
+            this.formatRoleId(user)
             this.userForm = this.userInfo
         }
 

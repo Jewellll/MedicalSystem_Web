@@ -108,7 +108,7 @@
                         :multiple="true"
                         :limit="3"
                         :on-exceed="exceedFile"
-                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=123&studentId=456"
+                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=1001&studentId=456"
                         :file-list="fileList">
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -177,7 +177,7 @@ export default {
         }
     },
     created () {
-        // this.getParams()
+        this.getParams()
         // this.commentData = comments.data
         this.getUserList ()
         this.getComments()
@@ -191,7 +191,9 @@ export default {
             const param={caseId:this.caseId}
             getCaseDetail(param).then((res) => {
                 console.log(res)
-                this.case = res.data
+                this.case= res.data
+                this.urls=res
+                this.srcList=this.urls
                 this.listLoading = false
             })
         },

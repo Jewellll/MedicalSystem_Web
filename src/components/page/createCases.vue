@@ -7,10 +7,10 @@
                     <el-form :model="caseForm" ref="caseForm"  :rules="rules"  label-width="100px">
                         <el-form-item label="案例名:" prop="caseName">
                             <el-col :span="8">
-                                <el-input placeholder="请输入案例名" v-model="caseForm.casename" ></el-input>
+                                <el-input placeholder="请输入案例名" v-model="caseForm.caseName" ></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="案例描述:" prop="desc">
+                        <el-form-item label="案例描述:" prop="caseDesc">
                             <el-col :span="20">
                                 <el-input  type="textarea"
                                            :rows="10"
@@ -75,7 +75,7 @@ export default {
                 caseName: '',
                 caseDesc: '',
                 thinking: '',
-                courseId:''
+                courseId:1
             },
             rules: {
                 caseName: [{ required: true, message: "请输入案例名", trigger: "blur" }],
@@ -92,7 +92,7 @@ export default {
     },
     methods: {
         getParams(){
-            this.caseForm.courseId=this.route.params.courseId
+            this.caseForm.courseId=this.$route.params.courseId
         },
         //图片
         handleRemove (file, fileList) {
@@ -129,9 +129,9 @@ export default {
                     const params = this.caseForm
                    addCase(params).then(res => {
                         let {msg, code,} = res
-                        if (code !== 200) {
+                        if (code !== '200') {
                             this.$message.error(res.msg);
-                        } else {
+                        } else if(code==='200'){
                             this.$message(res.msg)
                             this.$router.go(-1)
                         }

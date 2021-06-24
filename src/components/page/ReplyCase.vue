@@ -141,21 +141,22 @@ export default {
         }
     },
     created () {
-        // this.getParams()
+        this.getParams()
+        this.getUserList()
         // this.commentData = comments.data
         this.getComments()
     },
     methods: {
         getParams(){
-            this.caseId=this.route.params.caseId
+            this.caseId=this.$route.query.caseId
+            console.log(this.caseId)
         },
         async getUserList () {
             this.listLoading = true
             const param={caseId:this.caseId}
             getReplyCaseDetail(param).then((res) => {
                 console.log(res)
-                this.total = res.data.total
-                this.userList = res.data
+                this.case= res.data
                 this.listLoading = false
             })
         },
@@ -197,6 +198,7 @@ export default {
         handlePreview (file) {
             var a = document.createElement('a')
             var event = new MouseEvent('click')
+            console.log(file)
             a.download = file.name
             a.href = file.url
             a.dispatchEvent(event)

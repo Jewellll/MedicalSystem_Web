@@ -60,8 +60,8 @@
 <script>
 import {
     addTeacher,
-    batchRemoveTeacher,
-    editTeacher,
+    batchRemoveTeacher, downloadFile,
+    editTeacher, getCaseFile,
     getTeacherListPage,
     removeTeacher
 } from '../../api/api'
@@ -76,7 +76,8 @@ export default {
                 // 当前的页码数
                 pagenum: 1,
                 // 每页显示多少条数据
-                pagesize: 5
+                pagesize: 5,
+                caseId:-1
             },
             // 获取的用户列表
             fileList: [],
@@ -88,17 +89,31 @@ export default {
         }
     },
     created () {
+        this.getParams()
         this.getUserList()
     },
     methods: {
+        getParams(){
+            console.log(this.$route.query.caseId)
+            this.queryInfo.caseId=this.$route.query.caseId
+            console.log(this.queryInfo.caseId)
+        },
         async getUserList () {
-            // this.listLoading=true
-            // getTeacherListPage(this.queryInfo).then((res) => {
-            //     console.log(res)
-            //     this.total = res.total
-                this.fileList = [{fileName:'s2003',realName:'吴磊'}]
-                // this.listLoading=false
-            // })
+            this.listLoading=true
+            var param ={caseId:this.queryInfo.caseId,pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize}
+            getCaseFile(param).then((res) => {
+                console.log(res)
+                this.total = res.total
+                for(var i=0; i<res.data.list.length;i++){
+                    var item = {fileId:0,fileName:'',realName:'',caseName:'',creatTime:''}
+                    const name = res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/')+1)
+                    console.log(res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/')+1))
+                    item.fileName=name
+                    item.fileId=res.data.list[i].id
+                    this.fileList.push(item)
+                }
+                this.listLoading=false
+            })
         },
         // 监听 pageSize 改变的事件
         handleSizeChange (newSize) {
@@ -119,6 +134,15 @@ export default {
         //下载
         download: function (index, row) {
             const param = Object.assign({}, row)
+            console.log(param.fileId)
+            const params= {fileId:param.fileId}
+            console.log(params)
+            downloadFile(params).then((res) => {
+                console.log(res)
+                // this.total = res.total
+                // this.fileList = res.data
+                // this.listLoading=false
+            })
         },
         //删除
         handleDel: function (index, row) {
