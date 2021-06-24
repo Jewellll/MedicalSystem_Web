@@ -40,7 +40,7 @@ export default {
 
           if (hasUser) {
             console.log(user.username)
-            resolve([200, {code: 200, msg: '登录成功', token: '222', user}])
+            resolve([200, {code: 200, msg: '登录成功', token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjQ1MzU5MTAsInVzZXJuYW1lIjoieHh4eCJ9.iFQK51L1xjHa1Pngx5zqPS0uRzCiIHRkS2gxr3FOu30\n', user}])
           } else {
             resolve([200, {code: 400, msg: '账号或密码错误'}])
           }

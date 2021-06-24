@@ -229,6 +229,7 @@ export default {
       total_case: 0,
       total_team: 0,
       courseId: '',
+        courseName: '',
       // 列表加载
       listLoading: false,
       teamListLoading: false,
@@ -262,6 +263,7 @@ export default {
   methods: {
     getParams () {
       this.courseId = this.$route.query.courseId
+        this.courseName = this.$route.query.courseName
       console.log(this.courseId)
     },
     async getCourseDetail () {
@@ -343,7 +345,7 @@ export default {
     // 点击按钮，添加新案例
     addCase () {
       // this.$store.commit('setCourseName', this.courseInfo.courseName)
-      this.$router.push({ path: '/createCases', query: {courseId: this.courseId} })
+      this.$router.push({ path: '/createCases', query: {courseId: this.courseId,courseName: this.courseName} })
     },
     // 编辑
     handleEdit: function (index, row) {

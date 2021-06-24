@@ -354,10 +354,10 @@ export default {
       this.addTeacherVisible = false
     },
 
-    // 显示编辑
+    // 课程详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$router.push({ path: '/courseDetail', query: {courseId: para.courseId} })
+      this.$router.push({ path: '/courseDetail', query: {courseId: para.courseId,courseName:para.courseName} })
     },
     // 删除
     handleDel: function (index, row) {

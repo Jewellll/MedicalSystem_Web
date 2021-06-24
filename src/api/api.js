@@ -102,7 +102,7 @@ export const editDictionary = params => { return http.get(`${base}/dictionary/ed
 
 // 案例管理
 
-export const getCaseListPage = params => { return http.get(`${base}/case/findCasesByPage/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
+export const getCaseListPage = params => { return http.post(`${base}/case/findCasesByPage/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
 export const getCaseListByCaseName = params => { return http.get(`${base}/case/findCasesbycaseName/` + params.caseName).then(res => res.data) }
 
@@ -130,3 +130,5 @@ export const addCase = params => { return http.post(`${base}/case/insertcase`, p
 //文件
 
 export const downloadFile = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }
+
+export const getCaseFile = params => { return http.post(`${base}/sfile/getFileByCaseId/`+params.caseId+'/'+params.pageNum+'/'+params.pageSize ).then(res => res.data) }

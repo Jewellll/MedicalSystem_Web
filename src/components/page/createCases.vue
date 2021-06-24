@@ -75,7 +75,12 @@ export default {
                 caseName: '',
                 caseDesc: '',
                 thinking: '',
-                courseId:1
+                courseId:1,
+                courseName:'',
+                creatTime:'',
+                isPublish:'',
+                creatTeacher:localStorage.getItem('user').realName
+
             },
             rules: {
                 caseName: [{ required: true, message: "请输入案例名", trigger: "blur" }],
@@ -88,10 +93,12 @@ export default {
         }
     },
     created () {
-        // this.getParams()
+        this.getParams()
     },
     methods: {
         getParams(){
+            console.log(this.$route.params.courseId)
+            this.caseForm.courseName=this.$route.params.courseName
             this.caseForm.courseId=this.$route.params.courseId
         },
         //图片
