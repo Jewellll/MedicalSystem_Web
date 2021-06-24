@@ -70,12 +70,12 @@
             >
             <!-- 内容的主体区域 -->
             <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
-                <el-form-item label="课程名">
+                <el-form-item label="课程名" prop="courseName">
                     <el-col :span="8">
                         <el-input v-model="addForm.courseName"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="课程描述">
+                <el-form-item label="课程描述" prop="courseDesc">
                     <el-col :span="14">
                         <el-input v-model="addForm.courseDesc" type="textarea" :rows="5"></el-input>
                     </el-col>

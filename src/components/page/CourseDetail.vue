@@ -48,7 +48,7 @@
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column prop="caseName" label="案例名称"></el-table-column>
-                <el-table-column prop="valueName" label="创建教师" ></el-table-column>
+                <el-table-column prop="teacherName" label="创建教师" ></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
@@ -56,20 +56,20 @@
                         <el-button type="primary"  size="mini" @click="caseView(scope.$index, scope.row)">案例详情</el-button>
                         <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
                         <!-- 删除按钮 -->
-                        <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除案例</el-button>
+                        <el-button type="danger"  size="mini" @click="handleDelCase(scope.$index, scope.row)">删除案例</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <!-- 分页区域 -->
             <div class="page">
                 <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="queryInfo.pagenum"
+                    @size-change="handleCaseSizeChange"
+                    @current-change="handleCaseCurrentChange"
+                    :current-page="queryInfo.pagenum_case"
                     :page-sizes="[1, 2, 5, 10]"
-                    :page-size="queryInfo.pagesize"
+                    :page-size="queryInfo.pagesize_case"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
+                    :total="total_case">
                 </el-pagination>
             </div>
         </div>
@@ -85,35 +85,34 @@
                           :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" style="width: 100%" >
                     <el-table-column type="selection" width="55">
                     </el-table-column>
-                    <el-table-column label="序号" type="index"></el-table-column>
-                    <el-table-column prop="team_id" label="团队编号"  align="center"></el-table-column>
+                    <el-table-column prop="teamId" label="团队编号" width="100px" align="center"></el-table-column>
                     <el-table-column prop="members" label="成员" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary"  size="mini" @click="handleTeam(scope.$index, scope.row)">管理</el-button>
-                            <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                            <el-button type="danger"  size="mini" @click="handleDelTeam(scope.$index, scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button  @click="addTeamVisible=true" class="button">创建团队</el-button>
+                <el-button  @click="addTeam" class="button">创建团队</el-button>
             </div>
             <!-- 分页区域 -->
             <div class="page">
                 <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="queryInfo.pagenum"
+                    @size-change="handleTeamSizeChange"
+                    @current-change="handleTeamCurrentChange"
+                    :current-page="queryInfo.pagenum_team"
                     :page-sizes="[1, 2, 5, 10]"
-                    :page-size="queryInfo.pagesize"
+                    :page-size="queryInfo.pagesize_team"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
+                    :total="total_team">
                 </el-pagination>
             </div>
             <!--            创建团队页面-->
-            <el-dialog width="60%" title="创建团队" :visible.sync="addTeamVisible">
-                <el-form label-width="100px"  :model="addForm">
-                    <el-form-item label="团队编号" prop="team_id">
-                        <el-input v-model="addForm.team_id"></el-input>
+            <el-dialog width="60%" title="创建团队" :visible.sync="addTeamVisible" >
+                <el-form label-width="100px"  :model="addForm" :rules="addFormRules">
+                    <el-form-item label="团队编号" prop="teamId">
+                        <el-input v-model="addForm.teamId"></el-input>
                     </el-form-item>
                     <el-form-item label="请选择学生" prop="students">
                         <el-transfer
@@ -131,7 +130,7 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click.native="addTeamVisible = false">取消</el-button>
-                    <el-button type="primary" @click.native="addTeam" :loading="addLoading">提交</el-button>
+                    <el-button type="primary" @click.native="addTeamSubmit" :loading="addLoading">提交</el-button>
                 </div>
             </el-dialog>
 
@@ -141,20 +140,19 @@
                 width="60%"
                 :visible.sync="editTeamVisible">
                 <el-form
-                    :model="editTeam"
                     label-width="100px">
                     <el-form-item label="团队编号" prop="team_id">
-                        <el-input v-model="editTeam.team_id"></el-input>
+                        <el-input v-model="editTeam.teamId"></el-input>
                     </el-form-item>
                     <el-table
                         class="dicTable"
                         :data="editTeam.members"
                         border>
                         <el-table-column type="index"></el-table-column>
-                        <el-table-column prop="studentname" label="学生"></el-table-column>
+                        <el-table-column prop="studentName" label="学生"></el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <el-button type="danger"  size="mini" @click="handleDelTeam(scope.$index, scope.row)">删除</el-button>
+                                <el-button type="danger"  size="mini" @click="handleDelStudent(scope.$index, scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -192,11 +190,11 @@
 
 <script>
 import {
-  addTeacher, batchRemoveCase,
-  batchRemoveTeacher,
-  editTeacher, getCourseDetailPage,
-  getTeacherListPage, removeCase,
-  removeTeacher
+  batchRemoveCase,
+  createTeam,
+  getCaseListByCourse, getCourseDetailPage, getCourseStudents,
+  getTeamListByCourse, removeCase, removeTeam
+
 } from '../../api/api'
 import dicList from './Dictionary'
 
@@ -206,25 +204,31 @@ export default {
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
-        query: '',
+        queryCase: '',
+        queryTeam: '',
         // 课程名
         course_name: '',
         // 当前的页码数
-        pagenum: 1,
+        pagenum_case: 1,
         // 每页显示多少条数据
-        pagesize: 5
+        pagesize_case: 5,
+        // 当前的页码数
+        pagenum_team: 1,
+        // 每页显示多少条数据
+        pagesize_team: 5
       },
       // 课程
       courseInfo: {
-        courseName: '癌细胞转移',
-        desc: '国家创新重点课程'
+        courseName: '',
+        desc: ''
       },
       // 案例
       caseList: [],
       sels: [], // 列表选中列
       // 总数
-      total: 0,
-        courseId: '',
+      total_case: 0,
+      total_team: 0,
+      courseId: '',
       // 列表加载
       listLoading: false,
       teamListLoading: false,
@@ -235,53 +239,90 @@ export default {
       addLoading: false,
       editLoading: false,
       teamList: [],
-      addForm: {team_id: '',
-        students: [{key: '1', label: 'a'},
-          {key: '2', label: 'b'},
-          {key: '3', label: 'c'}],
+      addForm: {teamId: '',
+        students: [],
         members: []
       },
+      addFormRules: {
+        teamId: [{required: true, message: '请输入团队编号 ', trigger: 'blur'}]
+      },
       editTeam: {
-        team_id: '',
+        teamId: '',
         members: [],
         newMembers: []
       }
     }
   },
   created () {
-      this.getParams()
+    this.getParams()
     this.getCourseDetail()
+    this.getCaseList()
+    this.getTeamList()
   },
   methods: {
-      getParams(){
-          this.courseId=this.$route.params.courseId
-      },
+    getParams () {
+      this.courseId = this.$route.query.courseId
+      console.log(this.courseId)
+    },
     async getCourseDetail () {
+      let para = {courseId: this.courseId}
+      getCourseDetailPage(para).then((res) => {
+        this.courseInfo.courseName = res.data.courseName
+        this.courseInfo.desc = res.data.courseDesc
+      })
+    },
+    getCaseList () {
+      let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_case, pageSize: this.queryInfo.pagesize_case}
       this.listLoading = true
-      this.teamListLoading = true
-      getCourseDetailPage(this.queryInfo).then((res) => {
-        this.total = res.total
-        this.courseInfo = res
-        this.teamList = [{team_id: 12323, members: '成龙'}]
-        this.caseList = res.users
+      getCaseListByCourse(para).then((res) => {
+        this.caseList = res.data
         this.listLoading = false
+        this.total_case = res.count
+      })
+    },
+    getTeamList () {
+      let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_team, pageSize: this.queryInfo.pagesize_team}
+      this.teamListLoading = true
+      getTeamListByCourse(para).then((res) => {
+        this.teamList = res.data
+        for (let i = 0; i < res.data.length; i++) {
+          let temp = res.data[i].courseStudents
+          let data = ''
+          for (let j = 0; j < temp.length; j++) {
+            data += temp[j].studentName + ' '
+          }
+          this.teamList[i].members = data
+        }
         this.teamListLoading = false
       })
     },
     // 监听 pageSize 改变的事件
-    handleSizeChange (newSize) {
+    handleCaseSizeChange (newSize) {
       //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
-      this.queryInfo.pagesize = newSize
+      this.queryInfo.pagesize_case = newSize
       //  修改完以后，重新发起请求获取一次数据
-      this.getCourseDetail()
+      this.getCaseList()
     },
     // 监听 页码值  改变的事件
-    handleCurrentChange (newPage) {
-      //   console.log(newPage)
+    handleCaseCurrentChange (newPage) {
       //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
-      this.queryInfo.pagenum = newPage
+      this.queryInfo.pagenum_case = newPage
       //  修改完以后，重新发起请求获取一次数据
-      this.getCourseDetail()
+      this.getCaseList()
+    },
+    // 监听 pageSize 改变的事件
+    handleTeamSizeChange (newSize) {
+      //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
+      this.queryInfo.pagesize_team = newSize
+      //  修改完以后，重新发起请求获取一次数据
+      this.getTeamList()
+    },
+    // 监听 页码值  改变的事件
+    handleTeamCurrentChange (newPage) {
+      //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
+      this.queryInfo.pagenum_team = newPage
+      //  修改完以后，重新发起请求获取一次数据
+      this.getTeamList()
     },
     // 监听 switch 开关状态的改变
     async userStateChange (userInfo) {
@@ -299,35 +340,32 @@ export default {
       this.$refs.addFormRef.resetFields()
       this.$refs.editForm.resetFields()
     },
-    // 点击按钮，添加新用户
+    // 点击按钮，添加新案例
     addCase () {
-      this.$store.commit('setCourseName', this.courseInfo.courseName)
-      this.$router.push({ path: '/createCases', query: {} })
+      // this.$store.commit('setCourseName', this.courseInfo.courseName)
+      this.$router.push({ path: '/createCases', query: {courseId: this.courseId} })
     },
     // 编辑
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.case_name)
-      this.$store.commit('setCourseName', this.courseInfo.courseName)
-      this.$router.push({ path: '/editCases', query: {} })
+      this.$router.push({ path: '/editCases', query: {caseName: para.caseName, caseId: para.caseId, courseId: this.courseId} })
     },
     // 查看
     caseView: function (index, row) {
       let para = Object.assign({}, row)
-        this.$router.push({path:'/replyCase',params:{caseId:para.caseId}})
+      this.$router.push({path: '/replyCase', params: {caseId: para.caseId, caseName: para.caseName}})
     },
     fileView: function (index, row) {
       let para = Object.assign({}, row)
-      this.$store.commit('setCaseName', para.caseName)
-      this.$router.push({ path: '/fileView', query: {} })
+      this.$router.push({ path: '/fileView', query: {caseId: para.caseId, caseName: para.caseName} })
     },
     // 删除
-    handleDel: function (index, row) {
-      this.$confirm('确认删除该记录吗?', '提示', {
+    handleDelCase: function (index, row) {
+      this.$confirm('确认删除该案例吗?', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {id: row.id}
+        let para = {caseId: row.caseId}
         removeCase(para).then((res) => {
           if (res.data.code == 200) {
             this.listLoading = false
@@ -342,6 +380,30 @@ export default {
       }).catch(() => {
 
       })
+    },
+    handleDelTeam (index, row) {
+      this.$confirm('确认删除该团队吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.teamListLoading = true
+        let para = {courseId: this.courseId, teamId: row.teamId}
+        removeTeam(para).then((res) => {
+          if (res.code == '200') {
+            this.teamListLoading = false
+            // NProgress.done();
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getTeamList()
+          }
+        })
+      }).catch(() => {
+
+      })
+    },
+    handleDelStudent (index, row) {
+
     },
     // 选择多行
     selsChange: function (sels) {
@@ -374,10 +436,36 @@ export default {
       this.$router.go(-1)
     },
     // 团队
-    addTeam (index, row) {
+    addTeam () {
+      this.addTeamVisible = true
+      let para = {courseId: this.courseId}
+      getCourseStudents(para).then((res) => {
+        for (let i = 0; i < res.data.data.length; i++) {
+          this.addForm.students.push({
+            key: res.data.data[i].studentId,
+            label: res.data.data[i].studentName
+          })
+        }
+      })
+    },
+    // 点击按钮创建团队
+    addTeamSubmit () {
       // courseId从课程详情页面获取
-      let para = {courseId: this.$route.query.courseId, team_id: this.addForm.team_id}
-      console.log(this.addForm.members)
+      let para = {courseId: this.courseId, teamId: this.addForm.teamId, courseStudents: []}
+      for (let i = 0; i < this.addForm.members.length; i++) {
+        para.courseStudents.push({
+          studentId: this.addForm.members[i]
+        })
+      }
+      createTeam(para).then((res) => {
+        if (res.code == '200') {
+          this.$message.success('创建成功')
+          this.addForm.students = []
+          this.addForm.teamId = ''
+        }
+        this.getTeamList()
+      })
+      this.addTeamVisible = false
     },
     // 团队中添加学生
     addStudent () {
@@ -396,11 +484,15 @@ export default {
     },
     handleTeam (index, row) {
       this.editTeamVisible = true
-      this.editTeam = Object.assign({}, row)
-      this.editTeam.members = [{studentname: '刘洋'}]
-    },
-    handleDelTeam (index, row) {
-      this.editTeam.members.splice(index, 1)
+      this.editTeam.teamId = row.teamId
+      let para = row.members.split(' ')
+      for (let i = 0; i < para.length - 1; i++) {
+        let temp = JSON.stringify(para[i])
+        temp = temp.substring(1, temp.length - 1)
+        this.editTeam.members.push({
+          studentName: temp
+        })
+      }
     }
   }
 }
