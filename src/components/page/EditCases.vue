@@ -92,7 +92,7 @@ export default {
         }
     },
     created () {
-        // this.getParams()
+        this.getParams()
         this.getCaseDetail()
     },
     methods: {
@@ -105,7 +105,8 @@ export default {
             })
         },
         getParams(){
-            this.caseForm.caseId=this.route.params.caseId
+            this.caseForm.caseId=this.$route.query.caseId
+            console.log(this.caseForm.caseId)
         },
         //图片
         handleRemove (file, fileList) {
@@ -141,11 +142,12 @@ export default {
                 if (valid) {
                     const params = this.caseForm
                     editCse(params).then(res => {
+                        console.log(res)
                         let {msg, code,} = res
-                        if (code !== 200) {
+                        if (code !== '200') {
                             this.$message.error(msg);
-                        } else {
-                            this.$message(msg)
+                        } else if(code==='200'){
+                            this.$message.success('修改成功')
                             this.$router.push('/caseManage')
                         }
                     })
