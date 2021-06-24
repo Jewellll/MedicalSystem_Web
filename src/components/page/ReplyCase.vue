@@ -51,7 +51,7 @@
                     <el-upload
                         :headers="headers"
                         class="upload-demo"
-                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=123&studentId=456"
+                        action="http://118.195.129.22:8081/case/uploadFiletoCases?caseId=1000"
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
                         :before-remove="beforeRemove"
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import {getCommentList, getReplyCaseDetail, getTeacherListPage} from '../../api/api'
+import {getCommentList, getReplyCaseDetail, getReplyCaseImg, getTeacherListPage} from '../../api/api'
 // import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
 
@@ -145,6 +145,7 @@ export default {
         this.getUserList()
         // this.commentData = comments.data
         this.getComments()
+        this.getCaseImg ()
     },
     methods: {
         getParams(){
@@ -157,6 +158,15 @@ export default {
             getReplyCaseDetail(param).then((res) => {
                 console.log(res)
                 this.case= res.data
+                this.listLoading = false
+            })
+        },
+        async getCaseImg () {
+            this.listLoading = true
+            const param={caseId:this.caseId}
+            getReplyCaseImg(param).then((res) => {
+                console.log(res)
+                // this.urls= res
                 this.listLoading = false
             })
         },

@@ -78,8 +78,8 @@ export default {
                 courseId:1,
                 courseName:'',
                 creatTime:'',
-                isPublish:'',
-                creatTeacher:localStorage.getItem('user').realName
+                isPublish:2,
+                creatTeacher:localStorage.getItem('user').userId
 
             },
             rules: {
@@ -97,9 +97,11 @@ export default {
     },
     methods: {
         getParams(){
-            console.log(this.$route.params.courseId)
-            this.caseForm.courseName=this.$route.params.courseName
-            this.caseForm.courseId=this.$route.params.courseId
+
+            this.caseForm.courseName=this.$route.query.courseName
+            this.caseForm.courseId=this.$route.query.courseId
+            var param=JSON.parse(localStorage.getItem('user'))
+            this.caseForm.creatTeacher=param.userId
         },
         //图片
         handleRemove (file, fileList) {

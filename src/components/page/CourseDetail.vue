@@ -355,7 +355,7 @@ export default {
     // 查看
     caseView: function (index, row) {
       let para = Object.assign({}, row)
-      this.$router.push({path: '/replyCase', params: {caseId: para.caseId, caseName: para.caseName}})
+      this.$router.push({path: '/replyCase', query: {caseId: para.caseId, caseName: para.caseName}})
     },
     fileView: function (index, row) {
       let para = Object.assign({}, row)
@@ -369,14 +369,14 @@ export default {
         this.listLoading = true
         let para = {caseId: row.caseId}
         removeCase(para).then((res) => {
-          if (res.data.code == 200) {
+          if (res.code == 200) {
             this.listLoading = false
             // NProgress.done();
             this.$message({
-              message: res.data.msg,
+              message: '删除成功',
               type: 'success'
             })
-            this.getCourseDetail()
+              this.getCaseList()
           }
         })
       }).catch(() => {
@@ -420,14 +420,14 @@ export default {
         this.listLoading = true
         let para = {ids: ids}
         batchRemoveCase(para).then((res) => {
-          if (res.data.code == 200) {
+          if (res.code === 200) {
             this.listLoading = false
             // NProgress.done();
             this.$message({
               message: '删除成功',
               type: 'success'
             })
-            this.getCourseDetail()
+              this.getCaseList()
           }
         })
       }).catch(() => {

@@ -173,7 +173,7 @@ export default {
       getCaseListPage(param).then((res) => {
           this.$message.success(res.msg)
           console.log(res)
-        this.total = res.total
+        this.total = res.count
         this.caseList = res.data
         this.listLoading = false
       })
@@ -181,12 +181,12 @@ export default {
       //查找
       getUserByUserName(){
           this.listLoading = true
-          var param = {caseName: this.queryInfo.query}
+          var param = {caseName: this.queryInfo.query,pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize}
           getCaseListByCaseName(param).then((res) => {
               if(res.code==='200') {
                   console.log(res)
                   this.$message.success(res.msg)
-                  this.total = res.total
+                  this.total = res.count
                   this.caseList=res.data
                   this.listLoading = false
               }
@@ -269,12 +269,13 @@ export default {
     },
     // 批量删除
     batchRemove: function () {
-      var ids = this.sels.map(item => item.caseId).toString()
+      var ids = this.sels.map(item => item.caseId)
       this.$confirm('确认删除选中记录吗？', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {caseIdList: ids}
+        let para = ids
+        console.log(para)
         batchRemoveCase(para).then((res) => {
           if (res.code == 200) {
             this.listLoading = false

@@ -33,9 +33,12 @@
                 <el-upload
                     :headers="headers"
                     class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    action="http://118.195.129.22:8081/case/uploadimgetocase?caseId=1001&description="
+                    :limit="3"
+                    :multiple="true"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
+                    :on-exceed="exceedFile"
                     :before-remove="beforeRemove"
                     :on-success="handleSuccess"
                     :on-error="handleError"
@@ -49,8 +52,15 @@
                 <el-upload
                     class="upload-demo"
                     drag
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    multiple
+                    :action=upload
+                    :limit="3"
+                    :multiple="true"
+                    :on-exceed="exceedFile"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :before-remove="beforeRemove"
+                    :on-success="handleSuccess"
+                    :on-error="handleError"
                     :file-list="fileList2">
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -74,6 +84,8 @@ export default {
     name: 'createCases',
     data () {
         return {
+            limitNum: 3,
+            upload:'',
             headers: { Authorization: localStorage.getItem('token') },
             caseForm: {
                 caseName: '',
@@ -85,8 +97,7 @@ export default {
                 caseName: [{ required: true, message: "请输入案例名", trigger: "blur" }],
                 caseDesc: [{ required: true, message: "请输入案例描述", trigger: "blur" }]
             },
-            fileList1: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},
-                {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+            fileList1: [],
             fileList2:[]
 
         }
@@ -105,6 +116,7 @@ export default {
             })
         },
         getParams(){
+            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases/'+this.caseForm.caseId
             this.caseForm.caseId=this.$route.query.caseId
             console.log(this.caseForm.caseId)
         },
@@ -136,6 +148,13 @@ export default {
         },
         beforeRemove (file, fileList) {
             return this.$confirm(`确定移除 ${file.name}？`)
+        },
+        // 文件超出个数限制时的钩子
+        exceedFile(files, fileList) {
+            this.$notify.warning({
+                title: '警告',
+                message: `只能选择 ${this.limitNum} 个文件，当前共选择了 ${files.length + fileList.length} 个`
+            });
         },
         edit(){
             this.$refs.caseForm.validate((valid) => {
