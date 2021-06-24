@@ -15,13 +15,13 @@ export const requireRegister = params => { return axios.post(`${base}/register`,
 
 // 用户管理
 
-export const getUserListPage = params => { return http.post(`${base}/user/selectAllUser/`+params.pageNum+'/'+params.pageSize).then(res => res.data)  }
+export const getUserListPage = params => { return http.post(`${base}/user/selectAllUser/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
-export const removeUser = params => { return http.delete(`${base}/user/deleteUserByUserid/`+params.userId).then(res => res.data) }
+export const removeUser = params => { return http.delete(`${base}/user/deleteUserByUserid/` + params.userId).then(res => res.data) }
 
-export const getUserListByRealName = params => { return http.get(`${base}/user/getUserByRealName`,params).then(res => res.data) }
+export const getUserListByRealName = params => { return http.get(`${base}/user/getUserByRealName`, params).then(res => res.data) }
 
-export const getUserListByUserName = params => { return http.get(`${base}/user/getUserByUserName/`+params.username).then(res => res.data) }
+export const getUserListByUserName = params => { return http.get(`${base}/user/getUserByUserName/` + params.username).then(res => res.data) }
 
 export const batchRemoveUser = params => { return http.post(`${base}/user/batchremove`, params).then(res => res.data) }
 
@@ -54,8 +54,6 @@ export const batchRemoveStudent = params => { return http.get(`${base}/student/b
 // 课程管理
 export const getCourseListPage = params => { return http.get(`${base}/course/findAllCourse/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
-// export const editCourse = params => { return http.get(`${base}/course/edit`,  params).then(res => res.data); };
-
 export const addCourse = params => { return http.post(`${base}/course/insertCourse`, params).then(res => res.data) }
 
 export const addCourseTeachers = params => { return http.post(`${base}/course/insertCourseTeacher`, params).then(res => res.data) }
@@ -72,7 +70,18 @@ export const findOtherCourse = params => { return http.get(`${base}/course/findU
 
 export const addCoursePost = params => { return http.post(`${base}/course/insertApproveRequest`, params).then(res => res.data) }
 
-export const getCourseDetailPage = params => {}
+export const getCourseDetailPage = params => { return http.get(`${base}/course/findCourseByCourseId/` + params.courseId).then(res => res.data) }
+
+export const getCourseStudents = params => { return http.get(`${base}/team/findNotTeamStudentByCourseId/` + params.courseId) }
+
+export const createTeam = params => { return http.post(`${base}/course/setStudentGroup`, params).then(res => res.data) }
+
+export const removeTeam = params => { return http.post(`${base}/team/deleteTeamByCIdSId/` + params.courseId + '/' + params.teamId).then(res => res.data) }
+
+
+export const getCaseListByCourse = params => { return http.get(`${base}/case/findCasesbycourseId/` + params.courseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
+
+export const getTeamListByCourse = params => { return http.get(`${base}/team/findInTeamStudentByCourseId/` + params.courseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
 export const removeCourse = params => { return http.post(`${base}/course/deleteCourse/` + params.courseId).then(res => res.data) }
 
@@ -93,11 +102,11 @@ export const editDictionary = params => { return http.get(`${base}/dictionary/ed
 
 // 案例管理
 
-export const getCaseListPage = params => { return http.get(`${base}/case/findCasesByPage/`+params.pageNum+'/'+params.pageSize).then(res => res.data) }
+export const getCaseListPage = params => { return http.get(`${base}/case/findCasesByPage/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
-export const getCaseListByCaseName = params => { return http.get(`${base}/case/findCasesbycaseName/`+params.caseName).then(res => res.data) }
+export const getCaseListByCaseName = params => { return http.get(`${base}/case/findCasesbycaseName/` + params.caseName).then(res => res.data) }
 
-export const removeCase = params => { return http.get(`${base}/case/deletecase/`+params.caseId).then(res => res.data) }
+export const removeCase = params => { return http.get(`${base}/case/deletecase/` + params.caseId).then(res => res.data) }
 
 export const batchRemoveCase = params => { return http.get(`${base}/case/batchremove`, params).then(res => res.data) }
 // 评论
