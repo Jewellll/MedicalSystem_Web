@@ -2,30 +2,47 @@
     <div class="container">
 
         <!-- 面包屑导航区域 -->
-        <div class="add">
-            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
-                课程详情
+        <div class="add" style="height: 300px">
+            <div style="float: left">
+                <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
+                    课程详情
+                </div>
+                <hr>
+                <div>
+                    <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 1em">
+                        课程名：<div style="display: inline-block">{{courseInfo.courseName}}</div>
+                    </div>
+                    <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 2em">
+                        <div style="display: inline-block; vertical-align: top">
+                            课程描述：
+                        </div>
+                        <div class="descBox">
+                            <el-scrollbar>
+                                <p>{{courseInfo.desc}}</p>
+                            </el-scrollbar>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <hr>
-            <div>
-                <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 1em">
-                    课程名：<div style="display: inline-block">{{courseInfo.courseName}}</div>
+
+            <div style="float: right; text-align: center;width: 50%">
+                <div style="font-size: 1.5em; text-align: left;">
+                    团队信息
                 </div>
-                <div style="font-size: 1em;text-align: left;margin-left: 0.4em;margin-top: 2em">
-                    <div style="display: inline-block; vertical-align: top">
-                        课程描述：
-                    </div>
-                    <div class="descBox">
-                        <el-scrollbar>
-                            <p>{{courseInfo.desc}}</p>
-                        </el-scrollbar>
-                    </div>
-                </div>
+                <hr>
+                <el-table
+                    :data="teamInfo"
+                    style="margin-top: 10px"
+                    v-loading="teamLoading"
+                    border>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="teamId" align="center" label="团队编号"></el-table-column>
+                    <el-table-column prop="studentName" align="center" label="成员"></el-table-column>
+                </el-table>
             </div>
         </div>
 
-        <div class="table">
-
+        <div class="table" >
             <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
                 课程案例
             </div>
@@ -48,14 +65,12 @@
             <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" @selection-change="selsChange">
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column type="index" label="序号"></el-table-column>
-                <el-table-column prop="case_name" label="案例名称"></el-table-column>
-                <el-table-column prop="valueName" label="创建教师" ></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column prop="caseName" label="案例名称"></el-table-column>
+                <el-table-column prop="teacherName" label="创建教师" ></el-table-column>
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
                         <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index, scope.row)">案例详情</el-button>
-                        <!-- 删除按钮 -->
-                        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDel(scope.$index, scope.row)">删除案例</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -71,20 +86,15 @@
                     :total="total">
                 </el-pagination>
             </div>
-            <div class="submit">
-                <el-button type="primary" @click="back">返  回</el-button>
-            </div>
         </div>
     </div>
 </template>
 
 <script>
 import {
-  addTeacher, batchRemoveCase,
-  batchRemoveTeacher,
-  editTeacher, getCourseDetailPage,
-  getTeacherListPage, removeCase,
-  removeTeacher
+  batchRemoveCase,
+  getCaseListByCourse, getCourseDetailPage,
+  getTeamMembers
 } from '../../api/api'
 import dicList from './Dictionary'
 
@@ -95,8 +105,6 @@ export default {
       queryInfo: {
         // 查询参数
         query: '',
-        // 课程名
-        course_name: '',
         // 当前的页码数
         pagenum: 1,
         // 每页显示多少条数据
@@ -104,9 +112,11 @@ export default {
       },
       // 课程
       courseInfo: {
-        courseName: '癌细胞转移',
-        desc: '国家创新重点课程'
+        courseId: '',
+        courseName: '',
+        desc: ''
       },
+      teamInfo: [],
       // 案例
       caseList: [],
       sels: [], // 列表选中列
@@ -114,20 +124,44 @@ export default {
       total: 0,
       // 列表加载
       listLoading: false,
+      teamLoading: false
     }
   },
   created () {
     this.getCourseDetail()
+    this.getCaseList()
+    this.getTeamInfo()
   },
   methods: {
     async getCourseDetail () {
-      this.queryInfo.courseName = this.$store.state.courseName
+      this.courseInfo.courseId = this.$route.query.courseId
+
+      getCourseDetailPage(this.courseInfo).then((res) => {
+        this.courseInfo.courseName = res.data.courseName
+        this.courseInfo.desc = res.data.courseDesc
+      })
+    },
+    getCaseList () {
       this.listLoading = true
-      getCourseDetailPage(this.queryInfo).then((res) => {
-        this.total = res.data.total
-        this.courseInfo = res.data
-        this.caseList = res.data.users
+      let para = {courseId: this.courseInfo.courseId, pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize}
+      this.listLoading = true
+      getCaseListByCourse(para).then((res) => {
+        this.caseList = res.data
         this.listLoading = false
+        this.total = res.count
+      })
+    },
+    getTeamInfo () {
+      this.teamLoading = true
+      let para = {courseId: this.courseInfo.courseId, studentId: JSON.parse(localStorage.getItem('user')).userId}
+      getTeamMembers(para).then((res) => {
+        if (res.code == '200') {
+          this.teamLoading = false
+          this.teamInfo = res.data
+        } else if (res.code == '200') {
+          this.teamLoading = false
+          alert('您尚未组队')
+        }
       })
     },
     // 监听 pageSize 改变的事件
@@ -136,7 +170,7 @@ export default {
       //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
       this.queryInfo.pagesize = newSize
       //  修改完以后，重新发起请求获取一次数据
-      this.getCourseDetail()
+      this.getCaseList()
     },
     // 监听 页码值  改变的事件
     handleCurrentChange (newPage) {
@@ -144,18 +178,7 @@ export default {
       //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
       this.queryInfo.pagenum = newPage
       //  修改完以后，重新发起请求获取一次数据
-      this.getCourseDetail()
-    },
-    // 监听 switch 开关状态的改变
-    async userStateChange (userInfo) {
-      console.log(userInfo)
-      const {data: res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
-      if (res.meta.status !== 200) {
-        // 更新失败，将状态返回初始状态
-        this.userInfo.mg_state = !this.userInfo.mg_state
-        this.$message.error('更新用户状态失败！')
-      }
-      this.$message.success('更新用户状态成功！')
+      this.getCaseList()
     },
     // 监听添加用户对话框的关闭事件
     addDialogClosed () {
@@ -169,29 +192,7 @@ export default {
     // 案例详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-        this.$router.push({path:'/caseDetail',params:{caseId:para.caseId}})
-    },
-    // 删除
-    handleDel: function (index, row) {
-      this.$confirm('确认删除该记录吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        this.listLoading = true
-        let para = {id: row.id}
-        removeCase(para).then((res) => {
-          if (res.data.code == 200) {
-            this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-            this.getCourseDetail()
-          }
-        })
-      }).catch(() => {
-
-      })
+      this.$router.push({path: '/replyCase', params: {caseId: para.caseId, caseName: para.caseName}})
     },
     // 选择多行
     selsChange: function (sels) {
@@ -235,10 +236,13 @@ export default {
     margin-right: 10px;
     padding: 10px 10px;
     background-color: #FFFFFF;
-    height: 100%;
+    clear: both;
+    height: 100vh;
     border-radius: 5px;
 }
 .table{
+    width: 100%;
+    float: left;
     margin-top: 20px;
 }
 
