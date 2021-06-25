@@ -80,11 +80,11 @@
 
 <script>
 import {
-  addTeacher, batchRemoveCase,
-  batchRemoveTeacher,
-  editTeacher, getCourseDetailPage,
-  getTeacherListPage, removeCase,
-  removeTeacher
+    addTeacher, batchRemoveCase,
+    batchRemoveTeacher,
+    editTeacher, getCaseListByCourse, getCourseDetailPage,
+    getTeacherListPage, removeCase,
+    removeTeacher
 } from '../../api/api'
 import dicList from './Dictionary'
 
@@ -97,16 +97,17 @@ export default {
         query: '',
         // 课程名
         course_name: '',
-        // 当前的页码数
-        pagenum: 1,
-        // 每页显示多少条数据
-        pagesize: 5
+          // 当前的页码数
+          pagenum_case: 1,
+          // 每页显示多少条数据
+          pagesize_case: 5,
       },
       // 课程
       courseInfo: {
         courseName: '癌细胞转移',
         desc: '国家创新重点课程'
       },
+        courseId:0,
       // 案例
       caseList: [],
       sels: [], // 列表选中列
@@ -117,19 +118,34 @@ export default {
     }
   },
   created () {
+      this.getParams()
     this.getCourseDetail()
+      this.getCaseList()
   },
   methods: {
+      getParams () {
+          this.courseId = this.$route.query.courseId
+          console.log(this.courseId)
+      },
     async getCourseDetail () {
       this.queryInfo.courseName = this.$store.state.courseName
       this.listLoading = true
       getCourseDetailPage(this.queryInfo).then((res) => {
         this.total = res.data.total
         this.courseInfo = res.data
-        this.caseList = res.data.users
         this.listLoading = false
       })
     },
+     async getCaseList () {
+         let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_case, pageSize: this.queryInfo.pagesize_case}
+          this.listLoading = true
+          getCaseListByCourse(para).then((res) => {
+              console.log(res)
+              this.caseList = res.data
+              this.listLoading = false
+              this.total_case = res.count
+          })
+      },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
       //   console.log(newSize)
@@ -169,7 +185,7 @@ export default {
     // 案例详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-        this.$router.push({path:'/caseDetail',params:{caseId:para.caseId}})
+        this.$router.push({path:'/caseDetail',query:{caseId:para.caseId}})
     },
     // 删除
     handleDel: function (index, row) {

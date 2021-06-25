@@ -410,9 +410,10 @@ export default {
           this.listLoading = true
           var param = {username: this.queryInfo.query}
           getUserListByUserName(param).then((res) => {
+              console.log(res)
               if(res.code==='200') {
                   this.$message.success(res.msg)
-                  this.total = res.data.pageInfo.total
+                  this.total = res.count
                   this.userList=Array(res.data)
                   this.listLoading = false
               }

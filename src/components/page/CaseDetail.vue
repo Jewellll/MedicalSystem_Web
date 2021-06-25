@@ -108,7 +108,7 @@
                         :multiple="true"
                         :limit="3"
                         :on-exceed="exceedFile"
-                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=1001&studentId=456"
+                        :action=upload
                         :file-list="fileList">
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -125,11 +125,12 @@
 
     </div>
 </template>
-
+<!--"http://118.195.129.22:8081/sfile/uploadFile?caseId=122206152&studentId=888888888"-->
 <script>
-import {downloadFile, getCaseDetail, getCommentList, getTeacherListPage} from '../../api/api'
+import {getCaseDetail, getCaseDetailFile, getCommentList, getTeacherListPage} from '../../api/api'
 // import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
+import http from '../../store/http'
 export default {
     components: {
         Comment
@@ -142,8 +143,7 @@ export default {
             fileList:[],
             //附件
             listLoading:false,
-            fileList1:[{fileName:'sss'},{fileName:'sss'}
-            ,{fileName:'sss'}],
+            fileList1:[],
             urls: [
                 require('../../assets/img/CaseImg/Case02-1.png'),
                 require('../../assets/img/CaseImg/Case02-2.png'),
@@ -174,26 +174,48 @@ export default {
             },
             caseId: '',
             commentData: [],
+            upload:'',
+            userId:0
         }
     },
     created () {
         this.getParams()
         // this.commentData = comments.data
         this.getUserList ()
+        this.getFileList()
         this.getComments()
     },
     methods: {
         getParams(){
-            this.caseId=this.$route.params.caseId
+            this.caseId=this.$route.query.caseId
+            this.userId=JSON.parse(localStorage.getItem('user')).userId
+            console.log(this.caseId)
+            console.log(this.userId)
+            this.upload='http://118.195.129.22:8081/sfile/uploadFile?caseId='+this.caseId+'&studentId='+this.userId
         },
         async getUserList () {
-            this.listLoading = true
             const param={caseId:this.caseId}
             getCaseDetail(param).then((res) => {
                 console.log(res)
                 this.case= res.data
-                this.urls=res
-                this.srcList=this.urls
+
+            })
+        },
+        async getFileList () {
+            this.listLoading = true
+            this.caseId=1001
+            const param={caseId:this.caseId}
+            console.log(param)
+            getCaseDetailFile(param).then((res) => {
+                console.log(res)
+                for (var i = 0; i < res.data.length; i++) {
+                    var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
+                    const name = res.data[i].fileUrl.substring(res.data[i].fileUrl.lastIndexOf('/') + 1)
+                    console.log(res.data[i].fileUrl.substring(res.data[i].fileUrl.lastIndexOf('/') + 1))
+                    item.fileName = name
+                    item.fileId = res.data[i].id
+                    this.fileList1.push(item)
+                }
                 this.listLoading = false
             })
         },
@@ -210,11 +232,39 @@ export default {
         // 附件
         download: function (index, row) {
             var param = Object.assign({}, row)
-            downloadFile(param).then((res)=>{
-                if(res.code==='200'){
-                    console.log(res)
-                    this.$message.success(res.msg)
-                }
+            const params= {id:param.fileId}
+            console.log(params)
+            const url="/case/downloadFileFromCasesbyid/"+params.id
+            const options = {fileId:param.fileId}
+            this.exportExcel(url,options,param.fileName)
+        },
+        exportExcel(url, options = {},fileName) {
+            return new Promise((resolve, reject) => {
+                console.log(`${url} 请求数据，参数=>`, JSON.stringify(options))
+                http.defaults.headers['content-type'] = 'application/json;charset=UTF-8'
+                http({
+                    method: 'post',
+                    url: url, // 请求地址
+                    data: options, // 参数
+                    responseType: 'blob' // 表明返回服务器返回的数据类型
+                }).then(
+                    res => {
+                        console.log(res)
+                        console.log("这是下载的接口res", res.data);
+                        var blob = new Blob([res.data], {
+                            type: "application/octet-stream;chartset=UTF-8"
+                        });
+                        var url = window.URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        a.href = url;
+                        //文件名
+                        a.download = fileName;
+                        a.click();
+                    },
+                    err => {
+                        reject(err)
+                    }
+                )
             })
         },
 // 文件超出个数限制时的钩子
@@ -399,7 +449,7 @@ export default {
 .file1 {
     width: 50%;
     margin: 0px;
-    height: 250px;
+    height: 100%;
     box-sizing: border-box;
 }
 

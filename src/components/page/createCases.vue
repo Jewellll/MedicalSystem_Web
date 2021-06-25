@@ -33,8 +33,14 @@
                     <el-upload
                         class="upload-demo"
                         action="https://jsonplaceholder.typicode.com/posts/"
+                        :limit="3"
+                        :multiple="true"
+                        :on-exceed="exceedFile"
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
+                        :before-remove="beforeRemove"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
                         :file-list="fileList1"
                         list-type="picture">
                         <el-button size="small" type="primary">点击上传</el-button>
@@ -45,8 +51,15 @@
                     <el-upload
                         class="upload-demo"
                         drag
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        multiple
+                        :action=upload
+                        :limit="3"
+                        :multiple="true"
+                        :on-exceed="exceedFile"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :before-remove="beforeRemove"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
                         :file-list="fileList2"
                     >
                         <i class="el-icon-upload"></i>
@@ -86,9 +99,10 @@ export default {
                 caseName: [{ required: true, message: "请输入案例名", trigger: "blur" }],
                 caseDesc: [{ required: true, message: "请输入案例描述", trigger: "blur" }]
             },
-            fileList1: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},
-                {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-            fileList2:[]
+            fileList1: [],
+            fileList2:[],
+            upload:''
+
 
         }
     },
@@ -97,10 +111,10 @@ export default {
     },
     methods: {
         getParams(){
-
             this.caseForm.courseName=this.$route.query.courseName
             this.caseForm.courseId=this.$route.query.courseId
             var param=JSON.parse(localStorage.getItem('user'))
+            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='
             this.caseForm.creatTeacher=param.userId
         },
         //图片
@@ -114,6 +128,13 @@ export default {
             a.href = file.url
             a.dispatchEvent(event)
             console.log(file.url)
+        },
+        // 文件超出个数限制时的钩子
+        exceedFile(files, fileList) {
+            this.$notify.warning({
+                title: '警告',
+                message: `只能选择 ${this.limitNum} 个文件，当前共选择了 ${files.length + fileList.length} 个`
+            });
         },
         // 文件上传成功时的钩子
         handleSuccess(res, file, fileList) {

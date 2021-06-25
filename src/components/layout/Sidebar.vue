@@ -82,11 +82,6 @@ export default {
                 // },
                 {
                     icon: 'el-icon-collection',
-                    index: 'fileView',
-                    title: '文件管理'
-                },
-                {
-                    icon: 'el-icon-collection',
                     index: 'userManage',
                     title: '用户管理'
                 },
