@@ -33,7 +33,7 @@
                 <el-upload
                     :headers="headers"
                     class="upload-demo"
-                    action="http://118.195.129.22:8081/case/uploadimgetocase?caseId=1001&description="
+                    :action=upload1
                     :limit="3"
                     :multiple="true"
                     :on-preview="handlePreview"
@@ -86,6 +86,7 @@ export default {
         return {
             limitNum: 3,
             upload:'',
+            upload1:'',
             headers: { Authorization: localStorage.getItem('token') },
             caseForm: {
                 caseName: '',
@@ -116,8 +117,9 @@ export default {
             })
         },
         getParams(){
-            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases/'+this.caseForm.caseId
             this.caseForm.caseId=this.$route.query.caseId
+            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseForm.caseId
+            this.upload1='http://118.195.129.22:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId+'&description='
             console.log(this.caseForm.caseId)
         },
         //图片

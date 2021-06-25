@@ -44,14 +44,27 @@
         </div>
 
         <div class="inter layout">
+            <div class="interBox">
             <el-divider></el-divider>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
+                <el-table style="width:70%;left: 15%" :data="fileList1" :stripe="true" :border="true" v-loading="listLoading" size="small"
+                          :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="fileName" label="文件名"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <!-- 修改按钮 -->
+                            <el-button type="primary" icon="el-icon-download" size="mini" @click="download(scope.$index, scope.row)"></el-button>
+                            <el-button type="danger" icon="el-icon-delete"  size="mini" @click="handleDel(scope.$index, scope.row)"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
                 <div class="upload1">
                     <el-upload
                         :headers="headers"
                         class="upload-demo"
-                        action="http://118.195.129.22:8081/case/uploadFiletoCases?caseId=1000"
+                        :action=upload
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
                         :before-remove="beforeRemove"
@@ -80,6 +93,7 @@
                     </el-scrollbar>
                 </div>
             </div>
+            </div>
             <el-divider></el-divider>
             <div class="comment layout">
                 <div class="comment-box">
@@ -94,9 +108,17 @@
 </template>
 
 <script>
-import {getCommentList, getReplyCaseDetail, getReplyCaseImg, getTeacherListPage} from '../../api/api'
+import {
+    getCaseDetailFile,
+    getCommentList,
+    getReplyCaseDetail,
+    getReplyCaseImg,
+    getTeacherListPage,
+    removeCourse, removeTeacherFile
+} from '../../api/api'
 // import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
+import http from '../../store/http'
 
 export default {
     components: {
@@ -107,6 +129,7 @@ export default {
             headers: { Authorization: localStorage.getItem('token') },
             limitNum: 3,
             fileList: [],
+            fileList1:[],
             urls: [
                 require('../../assets/img/CaseImg/Case02-1.png'),
                 require('../../assets/img/CaseImg/Case02-2.png'),
@@ -138,11 +161,13 @@ export default {
             // 附件
             commentData: [],
             caseId: '',
+            upload:'',
         }
     },
     created () {
         this.getParams()
         this.getUserList()
+        this.getFileList()
         // this.commentData = comments.data
         this.getComments()
         this.getCaseImg ()
@@ -150,6 +175,7 @@ export default {
     methods: {
         getParams(){
             this.caseId=this.$route.query.caseId
+            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseId
             console.log(this.caseId)
         },
         async getUserList () {
@@ -159,6 +185,31 @@ export default {
                 console.log(res)
                 this.case= res.data
                 this.listLoading = false
+            })
+        },
+        async getFileList () {
+            // this.listLoading = true
+            const param={caseId:this.caseId}
+            this.fileList1=[]
+            console.log(param)
+            getCaseDetailFile(param).then((res) => {
+                if(res.code==='200') {
+                    console.log(res)
+                    this.$message.success(res.msg)
+                    for (var i = 0; i < res.data.length; i++) {
+                        var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
+                        const name = res.data[i].fileUrl.substring(res.data[i].fileUrl.lastIndexOf('/') + 1)
+                        console.log(res.data[i].fileUrl.substring(res.data[i].fileUrl.lastIndexOf('/') + 1))
+                        item.fileName = name
+                        item.fileId = res.data[i].id
+                        this.fileList1.push(item)
+                    }
+                    this.listLoading = false
+                }else if(res.code==='303'){
+                    console.log(res)
+                    this.listLoading = false
+                    this.$message.error(res.msg)
+                }
             })
         },
         async getCaseImg () {
@@ -180,6 +231,70 @@ export default {
                 this.$message.success(res.msg)
             })
         },
+        //下载
+        download: function (index, row) {
+            var param = Object.assign({}, row)
+            const params= {id:param.fileId}
+            console.log(params)
+            const url="/case/downloadFileFromCasesbyid/"+params.id
+            const options = {fileId:param.fileId}
+            this.exportExcel(url,options,param.fileName)
+        },
+        exportExcel(url, options = {},fileName) {
+            return new Promise((resolve, reject) => {
+                console.log(`${url} 请求数据，参数=>`, JSON.stringify(options))
+                http.defaults.headers['content-type'] = 'application/json;charset=UTF-8'
+                http({
+                    method: 'post',
+                    url: url, // 请求地址
+                    data: options, // 参数
+                    responseType: 'blob' // 表明返回服务器返回的数据类型
+                }).then(
+                    res => {
+                        console.log(res)
+                        console.log("这是下载的接口res", res.data);
+                        var blob = new Blob([res.data], {
+                            type: "application/octet-stream;chartset=UTF-8"
+                        });
+                        var url = window.URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        a.href = url;
+                        //文件名
+                        a.download = fileName;
+                        a.click();
+                    },
+                    err => {
+                        reject(err)
+                    }
+                )
+            })
+        },
+        //删除文件
+        handleDel: function (index, row) {
+            this.$confirm('确认删除该附件吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                this.listLoading = true
+                let para = {id: row.fileId}
+                console.log(row.fileId)
+                removeTeacherFile(para).then((res) => {
+                    console.log(res)
+                    if (res.code == '200') {
+                        this.listLoading = false
+                        console.log(res)
+                        this.getFileList()
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                    }else if(res.code==='205'){
+                        this.$message.error(res.msg)
+                    }
+                })
+            }).catch(() => {
+
+            })
+        },
         // 文件超出个数限制时的钩子
         exceedFile(files, fileList) {
             this.$notify.warning({
@@ -189,6 +304,7 @@ export default {
         },
         // 文件上传成功时的钩子
         handleSuccess(res, file, fileList) {
+            this.getFileList()
             this.$notify.success({
                 title: '成功',
                 message: `文件上传成功`
@@ -206,13 +322,20 @@ export default {
         },
         // 预览下载文件
         handlePreview (file) {
-            var a = document.createElement('a')
-            var event = new MouseEvent('click')
             console.log(file)
-            a.download = file.name
-            a.href = file.url
-            a.dispatchEvent(event)
-            console.log(file.url)
+            var url='http://118.195.129.22:8081/sfile/downloadFile?fileId'+ file.id
+            var link = document.createElement('a');
+            try {
+                link.href  = url;} catch (error) {
+                link.href  = window.URL.createObjectURL(url);}
+            link.click();
+            // var a = document.createElement('a')
+            // var event = new MouseEvent('click')
+            // console.log(file)
+            // a.download = file.name
+            // a.href = file.url
+            // a.dispatchEvent(event)
+            // console.log(file.url)
         },
         beforeRemove (file, fileList) {
             return this.$confirm(`确定移除 ${file.name}？`)
@@ -290,7 +413,8 @@ export default {
 
 /*上传*/
 .upload1 {
-
+    box-sizing: border-box;
+     margin-top: 3em;
 }
 
 .upload2 {
@@ -356,19 +480,21 @@ export default {
 .inter {
     box-sizing: border-box;
     height: 100%;
-
+}
+.interBox{
+    height: 100%;
 }
 .file1{
     width: 50%;
     margin: 0px;
-    height: 300px;
+    height: 600px;
     float: right;
     box-sizing: border-box;
 }
 .question {
     width: 50%;
     margin: 0px;
-    height: 300px;
+    height: 600px;
     box-sizing: border-box;
 }
 .comment {

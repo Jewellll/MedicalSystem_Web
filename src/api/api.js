@@ -131,6 +131,12 @@ export const addCase = params => { return http.post(`${base}/case/insertcase`, p
 
 //文件
 
-export const downloadFile = params => { return http.post(`${base}/case/editCase`, params).then(res => res.data) }
+export const getCaseDetailFile = params => { return http.get(`${base}/case/getFileByCaseId/`+params.caseId).then(res => res.data) }
+
+export const downloadFile = params => { return http.post(`${base}/sfile/downloadFile/`+params.fileId).then(res => res.data) }
+
+export const downloadCaseFile = params => { return http.post(`${base}/case/downloadFileFromCasesbyid/`+params.id).then(res => res.data) }
 
 export const getCaseFile = params => { return http.get(`${base}/sfile/getFileByCaseId/`+params.caseId+'/'+params.pageNum+'/'+params.pageSize ).then(res => res.data) }
+
+export const removeTeacherFile = params => { return http.delete(`${base}/case/deleteCaseFileById/`+params.id).then(res => res.data) }

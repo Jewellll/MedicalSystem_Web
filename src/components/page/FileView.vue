@@ -59,12 +59,12 @@
 
 <script>
 import {
-    addTeacher,
-    batchRemoveTeacher, downloadFile,
+    batchRemoveTeacher,
     editTeacher, getCaseFile,
-    getTeacherListPage,
     removeTeacher
 } from '../../api/api'
+import axios from 'axios'
+import http from '../../store/http'
 
 export default {
     data () {
@@ -103,16 +103,25 @@ export default {
             var param ={caseId:this.queryInfo.caseId,pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize}
             getCaseFile(param).then((res) => {
                 console.log(res)
-                this.total = res.total
-                for(var i=0; i<res.data.list.length;i++){
-                    var item = {fileId:0,fileName:'',realName:'',caseName:'',creatTime:''}
-                    const name = res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/')+1)
-                    console.log(res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/')+1))
-                    item.fileName=name
-                    item.fileId=res.data.list[i].id
-                    this.fileList.push(item)
+                if(res.code==='200') {
+                    this.total = res.data.total
+                    for (var i = 0; i < res.data.list.length; i++) {
+                        var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
+                        const name = res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1)
+                        console.log(res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1))
+                        item.fileName = name
+                        item.submitTime=res.data.list[i].uploadTime
+                        item.caseName=res.data.list[i].caseName
+                        item.realName=res.data.list[i].studentName
+                        item.studentId=res.data.list[i].studentId
+                        item.fileId = res.data.list[i].id
+                        this.fileList.push(item)
+                    }
+                    this.listLoading = false
+                }else if(res.code==='303'){
+                    this.$message.error(res.msg)
+                    this.listLoading = false
                 }
-                this.listLoading=false
             })
         },
         // 监听 pageSize 改变的事件
@@ -137,13 +146,53 @@ export default {
             console.log(param.fileId)
             const params= {fileId:param.fileId}
             console.log(params)
-            downloadFile(params).then((res) => {
-                console.log(res)
-                // this.total = res.total
-                // this.fileList = res.data
-                // this.listLoading=false
-            })
+            const url="/sfile/downloadFile/"+params.fileId
+            const options = {fileId:param.fileId}
+            this.exportExcel(url,options,param.fileName)
+            // downloadFile(params).then((res) => {
+            //     console.log(res.url)
+            //     console.log("这是下载的接口res", res);
+            //     var blob = new Blob([res], {
+            //         type: "application/octet-stream;chartset=UTF-8"
+            //     });
+            //     console.log("这是blob", blob);
+            //     var url = window.URL.createObjectURL(blob);
+            //     var a = document.createElement("a");
+            //     a.href = url;
+            //     //文件名
+            //     a.download = param.fileName;
+            //     a.click();
+            // })
         },
+        exportExcel(url, options = {},fileName) {
+    return new Promise((resolve, reject) => {
+        console.log(`${url} 请求数据，参数=>`, JSON.stringify(options))
+        http.defaults.headers['content-type'] = 'application/json;charset=UTF-8'
+        http({
+            method: 'post',
+            url: url, // 请求地址
+            data: options, // 参数
+            responseType: 'blob' // 表明返回服务器返回的数据类型
+        }).then(
+            res => {
+                console.log("这是下载的接口res", res.data);
+                var blob = new Blob([res.data], {
+                    type: "application/octet-stream;chartset=UTF-8"
+                });
+                console.log("这是blob", blob);
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                //文件名
+                a.download = fileName;
+                a.click();
+            },
+            err => {
+                reject(err)
+            }
+        )
+    })
+},
         //删除
         handleDel: function (index, row) {
             this.$confirm('确认删除该记录吗?', '提示', {
@@ -152,7 +201,7 @@ export default {
                 this.listLoading = true
                 let para = {id: row.id}
                 removeTeacher(para).then((res) => {
-                    if(res.data.code==200) {
+                    if(rescode==200) {
                         this.listLoading = false
                         //NProgress.done();
                         this.$message({
