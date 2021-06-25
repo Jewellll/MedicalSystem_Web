@@ -213,7 +213,7 @@ export default new Router({
           name: 'replyCase',
           component: ReplyCase,
           meta: {
-            title: '回复案例',
+            title: '查看案例',
             requireAuth: true
           }
         },
