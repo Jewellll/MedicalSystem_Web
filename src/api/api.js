@@ -83,6 +83,13 @@ export const getCaseListByCourse = params => { return http.get(`${base}/case/fin
 
 export const getTeamListByCourse = params => { return http.get(`${base}/team/findInTeamStudentByCourseId/` + params.courseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
+export const getTeamStudent = params => { return http.get(`${base}/team/findTeamStudent/` + params.courseId + '/' + params.teamId).then(res => res.data) }
+
+export const changeTeam = params => { return http.post(`${base}/team/updateOneStudentFromTeam/` + params.courseId + '/' + params.teamId + '/' + params.studentId).then(res => res.data) }
+
+export const delStudent = params => { return http.post(`${base}/team/deleteOneStudentFromTeam/` + params.courseId + '/' + params.teamId + '/' + params.studentId).then(res => res.data) }
+
+
 export const removeCourse = params => { return http.post(`${base}/course/deleteCourse/` + params.courseId).then(res => res.data) }
 
 export const batchRemoveCourse = params => { return http.get(`${base}/course/batchremove`, params).then(res => res.data) }

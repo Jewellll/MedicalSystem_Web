@@ -141,7 +141,7 @@
                 :visible.sync="editTeamVisible">
                 <el-form
                     label-width="100px">
-                    <el-form-item label="团队编号" prop="team_id">
+                    <el-form-item label="团队编号" prop="teamId">
                         <el-input v-model="editTeam.teamId"></el-input>
                     </el-form-item>
                     <el-table
@@ -152,6 +152,7 @@
                         <el-table-column prop="studentName" label="学生"></el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
+                                <el-button type="primary"  size="mini" @click="changeStudent(scope.$index, scope.row)">移动分组</el-button>
                                 <el-button type="danger"  size="mini" @click="handleDelStudent(scope.$index, scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
@@ -160,7 +161,7 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click.native="editTeamVisible = false">取消</el-button>
-                    <el-button type="primary" @click.native="editSubmit" :loading="addLoading">提交</el-button>
+                    <el-button type="primary" @click.native="editSubmit" :loading="addLoading">确认</el-button>
                 </div>
             </el-dialog>
             <!--            在已有团队中添加学生-->
@@ -181,6 +182,20 @@
                     <el-button type="primary" @click.native="addStudent" :loading="addLoading">提交</el-button>
                 </div>
             </el-dialog>
+
+<!--            更改学生分组-->
+            <el-dialog width="40%" title="更改分组" :visible.sync="changeTeamVisible">
+                <el-form :model="modifyTeam"
+                    label-width="100px" ref="change" :rules="changeTeamRules">
+                    <el-form-item label="新团队编号" prop="teamId_change">
+                        <el-input v-model="modifyTeam.teamId_change"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click.native="changeTeamVisible = false">取消</el-button>
+                    <el-button type="primary" @click.native="handlChangeStudent" >提交</el-button>
+                </div>
+            </el-dialog>
             <div class="submit">
                 <el-button type="primary" @click="back">返  回</el-button>
             </div>
@@ -190,10 +205,10 @@
 
 <script>
 import {
-  batchRemoveCase,
-  createTeam,
+  batchRemoveCase, changeTeam,
+  createTeam, delStudent,
   getCaseListByCourse, getCourseDetailPage, getCourseStudents,
-  getTeamListByCourse, removeCase, removeTeam
+  getTeamListByCourse, getTeamStudent, removeCase, removeTeam
 
 } from '../../api/api'
 import dicList from './Dictionary'
@@ -228,8 +243,15 @@ export default {
       // 总数
       total_case: 0,
       total_team: 0,
+      modifyTeam: {
+        teamId_change: '',
+        studentId: ''
+      },
+      changeTeamRules: {
+          teamId_change: [{required: true, message: '请输入新的团队编号', trigger: 'blur'}]
+      },
       courseId: '',
-        courseName: '',
+      courseName: '',
       // 列表加载
       listLoading: false,
       teamListLoading: false,
@@ -237,10 +259,12 @@ export default {
       addTeamVisible: false,
       addStudentVisible: false,
       editTeamVisible: false,
+      changeTeamVisible: false,
       addLoading: false,
       editLoading: false,
       teamList: [],
-      addForm: {teamId: '',
+      addForm: {
+        teamId: '',
         students: [],
         members: []
       },
@@ -263,8 +287,7 @@ export default {
   methods: {
     getParams () {
       this.courseId = this.$route.query.courseId
-        this.courseName = this.$route.query.courseName
-      console.log(this.courseId)
+      this.courseName = this.$route.query.courseName
     },
     async getCourseDetail () {
       let para = {courseId: this.courseId}
@@ -286,9 +309,9 @@ export default {
       let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_team, pageSize: this.queryInfo.pagesize_team}
       this.teamListLoading = true
       getTeamListByCourse(para).then((res) => {
-        this.teamList = res.data
-        for (let i = 0; i < res.data.length; i++) {
-          let temp = res.data[i].courseStudents
+        this.teamList = res.data.list
+        for (let i = 0; i < res.data.list.length; i++) {
+          let temp = res.data.list[i].courseStudents
           let data = ''
           for (let j = 0; j < temp.length; j++) {
             data += temp[j].studentName + ' '
@@ -345,7 +368,7 @@ export default {
     // 点击按钮，添加新案例
     addCase () {
       // this.$store.commit('setCourseName', this.courseInfo.courseName)
-      this.$router.push({ path: '/createCases', query: {courseId: this.courseId,courseName: this.courseName} })
+      this.$router.push({ path: '/createCases', query: {courseId: this.courseId, courseName: this.courseName} })
     },
     // 编辑
     handleEdit: function (index, row) {
@@ -404,8 +427,38 @@ export default {
 
       })
     },
+    // 更换分组
+    changeStudent (index, row) {
+      this.modifyTeam.studentId = row.studentId
+      this.changeTeamVisible = true
+    },
+    handlChangeStudent () {
+      this.$refs.change.validate((valid) => {
+        if (valid) {
+          let para = {courseId: this.courseId, teamId: this.modifyTeam.teamId_change, studentId: this.modifyTeam.studentId}
+          changeTeam(para).then((res) => {
+            if (res.code == '200') {
+              this.$message.success('更换成功')
+              let param = {courseId: this.courseId, teamId: this.editTeam.teamId}
+              getTeamStudent(param).then((res) => {
+                this.editTeam.members = res.data
+              })
+              this.getTeamList()
+              this.changeTeamVisible = false
+            }
+          })
+        }
+      })
+    },
+    // 删除学生
     handleDelStudent (index, row) {
-
+      this.editTeam.members.splice(index, 1)
+      let para = {courseId: this.courseId, teamId: this.editTeam.teamId, studentId: row.studentId}
+      delStudent(para).then((res) => {
+        if (res.code == '200') {
+          this.$message.success('删除成功')
+        }
+      })
     },
     // 选择多行
     selsChange: function (sels) {
@@ -440,6 +493,7 @@ export default {
     // 团队
     addTeam () {
       this.addTeamVisible = true
+      this.addForm.students = []
       let para = {courseId: this.courseId}
       getCourseStudents(para).then((res) => {
         for (let i = 0; i < res.data.data.length; i++) {
@@ -471,15 +525,37 @@ export default {
     },
     // 团队中添加学生
     addStudent () {
-      // newMember里存的是key值，需要调用接口将key值转换为姓名
-      for (let i = 0; i < this.editTeam.newMembers.length; i++) {
-        this.editTeam.members.push({studentname: this.editTeam.newMembers[i]})
+      let para = {courseId: this.courseId, teamId: this.editTeam.teamId, courseStudents: []}
+      for (let i in this.editTeam.newMembers) {
+        para.courseStudents.push({
+          studentId: this.editTeam.newMembers[i]
+        })
       }
+      createTeam(para).then((res) => {
+        if (res.code == '200') {
+          this.$message.success('增加成功')
+        }
+        this.addStudentVisible = false
+        let param = {courseId: this.courseId, teamId: this.editTeam.teamId}
+        getTeamStudent(param).then((res) => {
+          this.editTeam.members = res.data
+        })
+        this.getTeamList()
+      })
       this.editTeam.newMembers = []
-      this.addStudentVisible = false
     },
     addRow () {
       this.addStudentVisible = true
+      let para = {courseId: this.courseId}
+      this.addForm.students = []
+      getCourseStudents(para).then((res) => {
+        for (let i = 0; i < res.data.data.length; i++) {
+          this.addForm.students.push({
+            key: res.data.data[i].studentId,
+            label: res.data.data[i].studentName
+          })
+        }
+      })
     },
     editSubmit () {
       this.editTeamVisible = false
@@ -487,14 +563,17 @@ export default {
     handleTeam (index, row) {
       this.editTeamVisible = true
       this.editTeam.teamId = row.teamId
-      let para = row.members.split(' ')
-      for (let i = 0; i < para.length - 1; i++) {
-        let temp = JSON.stringify(para[i])
-        temp = temp.substring(1, temp.length - 1)
-        this.editTeam.members.push({
-          studentName: temp
-        })
-      }
+      let para = {courseId: this.courseId, teamId: row.teamId}
+      getTeamStudent(para).then((res) => {
+        this.editTeam.members = res.data
+      })
+      // for (let i = 0; i < para.length - 1; i++) {
+      //   let temp = JSON.stringify(para[i])
+      //   temp = temp.substring(1, temp.length - 1)
+      //   this.editTeam.members.push({
+      //     studentName: temp
+      //   })
+      // }
     }
   }
 }
