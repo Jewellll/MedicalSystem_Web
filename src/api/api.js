@@ -90,7 +90,6 @@ export const changeTeam = params => { return http.post(`${base}/team/updateOneSt
 
 export const delStudent = params => { return http.post(`${base}/team/deleteOneStudentFromTeam/` + params.courseId + '/' + params.teamId + '/' + params.studentId).then(res => res.data) }
 
-
 export const removeCourse = params => { return http.post(`${base}/course/deleteCourse/` + params.courseId).then(res => res.data) }
 
 export const batchRemoveCourse = params => { return http.get(`${base}/course/batchremove`, params).then(res => res.data) }
@@ -110,20 +109,19 @@ export const editDictionary = params => { return http.get(`${base}/dictionary/ed
 
 // 案例管理
 
-
 export const getCaseListPage = params => { return http.post(`${base}/case/findCasesByPage/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
-export const getCaseListByCaseName = params => { return http.get(`${base}/case/findCasesbycaseName/` + params.caseName+'/'+params.pageNum+'/'+params.pageSize).then(res => res.data) }
+export const getCaseListByCaseName = params => { return http.get(`${base}/case/findCasesbycaseName/` + params.caseName + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
 export const removeCase = params => { return http.delete(`${base}/case/deletecase/` + params.caseId).then(res => res.data) }
 
 export const batchRemoveCase = params => { return http.delete(`${base}/case/batchdeletecase`, params).then(res => res.data) }
 
-export const getCaseDetail = params => { return http.get(`${base}/case/findCasesbycaseId/`+ params.caseId).then(res => res.data) }
+export const getCaseDetail = params => { return http.get(`${base}/case/findCasesbycaseId/` + params.caseId).then(res => res.data) }
 
-export const getReplyCaseDetail = params => { return http.get(`${base}/case/findCasesbycaseId/`+ params.caseId).then(res => res.data) }
+export const getReplyCaseDetail = params => { return http.get(`${base}/case/findCasesbycaseId/` + params.caseId).then(res => res.data) }
 
-export const getReplyCaseImg = params => { return http.get(`${base}/case/readimage/`+ params.caseId).then(res => res.data) }
+export const getReplyCaseImg = params => { return http.get(`${base}/case/readimage/` + params.caseId).then(res => res.data) }
 // 评论
 
 export const getCommentList = params => { return http.get(`${base}/comment/getComments/` + params.caseId).then(res => res.data) }
@@ -132,20 +130,31 @@ export const requestComment = params => { return http.post(`${base}/comment/addC
 
 // 编辑添加案例
 
-export const getCaseToEdit = params => { return http.get(`${base}/case/findCasesbycaseId/`+ params.caseId).then(res => res.data) }
+export const getCaseToEdit = params => { return http.get(`${base}/case/findCasesbycaseId/` + params.caseId).then(res => res.data) }
 
 export const editCse = params => { return http.put(`${base}/case/updatecase`, params).then(res => res.data) }
 
 export const addCase = params => { return http.post(`${base}/case/insertcase`, params).then(res => res.data) }
 
-//文件
+// 文件
 
-export const getCaseDetailFile = params => { return http.get(`${base}/case/getFileByCaseId/`+params.caseId).then(res => res.data) }
+export const getCaseDetailFile = params => { return http.get(`${base}/case/getFileByCaseId/` + params.caseId).then(res => res.data) }
 
-export const downloadFile = params => { return http.post(`${base}/sfile/downloadFile/`+params.fileId).then(res => res.data) }
+export const downloadFile = params => { return http.post(`${base}/sfile/downloadFile/` + params.fileId).then(res => res.data) }
 
-export const downloadCaseFile = params => { return http.post(`${base}/case/downloadFileFromCasesbyid/`+params.id).then(res => res.data) }
+export const downloadCaseFile = params => { return http.post(`${base}/case/downloadFileFromCasesbyid/` + params.id).then(res => res.data) }
 
-export const getCaseFile = params => { return http.get(`${base}/sfile/getFileByCaseId/`+params.caseId+'/'+params.pageNum+'/'+params.pageSize ).then(res => res.data) }
+export const getCaseFile = params => { return http.get(`${base}/sfile/getFileByCaseId/` + params.caseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
-export const removeTeacherFile = params => { return http.delete(`${base}/case/deleteCaseFileById/`+params.id).then(res => res.data) }
+export const removeTeacherFile = params => { return http.delete(`${base}/case/deleteCaseFileById/` + params.id).then(res => res.data) }
+
+// 字典管理
+export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionary/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
+
+export const delDictVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailByTypeCode`).then(res => res.data) }
+
+export const getEditValue = params => {return http.get(`${base}/dict/getDictionaryDetailByTypeCode/` + params.typeCode).then(res => res.data)}
+
+export const updateEditVal = params => { return http.put(`${base}/dict/updateDictionaryDetail`).then(res => res.data) }
+
+export const queryDict = params => { return http.get(`${base}/dict/getDictionaryTypeBytypeName/` + params.typeName).then(res => res.data)}

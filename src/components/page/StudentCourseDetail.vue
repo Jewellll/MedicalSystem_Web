@@ -149,10 +149,11 @@ export default {
       this.teamLoading = true
       let para = {courseId: this.courseInfo.courseId, studentId: JSON.parse(localStorage.getItem('user')).userId}
       getTeamMembers(para).then((res) => {
+
         if (res.code == '200') {
           this.teamLoading = false
           this.teamInfo = res.data
-        } else if (res.code == '200') {
+        } else if (res.code == '201') {
           this.teamLoading = false
           alert('您尚未组队')
         }
