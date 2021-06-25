@@ -78,6 +78,7 @@ export const createTeam = params => { return http.post(`${base}/course/setStuden
 
 export const removeTeam = params => { return http.post(`${base}/team/deleteTeamByCIdSId/` + params.courseId + '/' + params.teamId).then(res => res.data) }
 
+export const getTeamMembers = params => { return http.get(`${base}/team/findTeamStudent/` + params.courseId + '/' + params.studentId).then(res => res.data) }
 
 export const getCaseListByCourse = params => { return http.get(`${base}/case/findCasesbycourseId/` + params.courseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
@@ -108,6 +109,7 @@ export const batchRemoveDic = params => { return http.get(`${base}/dictionary/ba
 export const editDictionary = params => { return http.get(`${base}/dictionary/edit`, params).then(res => res.data) }
 
 // 案例管理
+
 
 export const getCaseListPage = params => { return http.post(`${base}/case/findCasesByPage/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 

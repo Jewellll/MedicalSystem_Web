@@ -61,7 +61,7 @@ export default {
       addedCourse: [],
       allCourses: [],
       listLoading1: false,
-      listLoading2: false,
+      listLoading2: false
     }
   },
   created () {
