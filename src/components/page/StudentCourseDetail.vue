@@ -92,211 +92,139 @@
 
 <script>
 import {
-<<<<<<< HEAD
-    addTeacher, batchRemoveCase,
-    batchRemoveTeacher,
-    editTeacher, getCaseListByCourse, getCourseDetailPage,
-    getTeacherListPage, removeCase,
-    removeTeacher
-=======
-  batchRemoveCase,
-  getCaseListByCourse, getCourseDetailPage,
-  getTeamMembers
->>>>>>> Liu
+    batchRemoveCase,
+    getCaseListByCourse, getCourseDetailPage,
+    getTeamMembers
 } from '../../api/api'
 import dicList from './Dictionary'
 
 export default {
-  data () {
-    return {
-      // 获取用户列表的参数对象
-      queryInfo: {
-        // 查询参数
-        query: '',
-<<<<<<< HEAD
-        // 课程名
-        course_name: '',
-          // 当前的页码数
-          pagenum_case: 1,
-          // 每页显示多少条数据
-          pagesize_case: 5,
-=======
-        // 当前的页码数
-        pagenum: 1,
-        // 每页显示多少条数据
-        pagesize: 5
->>>>>>> Liu
-      },
-      // 课程
-      courseInfo: {
-        courseId: '',
-        courseName: '',
-        desc: ''
-      },
-<<<<<<< HEAD
-        courseId:0,
-=======
-      teamInfo: [],
->>>>>>> Liu
-      // 案例
-      caseList: [],
-      sels: [], // 列表选中列
-      // 总数
-      total: 0,
-      // 列表加载
-      listLoading: false,
-      teamLoading: false
-    }
-  },
-  created () {
-      this.getParams()
-    this.getCourseDetail()
-<<<<<<< HEAD
-      this.getCaseList()
-=======
-    this.getCaseList()
-    this.getTeamInfo()
->>>>>>> Liu
-  },
-  methods: {
-      getParams () {
-          this.courseId = this.$route.query.courseId
-          console.log(this.courseId)
-      },
-    async getCourseDetail () {
-      this.courseInfo.courseId = this.$route.query.courseId
-
-      getCourseDetailPage(this.courseInfo).then((res) => {
-        this.courseInfo.courseName = res.data.courseName
-        this.courseInfo.desc = res.data.courseDesc
-      })
-    },
-    getCaseList () {
-      this.listLoading = true
-      let para = {courseId: this.courseInfo.courseId, pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize}
-      this.listLoading = true
-<<<<<<< HEAD
-      getCourseDetailPage(this.queryInfo).then((res) => {
-        this.total = res.data.total
-        this.courseInfo = res.data
-=======
-      getCaseListByCourse(para).then((res) => {
-        this.caseList = res.data
->>>>>>> Liu
-        this.listLoading = false
-        this.total = res.count
-      })
-    },
-    getTeamInfo () {
-      this.teamLoading = true
-      let para = {courseId: this.courseInfo.courseId, studentId: JSON.parse(localStorage.getItem('user')).userId}
-      getTeamMembers(para).then((res) => {
-        if (res.code == '200') {
-          this.teamLoading = false
-          this.teamInfo = res.data
-        } else if (res.code == '200') {
-          this.teamLoading = false
-          alert('您尚未组队')
+    data () {
+        return {
+            // 获取用户列表的参数对象
+            queryInfo: {
+                // 查询参数
+                query: '',
+                // 当前的页码数
+                pagenum: 1,
+                // 每页显示多少条数据
+                pagesize: 5
+            },
+            // 课程
+            courseInfo: {
+                courseId: '',
+                courseName: '',
+                desc: ''
+            },
+            teamInfo: [],
+            // 案例
+            caseList: [],
+            sels: [], // 列表选中列
+            // 总数
+            total: 0,
+            // 列表加载
+            listLoading: false,
+            teamLoading: false
         }
-      })
     },
-     async getCaseList () {
-         let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_case, pageSize: this.queryInfo.pagesize_case}
-          this.listLoading = true
-          getCaseListByCourse(para).then((res) => {
-              console.log(res)
-              this.caseList = res.data
-              this.listLoading = false
-              this.total_case = res.count
-          })
-      },
-    // 监听 pageSize 改变的事件
-    handleSizeChange (newSize) {
-      //   console.log(newSize)
-      //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
-      this.queryInfo.pagesize = newSize
-      //  修改完以后，重新发起请求获取一次数据
-      this.getCaseList()
+    created () {
+        this.getCourseDetail()
+        this.getCaseList()
+        this.getTeamInfo()
     },
-    // 监听 页码值  改变的事件
-    handleCurrentChange (newPage) {
-      //   console.log(newPage)
-      //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
-      this.queryInfo.pagenum = newPage
-      //  修改完以后，重新发起请求获取一次数据
-      this.getCaseList()
-    },
-    // 监听添加用户对话框的关闭事件
-    addDialogClosed () {
-      this.$refs.addFormRef.resetFields()
-      this.$refs.editForm.resetFields()
-    },
-    // 点击按钮，添加新用户
-    addCase () {
-      this.$router.push({ path: '/createCases', query: {} })
-    },
-    // 案例详情
-    handleEdit: function (index, row) {
-      let para = Object.assign({}, row)
-<<<<<<< HEAD
-        this.$router.push({path:'/caseDetail',query:{caseId:para.caseId}})
-    },
-    // 删除
-    handleDel: function (index, row) {
-      this.$confirm('确认删除该记录吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        this.listLoading = true
-        let para = {id: row.id}
-        removeCase(para).then((res) => {
-          if (res.data.code == 200) {
-            this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-            this.getCourseDetail()
-          }
-        })
-      }).catch(() => {
+    methods: {
+        async getCourseDetail () {
+            this.courseInfo.courseId = this.$route.query.courseId
 
-      })
-=======
-      this.$router.push({path: '/replyCase', params: {caseId: para.caseId, caseName: para.caseName}})
->>>>>>> Liu
-    },
-    // 选择多行
-    selsChange: function (sels) {
-      this.sels = sels
-    },
-    // 批量删除
-    batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString()
-      this.$confirm('确认删除选中记录吗？', '提示', {
-        type: 'warning'
-      }).then(() => {
-        this.listLoading = true
-        let para = {ids: ids}
-        batchRemoveCase(para).then((res) => {
-          if (res.data.code == 200) {
-            this.listLoading = false
-            // NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
+            getCourseDetailPage(this.courseInfo).then((res) => {
+                this.courseInfo.courseName = res.data.courseName
+                this.courseInfo.desc = res.data.courseDesc
             })
-            this.getCourseDetail()
-          }
-        })
-      }).catch(() => {
+        },
+        getCaseList () {
+            this.listLoading = true
+            let para = {courseId: this.courseInfo.courseId, pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize}
+            this.listLoading = true
+            getCaseListByCourse(para).then((res) => {
+                this.caseList = res.data
+                this.listLoading = false
+                this.total = res.count
+            })
+        },
+        getTeamInfo () {
+            this.teamLoading = true
+            let para = {courseId: this.courseInfo.courseId, studentId: JSON.parse(localStorage.getItem('user')).userId}
+            getTeamMembers(para).then((res) => {
+                if (res.code == '200') {
+                    this.teamLoading = false
+                    this.teamInfo = res.data
+                } else if (res.code == '200') {
+                    this.teamLoading = false
+                    alert('您尚未组队')
+                }
+            })
+        },
+        // 监听 pageSize 改变的事件
+        handleSizeChange (newSize) {
+            //   console.log(newSize)
+            //  将监听接受到的每页显示多少条的数据 newSzie 赋值给 pagesize
+            this.queryInfo.pagesize = newSize
+            //  修改完以后，重新发起请求获取一次数据
+            this.getCaseList()
+        },
+        // 监听 页码值  改变的事件
+        handleCurrentChange (newPage) {
+            //   console.log(newPage)
+            //  将监听接受到的页码值的数据 newPage 赋值给 pagenum
+            this.queryInfo.pagenum = newPage
+            //  修改完以后，重新发起请求获取一次数据
+            this.getCaseList()
+        },
+        // 监听添加用户对话框的关闭事件
+        addDialogClosed () {
+            this.$refs.addFormRef.resetFields()
+            this.$refs.editForm.resetFields()
+        },
+        // 点击按钮，添加新用户
+        addCase () {
+            this.$router.push({ path: '/createCases', query: {} })
+        },
+        // 案例详情
+        handleEdit: function (index, row) {
+            let para = Object.assign({}, row)
+            this.$router.push({path: '/replyCase', params: {caseId: para.caseId, caseName: para.caseName}})
+        },
+        // 选择多行
+        selsChange: function (sels) {
+            this.sels = sels
+        },
+        // 批量删除
+        batchRemove: function () {
+            var ids = this.sels.map(item => item.id).toString()
+            this.$confirm('确认删除选中记录吗？', '提示', {
+                type: 'warning'
+            }).then(() => {
+                this.listLoading = true
+                let para = {ids: ids}
+                batchRemoveCase(para).then((res) => {
+                    if (res.data.code == 200) {
+                        this.listLoading = false
+                        // NProgress.done();
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        })
+                        this.getCourseDetail()
+                    }
+                })
+            }).catch(() => {
 
-      })
-    },
-    back () {
-      this.$router.go(-1)
+            })
+        },
+        back () {
+            this.$router.go(-1)
+        }
     }
-  }
 }
 </script>
 
