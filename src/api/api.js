@@ -148,6 +148,8 @@ export const getCaseFile = params => { return http.get(`${base}/sfile/getFileByC
 
 export const removeTeacherFile = params => { return http.delete(`${base}/case/deleteCaseFileById/` + params.id).then(res => res.data) }
 
+export const removeStudentFile = params => { return http.delete(`${base}/sfile/deleteFile/`+params.fileId).then(res => res.data) }
+
 // 字典管理
 export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionary/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
