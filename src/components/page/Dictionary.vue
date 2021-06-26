@@ -406,6 +406,7 @@ export default {
       this.listLoading = true
       getPageDict(para).then((res) => {
           //console.log(res.data)
+          this.$message.success(res.msg)
         this.total = res.data.pageInfo.total
         this.pageData = res.data.pageInfo.list
         for (let i = 0; i < this.pageData.length; i++) {
