@@ -196,7 +196,7 @@ export default {
         pageSize: 5,
         dicName: ''
       },
-      total: '',
+      total: 0,
       pageData: [],
       listLoading: false,
       valueData: [],
@@ -376,7 +376,6 @@ export default {
     handleSearch () {
       let para = {typeName: this.query.dicName}
       queryDict(para).then((res) => {
-        console.log(res.data)
         this.pageData = res.data
       })
     },
