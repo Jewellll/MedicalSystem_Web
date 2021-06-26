@@ -149,3 +149,5 @@ export const downloadCaseFile = params => { return http.post(`${base}/case/downl
 export const getCaseFile = params => { return http.get(`${base}/sfile/getFileByCaseId/`+params.caseId+'/'+params.pageNum+'/'+params.pageSize ).then(res => res.data) }
 
 export const removeTeacherFile = params => { return http.delete(`${base}/case/deleteCaseFileById/`+params.id).then(res => res.data) }
+
+export const removeStudentFile = params => { return http.delete(`${base}/sfile/deleteFile/`+params.fileId).then(res => res.data) }

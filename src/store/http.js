@@ -4,7 +4,7 @@ import axios from 'axios'
 import {Message} from 'element-ui'
 
 
-axios.defaults.timeout = 5000; // 超时时间
+axios.defaults.timeout = 50000; // 超时时间
 axios.defaults.baseURL = 'http://118.195.129.22:8081'
 // axios.defaults.baseURL = 'http://172.20.10.11:8443/api'
 // axios.defaults.baseURL = 'http://localhost:8443/api'

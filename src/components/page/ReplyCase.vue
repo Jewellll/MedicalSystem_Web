@@ -131,28 +131,28 @@ export default {
             fileList: [],
             fileList1:[],
             urls: [
-                require('../../assets/img/CaseImg/Case02-1.png'),
-                require('../../assets/img/CaseImg/Case02-2.png'),
-                require('../../assets/img/CaseImg/Case02-3.png'),
-                require('../../assets/img/CaseImg/Case02-4.png'),
-                require('../../assets/img/CaseImg/Case02-5.png'),
-                require('../../assets/img/CaseImg/Case02-6.png'),
-                require('../../assets/img/CaseImg/Case02-7.png'),
-                require('../../assets/img/CaseImg/Case02-8.png'),
-                require('../../assets/img/CaseImg/Case02-9.png'),
-                require('../../assets/img/CaseImg/Case02-10.png')
+                // require('../../assets/img/CaseImg/Case02-1.png'),
+                // require('../../assets/img/CaseImg/Case02-2.png'),
+                // require('../../assets/img/CaseImg/Case02-3.png'),
+                // require('../../assets/img/CaseImg/Case02-4.png'),
+                // require('../../assets/img/CaseImg/Case02-5.png'),
+                // require('../../assets/img/CaseImg/Case02-6.png'),
+                // require('../../assets/img/CaseImg/Case02-7.png'),
+                // require('../../assets/img/CaseImg/Case02-8.png'),
+                // require('../../assets/img/CaseImg/Case02-9.png'),
+                // require('../../assets/img/CaseImg/Case02-10.png')
             ],
             srcList: [
-                require('../../assets/img/CaseImg/Case02-1.png'),
-                require('../../assets/img/CaseImg/Case02-2.png'),
-                require('../../assets/img/CaseImg/Case02-3.png'),
-                require('../../assets/img/CaseImg/Case02-4.png'),
-                require('../../assets/img/CaseImg/Case02-5.png'),
-                require('../../assets/img/CaseImg/Case02-6.png'),
-                require('../../assets/img/CaseImg/Case02-7.png'),
-                require('../../assets/img/CaseImg/Case02-8.png'),
-                require('../../assets/img/CaseImg/Case02-9.png'),
-                require('../../assets/img/CaseImg/Case02-10.png')
+                // require('../../assets/img/CaseImg/Case02-1.png'),
+                // require('../../assets/img/CaseImg/Case02-2.png'),
+                // require('../../assets/img/CaseImg/Case02-3.png'),
+                // require('../../assets/img/CaseImg/Case02-4.png'),
+                // require('../../assets/img/CaseImg/Case02-5.png'),
+                // require('../../assets/img/CaseImg/Case02-6.png'),
+                // require('../../assets/img/CaseImg/Case02-7.png'),
+                // require('../../assets/img/CaseImg/Case02-8.png'),
+                // require('../../assets/img/CaseImg/Case02-9.png'),
+                // require('../../assets/img/CaseImg/Case02-10.png')
             ],
             case:{
                 caseDesc:'',
@@ -168,9 +168,9 @@ export default {
         this.getParams()
         this.getUserList()
         this.getFileList()
-        // this.commentData = comments.data
-        this.getComments()
         this.getCaseImg ()
+        this.getComments()
+
     },
     methods: {
         getParams(){
@@ -208,7 +208,7 @@ export default {
                 }else if(res.code==='303'){
                     console.log(res)
                     this.listLoading = false
-                    this.$message.error(res.msg)
+                    this.$message.warning(res.msg)
                 }
             })
         },
@@ -216,9 +216,13 @@ export default {
             this.listLoading = true
             const param={caseId:this.caseId}
             getReplyCaseImg(param).then((res) => {
-                console.log(res)
-                // this.urls= res
-                this.listLoading = false
+                    console.log(res)
+                    var img = []
+                    for (var i = 0; i < res.data.length; i++) {
+                        img.push('data:image/jpeg;base64,' + res.data[i].imagebase)
+                    }
+                    this.urls = img
+                    this.srcList = img
             })
         },
         //评论
