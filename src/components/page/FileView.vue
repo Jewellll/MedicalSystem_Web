@@ -60,7 +60,7 @@
 <script>
 import {
     batchRemoveTeacher,
-    editTeacher, getCaseFile,
+    editTeacher, getCaseFile, removeStudentFile,
     removeTeacher
 } from '../../api/api'
 import axios from 'axios'
@@ -149,20 +149,6 @@ export default {
             const url="/sfile/downloadFile/"+params.fileId
             const options = {fileId:param.fileId}
             this.exportExcel(url,options,param.fileName)
-            // downloadFile(params).then((res) => {
-            //     console.log(res.url)
-            //     console.log("这是下载的接口res", res);
-            //     var blob = new Blob([res], {
-            //         type: "application/octet-stream;chartset=UTF-8"
-            //     });
-            //     console.log("这是blob", blob);
-            //     var url = window.URL.createObjectURL(blob);
-            //     var a = document.createElement("a");
-            //     a.href = url;
-            //     //文件名
-            //     a.download = param.fileName;
-            //     a.click();
-            // })
         },
         exportExcel(url, options = {},fileName) {
     return new Promise((resolve, reject) => {
@@ -199,9 +185,11 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.listLoading = true
-                let para = {id: row.id}
-                removeTeacher(para).then((res) => {
-                    if(rescode==200) {
+                console.log(row)
+                let para = {fileId: row.fileId}
+                removeStudentFile(para).then((res) => {
+                    console.log(res)
+                    if(res.code==='200') {
                         this.listLoading = false
                         //NProgress.done();
                         this.$message({
@@ -228,7 +216,7 @@ export default {
                 this.listLoading = true
                 let para = {ids: ids}
                 batchRemoveTeacher(para).then((res) => {
-                    if(res.data.code==200) {
+                    if(res.code==200) {
                         this.listLoading = false
                         //NProgress.done();
                         this.$message({

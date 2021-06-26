@@ -46,7 +46,7 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                <Comment :comments="commentData" :getComments="getComments"></Comment>
+                <Comment :comments=" commentData" :getComments="getComments"></Comment>
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
@@ -68,9 +68,10 @@
                 <div class="think">
                     <el-scrollbar>
                         <p>{{this.case.thinking}}</p>
-<!--                        <p>1、影像学磁共振表现？</p>-->
-<!--                        <p>2、最常见放疗后差分化梭形细胞肉瘤</p>-->
-<!--                        <p>3、放疗后血管肉瘤病理诊断标准</p>-->
+<!--                        <p>1、软组织或骨病变？钙化？良性？恶性？</p>-->
+<!--                        <p>2、10岁小圆细胞肿瘤：癌？肉瘤？白血病？</p>-->
+<!--                        <p>3、如果是肉瘤，鉴别尤文和横纹肌肉瘤需用哪些指标？</p>-->
+<!--                        <p>4、尤文肉瘤可以化疗吗？常规治疗方案？</p>-->
                     </el-scrollbar>
                 </div>
             </div>
@@ -127,7 +128,7 @@
 </template>
 <!--"http://118.195.129.22:8081/sfile/uploadFile?caseId=122206152&studentId=888888888"-->
 <script>
-import {getCaseDetail, getCaseDetailFile, getCommentList, getTeacherListPage} from '../../api/api'
+import {getCaseDetail, getCaseDetailFile, getCommentList, getReplyCaseImg, getTeacherListPage} from '../../api/api'
 // import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
 import http from '../../store/http'
@@ -180,10 +181,11 @@ export default {
     },
     created () {
         this.getParams()
-        // this.commentData = comments.data
-        this.getUserList ()
+        this.getCaseImg()
         this.getFileList()
+        // this.commentData=comments.data
         this.getComments()
+        this.getUserList ()
     },
     methods: {
         getParams(){
@@ -217,6 +219,23 @@ export default {
                     this.fileList1.push(item)
                 }
                 this.listLoading = false
+            })
+        },
+        async getCaseImg () {
+            this.listLoading = true
+            const param={caseId:this.caseId}
+            getReplyCaseImg(param).then((res) => {
+                if(res.code==='200') {
+                    console.log(res)
+                    var img = []
+                    for (var i = 0; i < res.data.length; i++) {
+                        img.push('data:image/jpeg;base64,' + res.data[i].imagebase)
+                    }
+                    this.urls = img
+                    this.srcList = img
+                }else{
+                    this.$message.warning('该案例无图片')
+                }
             })
         },
         //评论
@@ -372,7 +391,7 @@ export default {
 .think >>> .el-scrollbar__wrap {
     overflow: scroll;
     width: 110%;
-    height: 104%;
+    height: 110%;
 }
 
 /*上传*/
