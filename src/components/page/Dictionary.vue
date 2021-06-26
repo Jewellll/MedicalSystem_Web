@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 字典
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
         <div class="container">
+            <div class="crumb">
+                <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size: 5px">
+                    <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>字典</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+
             <div class="handle-box">
                 <el-button
                     type="primary"
@@ -28,6 +28,7 @@
                 border
                 class="table"
                 ref="multipleTable"
+                v-loading="listLoading"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
@@ -197,6 +198,7 @@ export default {
       },
       total: '',
       pageData: [],
+      listLoading: false,
       valueData: [],
       selectTotal: 0,
       multipleSelection: [],
@@ -228,11 +230,11 @@ export default {
   },
   created () {
     this.getPageData(),
-        this.$watch('query.dicName', (newVal, oldVal) => {
-            if (newVal == ''){
-                this.getPageData()
-            }
-        })
+    this.$watch('query.dicName', (newVal, oldVal) => {
+      if (newVal == '') {
+        this.getPageData()
+      }
+    })
   },
   methods: {
     // 新增操作
@@ -253,6 +255,7 @@ export default {
     },
     addEditRow () {
       let list = {
+        id: '',
         name: ' ',
         value: '',
         show: true,
@@ -299,25 +302,28 @@ export default {
 
     // 新增字典
     saveAdd () {
-      let param = this.addform
-      addDict(param).then(res => {
-        if (res.code == 102) {
-          alert('已提交，请勿重复提交')
-        } else if (res.code == 201) {
-          alert('请勿提交空值')
-        } else {
-          this.addform = {
-            typeName: '',
-            typeCode: '',
-            dictionaryDetails: [{ name: ' ', value: '0', show: false, isDefault: '0'}]
+      this.$refs.addform.validate(valid => {
+        if (valid) {
+          let param = this.addform
+          console.log(param)
+          addDict(param).then(res => {
+            if (res.code == '102') {
+              alert('已提交，请勿重复提交')
+            } else if (res.code == '201') {
+              this.addform = {
+                typeName: '',
+                typeCode: '',
+                dictionaryDetails: [{ name: ' ', value: '0', show: false, isDefault: '0'}]
 
-          },
-          this.$message.success('添加成功')
-          this.getPageData()
-          // this.$message.success("请刷新页面以显示数据");
+              },
+              this.$message.success('添加成功')
+              this.getPageData()
+              // this.$message.success("请刷新页面以显示数据");
+            }
+          })
+          this.addVisible = false
         }
       })
-      this.addVisible = false
     },
     // 编辑操作
     handleEdit (index, row) {
@@ -337,13 +343,13 @@ export default {
 
     // 保存编辑
     saveEdit (index, row) {
-      var updateVal = {typeCode: this.editform.typeCode, value: row.value, name: row.name, isDefault: row.isDefault}
+      var updateVal = {typeCode: this.editform.typeCode, id: row.id, value: row.value, name: row.name, isDefault: row.isDefault}
       console.log(updateVal)
       updateEditVal(updateVal).then((res) => {
         this.getPageData()
         this.handleEdit(index, row)
+        this.$message.success(`保存成功`)
       })
-      this.$message.success(`保存成功`)
     },
     // 编辑字典的删除操作
     // 再.then之后重新获取数据就可以刷新页面数据
@@ -398,7 +404,9 @@ export default {
     // 获取页面数据
     getPageData () {
       let para = {pageNum: this.query.page, pageSize: this.query.pageSize}
+      this.listLoading = true
       getPageDict(para).then((res) => {
+          //console.log(res.data)
         this.total = res.data.pageInfo.total
         this.pageData = res.data.pageInfo.list
         for (let i = 0; i < this.pageData.length; i++) {
@@ -409,6 +417,7 @@ export default {
           }
           this.pageData[i].modifier = data
         }
+        this.listLoading = false
       })
     },
     handlePageChange (val) {
@@ -418,7 +427,7 @@ export default {
     handleSizeChange (val) {
       this.$set(this.query, 'pageSize', val)
       this.getPageData()
-    },
+    }
 
   }
   // mounted() {
@@ -434,7 +443,20 @@ export default {
 }
 </script>
 <style scoped>
+.container {
+    margin-top: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px 10px;
+    background-color: #FFFFFF;
+    height: 100vh;
+    border-radius: 5px;
+}
+.crumbs{
+    margin-left: 2px;
+}
 .handle-box {
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 

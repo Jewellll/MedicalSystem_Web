@@ -158,3 +158,7 @@ export const getEditValue = params => {return http.get(`${base}/dict/getDictiona
 export const updateEditVal = params => { return http.put(`${base}/dict/updateDictionaryDetail`).then(res => res.data) }
 
 export const queryDict = params => { return http.get(`${base}/dict/getDictionaryTypeBytypeName/` + params.typeName).then(res => res.data)}
+
+export const addDict = params => {return http.post(`${base}/dict/insertDictionary`).then(res => res.data)}
+
+export const delEditVal = params => {}
