@@ -183,7 +183,7 @@ export default {
     // 案例详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$router.push({path: '/replyCase', params: {caseId: para.caseId, caseName: para.caseName}})
+      this.$router.push({path: '/caseDetail', query: {caseId: para.caseId, caseName: para.caseName}})
     },
     // 选择多行
     selsChange: function (sels) {
