@@ -98,8 +98,8 @@
                     <el-table-column label="默认值" >
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.isDefault" placeholder="默认值">
-                                <el-option label="是" value="1"></el-option>
-                                <el-option label="否" value="0"></el-option>
+                                <el-option label="是" :value='1'></el-option>
+                                <el-option label="否" :value='0'></el-option>
                             </el-select>
                         </template>
 
@@ -151,8 +151,8 @@
                     <el-table-column prop="isDefault" label="默认值" align="center">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.isDefault" placeholder="默认值">
-                                <el-option label="是" value="1"></el-option>
-                                <el-option label="否" value="0"></el-option>
+                                <el-option label="是" :value='1'></el-option>
+                                <el-option label="否" :value='0'></el-option>
                             </el-select>
                         </template>
                     </el-table-column>
@@ -176,7 +176,6 @@
 
 <script>
 import {
-  addDict,
   getDictPage,
   getEditValue,
   updateEditVal,
@@ -187,6 +186,7 @@ import {
   queryDict
 } from '../../api/api'
 import Sortable from 'sortablejs'
+import axios from 'axios'
 export default {
   name: 'basetable',
   data () {
@@ -196,7 +196,7 @@ export default {
         pageSize: 5,
         dicName: ''
       },
-      total: '',
+      total: 0,
       pageData: [],
       listLoading: false,
       valueData: [],
@@ -209,15 +209,15 @@ export default {
       editform: {
         typeName: ' ',
         typeCode: ' ',
-        value: ' ',
+        value: -1,
         name: ' ',
-        isDefault: ' '
+        isDefault: 0
       },
       editValue: [],
       addform: {
         typeName: '',
         typeCode: '',
-        dictionaryDetails: [{ name: ' ', value: '0', show: false, isDefault: '0'}]
+        dictionaryDetails: [{ name: ' ', value: 0, show: false, isDefault: 0}]
 
       },
       addrules: {
@@ -225,6 +225,7 @@ export default {
         typeCode: [{required: true, message: '请输入编码', trigger: 'blur'}]
       },
       idx: -1,
+        row:'',
       id: -1
     }
   },
@@ -246,7 +247,7 @@ export default {
         name: ' ',
         value: '',
         show: false,
-        isDefault: '0'
+        isDefault: 0
       }
       this.addform.dictionaryDetails.push(list)
       for (let i = 0; i < this.addform.dictionaryDetails.length; i++) {
@@ -257,9 +258,9 @@ export default {
       let list = {
         id: '',
         name: ' ',
-        value: '',
+        value: -1,
         show: true,
-        isDefault: '0'
+        isDefault: 0
       }
       this.editValue.push(list)
     },
@@ -305,22 +306,45 @@ export default {
       this.$refs.addform.validate(valid => {
         if (valid) {
           let param = this.addform
-          console.log(param)
-          addDict(param).then(res => {
-            if (res.code == '102') {
+          axios({
+            method: 'post',
+            url: 'http://118.195.129.22:8081/dict/insertDictionary',
+            data: {
+              typeName: this.addform.typeName,
+              typeCode: this.addform.typeCode,
+              dictionaryDetails: this.addform.dictionaryDetails
+            }
+          }).then((res) => {
+            console.log(res.data)
+            if (res.data.code == '102') {
               alert('已提交，请勿重复提交')
-            } else if (res.code == '201') {
+            } else if (res.data.code == '201') {
               this.addform = {
                 typeName: '',
                 typeCode: '',
-                dictionaryDetails: [{ name: ' ', value: '0', show: false, isDefault: '0'}]
+                dictionaryDetails: [{ name: ' ', value: 0, show: false, isDefault: 0}]
 
               },
               this.$message.success('添加成功')
               this.getPageData()
               // this.$message.success("请刷新页面以显示数据");
             }
-          })
+          }).catch()
+          // addDict(param).then(res => {
+          //   if (res.code == '102') {
+          //     alert('已提交，请勿重复提交')
+          //   } else if (res.code == '201') {
+          //     this.addform = {
+          //       typeName: '',
+          //       typeCode: '',
+          //       dictionaryDetails: [{ name: ' ', value: '0', show: false, isDefault: '0'}]
+          //
+          //     },
+          //     this.$message.success('添加成功')
+          //     this.getPageData()
+          //     // this.$message.success("请刷新页面以显示数据");
+          //   }
+          // })
           this.addVisible = false
         }
       })
@@ -329,6 +353,7 @@ export default {
     handleEdit (index, row) {
       this.editVisible = true
       this.idx = index
+        this.row = row
       this.editform = Object.assign({}, row)
       let a = {typeCode: this.editform.typeCode}
       getEditValue(a).then((res) => {
@@ -336,7 +361,6 @@ export default {
         this.editValue = jsonObj
         for (let i = 0; i < this.editValue.length; i++) {
           this.editValue[i].show = true
-          this.editValue[i].isDefault = this.editValue[i].isDefault == '0' ? '0' : '1'
         }
       })
     },
@@ -347,14 +371,14 @@ export default {
       console.log(updateVal)
       updateEditVal(updateVal).then((res) => {
         this.getPageData()
-        this.handleEdit(index, row)
-        this.$message.success(`保存成功`)
+        this.handleEdit(this.idx, this.row)
+        this.$message.success(res.data.msg)
       })
     },
     // 编辑字典的删除操作
     // 再.then之后重新获取数据就可以刷新页面数据
     handleDeleteEditAdd (index, row) {
-      let params = {typeCode: row.typeCode, value: row.value}
+      let params = {id: row.id}
       this.editValue.splice(index, 1)
       delEditVal(params).then((res) => {
         this.getPageData()
@@ -366,17 +390,25 @@ export default {
     handleDelete (index, row) {
       if (confirm('确认删除吗？') == true) {
         let params = {typeCode: row.typeCode}
-        delDictVal(params).then((res) => {
+        axios({
+          method: 'delete',
+          url: 'http://118.195.129.22:8081/dict/deleteDictionaryByTypeCode/' + row.typeCode,
+          data: {
+          }
+        }).then((res) => {
           this.$message.success('删除成功')
           this.getPageData()
-        })
+        }).catch()
+        // delDictVal(params).then((res) => {
+        //   this.$message.success('删除成功')
+        //   this.getPageData()
+        // })
       }
     },
     // 触发搜索按钮
     handleSearch () {
-      let para = {typeName: this.query.dicName}
+      let para = this.query.dicName
       queryDict(para).then((res) => {
-        console.log(res.data)
         this.pageData = res.data
       })
     },
@@ -406,7 +438,7 @@ export default {
       let para = {pageNum: this.query.page, pageSize: this.query.pageSize}
       this.listLoading = true
       getPageDict(para).then((res) => {
-          //console.log(res.data)
+        console.log(res.data)
         this.total = res.data.pageInfo.total
         this.pageData = res.data.pageInfo.list
         for (let i = 0; i < this.pageData.length; i++) {
