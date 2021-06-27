@@ -26,6 +26,7 @@ import CourseDetail from '../components/page/CourseDetail'
 import EditCases from '../components/page/EditCases'
 import StudentCourseDetail from "../components/page/StudentCourseDetail";
 import FileView from '../components/page/FileView'
+import ImageView from '../components/page/ImageView'
 
 Vue.use(Router)
 
@@ -155,6 +156,15 @@ export default new Router({
             requireAuth: true
           }
         },
+          {
+              path: '/imageView',
+              name: 'imageView',
+              component: ImageView,
+              meta: {
+                  title: '查看图片',
+                  requireAuth: true
+              }
+          },
         {
           path: '/500',
           name: '500',

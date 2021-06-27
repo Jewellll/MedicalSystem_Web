@@ -55,6 +55,7 @@
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
                         <el-button type="primary"  size="mini" @click="caseView(scope.$index, scope.row)">案例详情</el-button>
                         <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
+<!--                        <el-button type="primary"  size="mini" @click="imageView(scope.$index, scope.row)">查看图片</el-button>-->
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDelCase(scope.$index, scope.row)">删除案例</el-button>
                     </template>
@@ -384,6 +385,10 @@ export default {
       let para = Object.assign({}, row)
       this.$router.push({ path: '/fileView', query: {caseId: para.caseId, caseName: para.caseName} })
     },
+      imageView: function (index, row) {
+          let para = Object.assign({}, row)
+          this.$router.push({ path: '/imageView', query: {caseId: para.caseId, caseName: para.caseName} })
+      },
     // 删除
     handleDelCase: function (index, row) {
       this.$confirm('确认删除该案例吗?', '提示', {

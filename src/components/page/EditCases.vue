@@ -120,7 +120,7 @@ export default {
             this.caseForm.caseId=this.$route.query.caseId
             this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseForm.caseId
             this.upload1='http://118.195.129.22:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId+'&description='
-            console.log(this.caseForm.caseId)
+            console.log(this.upload)
         },
         //图片
         handleRemove (file, fileList) {

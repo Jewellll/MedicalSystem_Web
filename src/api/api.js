@@ -160,3 +160,13 @@ export const updateEditVal = params => { return http.put(`${base}/dict/updateDic
 export const queryDict = params => { return http.get(`${base}/dict/getDictionaryTypeBytypeName/` + params).then(res => res.data) }
 
 export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailByValueAndTypeCode/` + params.id).then(res => res.data) }
+
+export const getCaseId = params => { return http.post(`${base}/case/intoinsertcase` ,params).then(res => res.data) }
+
+export const deleteCaseImg = params => { return http.delete(`${base}/case/deletecaseimageByCaseId/` + params.caseId ).then(res => res.data) }
+
+export const deleteCaseFile = params => { return http.delete(`${base}/case/deleteCaseFileByCaseId/`+ params.caseId ).then(res => res.data) }
+
+//图片管理
+
+export const getCaseImage = params => { return http.get(`${base}/case/readimage/`+ params.caseId ).then(res => res.data) }

@@ -32,7 +32,7 @@
                     <div style="text-align: left;font-size: 14px;margin-top: 5px"> 案例图片：</div>
                     <el-upload
                         class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :action=upload1
                         :limit="3"
                         :multiple="true"
                         :on-exceed="exceedFile"
@@ -78,7 +78,14 @@
 </template>
 
 <script>
-import {addCase, editCse, getCaseListPage, getCaseToEdit, getCaseToEdite, requireRegister} from '../../api/api'
+import {
+    addCase, deleteCaseFile, deleteCaseImg,
+    editCse,
+    getCaseId,
+    getCaseListPage,
+    getCaseToEdit,
+    requireRegister
+} from '../../api/api'
 
 export default {
     name: 'createCases',
@@ -92,8 +99,8 @@ export default {
                 courseName:'',
                 creatTime:'',
                 isPublish:2,
-                creatTeacher:localStorage.getItem('user').userId
-
+                creatTeacher:localStorage.getItem('user').userId,
+                caseId:''
             },
             rules: {
                 caseName: [{ required: true, message: "请输入案例名", trigger: "blur" }],
@@ -101,20 +108,30 @@ export default {
             },
             fileList1: [],
             fileList2:[],
-            upload:''
-
+            upload:'',
+            upload1:'',
 
         }
     },
     created () {
+        this.getCaseId()
         this.getParams()
+
     },
     methods: {
+        async getCaseId(){
+            var params={}
+            getCaseId(params).then(res=>{
+                console.log(res)
+                this.caseForm.caseId=res.data.caseId
+                this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseForm.caseId
+                this.upload1='http://118.195.129.22:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId
+            })
+        },
         getParams(){
             this.caseForm.courseName=this.$route.query.courseName
             this.caseForm.courseId=this.$route.query.courseId
             var param=JSON.parse(localStorage.getItem('user'))
-            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='
             this.caseForm.creatTeacher=param.userId
         },
         //图片
@@ -154,6 +171,7 @@ export default {
             return this.$confirm(`确定移除 ${file.name}？`)
         },
         edit(){
+            console.log(this.caseForm.caseId)
             this.$refs.caseForm.validate((valid) => {
                 if (valid) {
                     const params = this.caseForm
@@ -172,7 +190,25 @@ export default {
                 }
             });
         },
+        deleteImg(){
+            var param={caseId:this.caseForm.caseId}
+            deleteCaseImg(param).then(res=>{
+                if (res.code==='200'){
+                    console.log(res)
+                }
+            })
+        },
+        deleteFile(){
+            var param={caseId:this.caseForm.caseId}
+            deleteCaseFile(param).then(res=>{
+                if (res.code==='200'){
+                    console.log(res)
+                }
+            })
+        },
         back(){
+            this.deleteFile()
+            this.deleteImg()
             this.$router.go(-1)
         }
     }
