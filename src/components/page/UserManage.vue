@@ -14,7 +14,7 @@
             <div class="toolbar">
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
+                        <el-input placeholder="请输入用户名" v-model="queryInfo.query" clearable @clear="getUserList()">
                             <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
                     </el-col>
