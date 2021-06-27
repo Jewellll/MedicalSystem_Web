@@ -153,14 +153,10 @@ export const removeStudentFile = params => { return http.delete(`${base}/sfile/d
 // 字典管理
 export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionary/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
-export const delDictVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailByTypeCode`).then(res => res.data) }
-
 export const getEditValue = params => { return http.get(`${base}/dict/getDictionaryDetailByTypeCode/` + params.typeCode).then(res => res.data) }
 
-export const updateEditVal = params => { return http.put(`${base}/dict/updateDictionaryDetail`).then(res => res.data) }
+export const updateEditVal = params => { return http.put(`${base}/dict/updateDictionaryDetail`, params).then(res => res.data) }
 
-export const queryDict = params => { return http.get(`${base}/dict/getDictionaryTypeBytypeName/` + params.typeName).then(res => res.data) }
+export const queryDict = params => { return http.get(`${base}/dict/getDictionaryTypeBytypeName/` + params).then(res => res.data) }
 
-export const addDict = params => { return http.post(`${base}/dict/insertDictionary`).then(res => res.data) }
-
-export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailByValueAndTypeCode`).then(res => res.data) }
+export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailByValueAndTypeCode/` + params.id).then(res => res.data) }
