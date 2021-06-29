@@ -23,7 +23,7 @@ export const getUserListByRealName = params => { return http.get(`${base}/user/g
 
 export const getUserListByUserName = params => { return http.get(`${base}/user/getUserByUserName/` + params.username).then(res => res.data) }
 
-export const batchRemoveUser = params => { return http.post(`${base}/user/batchremove`, params).then(res => res.data) }
+export const batchRemoveUser = params => { return http.delete(`${base}/user/deleteUserAllByuserId`, params).then(res => res.data) }
 
 export const editUser = params => { return http.put(`${base}/user/updateUser`, params).then(res => res.data) }
 
@@ -170,3 +170,7 @@ export const deleteCaseFile = params => { return http.delete(`${base}/case/delet
 //图片管理
 
 export const getCaseImage = params => { return http.get(`${base}/case/readimage/`+ params.caseId ).then(res => res.data) }
+
+export const batchRemoveFile = params => { return http.delete(`${base}/sfile/deleteBatchFiles`,params).then(res => res.data) }
+
+export const removeImage = params => { return http.delete(`${base}/case/deletecaseimage/`+ params.id ).then(res => res.data) }

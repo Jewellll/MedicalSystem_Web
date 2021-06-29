@@ -45,17 +45,17 @@
                 </el-row>
             </div>
             <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" @selection-change="selsChange">
-                <el-table-column type="selection" width="40"></el-table-column>
-                <el-table-column type="index" label="序号"></el-table-column>
-                <el-table-column prop="caseName" label="案例名称"></el-table-column>
-                <el-table-column prop="teacherName" label="创建教师" ></el-table-column>
+                <el-table-column type="selection" width="30px"></el-table-column>
+                <el-table-column type="index" width="40px" label="序号"></el-table-column>
+                <el-table-column prop="caseName" width="300px" label="案例名称"></el-table-column>
+                <el-table-column prop="teacherName" width="300px" label="创建教师" ></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
                         <el-button type="primary"  size="mini" @click="caseView(scope.$index, scope.row)">案例详情</el-button>
                         <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
-<!--                        <el-button type="primary"  size="mini" @click="imageView(scope.$index, scope.row)">查看图片</el-button>-->
+                        <el-button type="primary"  size="mini" @click="imageView(scope.$index, scope.row)">查看提交图片</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDelCase(scope.$index, scope.row)">删除案例</el-button>
                     </template>

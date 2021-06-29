@@ -59,6 +59,7 @@
 
 <script>
 import {
+    batchRemoveFile,
     batchRemoveTeacher,
     editTeacher, getCaseFile, removeStudentFile,
     removeTeacher
@@ -209,13 +210,15 @@ export default {
         },
         //批量删除
         batchRemove: function () {
-            var ids = this.sels.map(item => item.id).toString()
+            console.log(this.sels)
+            var ids = this.sels.map(item => item.fileId)
             this.$confirm('确认删除选中记录吗？', '提示', {
                 type: 'warning'
             }).then(() => {
                 this.listLoading = true
-                let para = {ids: ids}
-                batchRemoveTeacher(para).then((res) => {
+                let para =  ids
+                console.log(para)
+                batchRemoveFile(para).then((res) => {
                     if(res.code==200) {
                         this.listLoading = false
                         //NProgress.done();

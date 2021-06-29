@@ -40,6 +40,7 @@
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
                         <el-button type="primary"  size="mini" @click="caseDetail(scope.$index, scope.row)">案例详情</el-button>
                         <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
+                        <el-button type="primary"  size="mini" @click="imageView(scope.$index, scope.row)">查看提交图片</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -263,6 +264,10 @@ export default {
 
       })
     },
+      imageView: function (index, row) {
+          let para = Object.assign({}, row)
+          this.$router.push({ path: '/imageView', query: {caseId: para.caseId, caseName: para.caseName} })
+      },
     // 选择多行
     selsChange: function (sels) {
       this.sels = sels

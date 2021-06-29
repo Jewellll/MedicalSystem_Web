@@ -90,20 +90,6 @@ export default {
           this.$message.error('发送失败')
         }
       })
-      // this.$http
-      //     .post('/send', {
-      //         phoneNum: this.phoneNum,
-      //     })
-      //     .then(res => {
-      //         if (res.data.code === 200) {
-      //             this.$message('发送成功')
-      //         }
-      //         if (res.data.code === 400) {
-      //             this.$message.error('发送失败')
-      //         }
-      //     })
-      //     .catch(failResponse => {
-      //     })
     },
     timer () {
       if (this.time > 0) {

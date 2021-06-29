@@ -4,7 +4,7 @@
         <div class="crumb">
             <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size: 5px">
                 <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>教师管理</el-breadcrumb-item>
+                <el-breadcrumb-item>用户管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -13,7 +13,7 @@
             <!-- 搜索与添加区域 -->
             <div class="toolbar">
                 <el-row :gutter="20">
-                    <el-col :span="8">
+                    <el-col :span="4">
                         <el-input placeholder="请输入用户名" v-model="queryInfo.query" clearable @clear="getUserList()">
                             <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
@@ -523,12 +523,14 @@ export default {
     },
     // 批量删除
     batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString()
+      var ids = this.sels.map(item => item.userId)
       this.$confirm('确认删除选中记录吗？', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {ids: ids}
+          console.log(ids)
+        let para = ids
+        console.log(para)
         batchRemoveUser(para).then((res) => {
           if (res.data.code == 200) {
             this.listLoading = false
