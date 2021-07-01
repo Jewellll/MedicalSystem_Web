@@ -1,18 +1,18 @@
 <template>
     <div>
-        <el-form ref="checkForm" class="check-container" label-position="left"
-                 label-width="0x" >
-            <h3 class="check_title">手机登录</h3>
-            <el-form-item prop="phoneNum">
-                <el-input type="text" v-model="phoneNum"
-                          auto-complete="off" placeholder="请输入手机号码"></el-input>
+        <el-form :model="phoneForm" ref="phoneForm" class="check-container" label-position="left"
+                 label-width="0px" :rules="rules" >
+            <h3 class="check_title">邮箱登录</h3>
+            <el-form-item prop="email">
+                <el-input type="text" v-model="phoneForm.email"
+                          auto-complete="off" placeholder="请输入邮箱"></el-input>
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="verifyNum">
                 <div class="iden">
-                    <el-input type="text" v-model="verifyNum" style=""
+                    <el-input type="text" v-model="phoneForm.verifyNum" style=""
                               auto-complete="off" @keyup.enter.native="verificationCode"
                               placeholder="请输入验证码"></el-input>
-                    <el-button :style="{border: none,background:btnColor?'#2E9AFE':'#617079',color:'#FFF',width:'50%'}"
+                    <el-button :style="{background:btnColor?'#2E9AFE':'#617079',color:'#FFF',width:'50%'}"
                                v-on:click="sendSmsCode"
                                class="verify-btn" v-model="btnContent"
                                v-bind="{'disabled':disabled}">
@@ -32,117 +32,98 @@
 </template>
 
 <script>
-import {requestLogin, requestMss, requestPhoneLogin} from '../../api/api'
+import {requestEmailLogin, requestLogin, requestMss, requestPhoneLogin} from '../../api/api'
 
 export default {
-  data () {
-    var checkMobile = (rule, value, callback) => {
-      // 验证手机号的正则表达式
-      const regMobile = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
-      if (regMobile.test(value)) {
-        // 验证通过，合法的手机号
-        return callback()
-      }
-      // 验证不通过，不合法
-      callback(new Error('请输入合法的手机号'))
-    }
-    return {
-      phoneNum: '', // 手机号
-      verifyNum: '', // 验证码
-      btnContent: '获取验证码', // 获取验证码按钮内文字
-      time: 0, // 发送验证码间隔时间
-      disabled: false, // 按钮状态
-      btnColor: true
-    }
-  },
-  created () {
+    data () {
+        var checkEmail = (rule, value, cb) => {
+            // 验证邮箱的正则表达式
+            const regEmail = /^[A-Za-z0-9]+([_.][A-Za-z0-9]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$/
 
-  },
-  methods: {
-    // 获取验证码
-    sendSmsCode () {
-      var reg = 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/// 手机号正则验证
-      var phoneNum = this.phoneNum
-      if (!phoneNum) { // 未输入手机号
-        this.$message.error({
-          message: '手机号不能为空',
-          center: true
-        })
-        return
-      }
-      if (!reg.test(phoneNum)) { // 手机号不合法
-        this.$message.error({
-          message: '手机号格式不正确',
-          center: true
-        })
-        return
-      }
-      this.time = 60
-      this.btnColor = false
-      this.timer()
-      // 获取验证码请求
-      const phoneParams = {phoneNum: this.phoneNum}
-      requestMss(phoneParams).then(data => {
-        let {msg, code, user, token} = data
-        if (code === 200) {
-          this.$message('发送成功')
-        } else if (code === 400) {
-          this.$message.error('发送失败')
+            if (regEmail.test(value)) {
+                // 合法的邮箱
+                return cb()
+            }
+
+            cb(new Error('请输入合法的邮箱'))
+        };
+        return {
+            phoneForm:{
+                email: '',
+                verifyNum: '', //验证码
+            },
+            rules: {
+                verifyNum: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+                email: [{ required: true, message: "请输入邮箱", trigger: "blur" },
+                    { validator: checkEmail, trigger: 'blur' }],
+            },
+            btnContent: '获取验证码', //获取验证码按钮内文字
+            time: 0, //发送验证码间隔时间
+            disabled: false, //按钮状态
+            btnColor: true
         }
-      })
     },
-    timer () {
-      if (this.time > 0) {
-        this.time--
-        this.btnContent = this.time + 's后重新获取'
-        this.disabled = true
-        var timer = setTimeout(this.timer, 1000)
-      } else if (this.time == 0) {
-        this.btnContent = '获取验证码'
-        clearTimeout(timer)
-        this.disabled = false
-        this.btnColor = true
-      }
+    created () {
+
     },
-    // 验证验证码
-    verificationCode () {
-      var reg = 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/// 手机号正则验证
-      var phoneNum = this.phoneNum
-      if (!phoneNum) { // 未输入手机号
-        this.$message.error({
-          message: '手机号不能为空',
-          center: true
-        })
-        return
-      }
-      if (!reg.test(phoneNum)) { // 手机号不合法
-        this.$message.error({
-          message: '手机号格式不正确',
-          center: true
-        })
-        return
-      }
-      const _this = this
-      const loginParams = {phoneNum: this.phoneNum, verifyNum: this.verifyNum}
-      requestPhoneLogin(loginParams).then(data => {
-        let {msg, code, user, token} = data
-        if (code == 300) {
-          this.$message.error(msg)
-        } else if (code == 200) {
-          _this.$store.commit('login', user)
-          _this.$store.commit('login2', token)
-          _this.$router.push({path: '/home'})
-        } else if (code == 400) {
-          this.$message.error(msg)
+    methods: {
+        // 获取验证码
+        sendSmsCode () {
+            this.time = 60
+            this.btnColor = false
+            this.timer()
+            // 获取验证码请求
+            const phoneParams={mail: this.phoneForm.email}
+            requestMss(phoneParams).then(res => {
+                let {msg, code} =res;
+                if (code === '200') {
+                    this.$message.success(msg)
+                } else if (code === 400) {
+                    this.$message.error(msg);
+                }
+            });
+        },
+        timer () {
+            if (this.time > 0) {
+                this.time--
+                this.btnContent = this.time + 's后重新获取'
+                this.disabled = true
+                var timer = setTimeout(this.timer, 1000)
+            } else if (this.time == 0) {
+                this.btnContent = '获取验证码'
+                clearTimeout(timer)
+                this.disabled = false
+                this.btnColor = true
+            }
+        },
+        // 验证验证码
+        verificationCode () {
+            this.$refs.phoneForm.validate((valid) => {
+                if (valid) {
+                    const params = {mail:this.phoneForm.email,code:this.phoneForm.verifyNum}
+                    requestEmailLogin(params).then(res => {
+                        let {msg, code, user, token} = res
+                        if (code == '300') {
+                            this.$message.error(msg)
+                        } else if(code =='200'){
+                            this.$store.commit('login', res.data);
+                            this.$store.commit('login2', token);
+                            this.$router.push({ path: '/home' });
+                            this.$message.success(msg);
+                        }else if(code == '400'){
+                            this.$message.error(msg)
+                        }
+                    })
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            })
+        },
+        back () {
+            this.$router.push('/login')
         }
-      })
-        .catch(failResponse => {
-        })
-    },
-    back () {
-      this.$router.push({path: '/login', query: {}})
     }
-  }
 }
 </script>
 

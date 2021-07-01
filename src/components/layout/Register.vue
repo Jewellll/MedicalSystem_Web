@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { requireRegister} from '../../api/api'
+import {requestTitle, requireRegister} from '../../api/api'
 
 export default {
     name: 'Register',
@@ -182,8 +182,46 @@ export default {
         }
     },
     created () {
+        this.getTitle()
+        this.getDepartment()
     },
     methods: {
+        getTitle(){
+            this.title=[]
+            var param={typeCode:'title'}
+            requestTitle(param).then(res => {
+                console.log(res)
+                let {msg, code,} = res
+                if (code !== '200') {
+                    this.$message.error(msg);
+                } else if(code === '200'){
+                    for(var i=0;i<res.data.length;i++){
+                        var item={value:'',label:''}
+                        item.label=res.data[i].name
+                        item.value=res.data[i].name
+                        this.title.push(item)
+                    }
+                }
+            })
+        },
+        getDepartment(){
+            this.department=[]
+            var param={typeCode:'department'}
+            requestTitle(param).then(res => {
+                console.log(res)
+                let {msg, code,} = res
+                if (code !== '200') {
+                    this.$message.error(msg);
+                } else if(code === '200'){
+                    for(var i=0;i<res.data.length;i++){
+                        var item={value:'',label:''}
+                        item.label=res.data[i].name
+                        item.value=res.data[i].name
+                        this.department.push(item)
+                    }
+                }
+            })
+        },
         // 验证验证码
         register () {
             this.$refs.regForm.validate((valid) => {

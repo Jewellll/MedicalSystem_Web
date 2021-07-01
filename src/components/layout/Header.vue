@@ -165,7 +165,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click.native="editPassword = false">返回</el-button>
-                    <el-button type="primary" @click.native="editSubmit">提交</el-button>
+                    <el-button type="primary" @click.native="verificationCode">提交</el-button>
                 </el-form-item>
             </el-form>
         </el-drawer>
@@ -173,7 +173,7 @@
 </template>
 
 <script>
-import {editPwd, editUserInfo, requestLogin, requestMss} from '../../api/api'
+import {editPwd, editUserInfo, requestLogin, requestMss, requestTitle} from '../../api/api'
 
 export default {
     name: 'Header',
@@ -208,40 +208,8 @@ export default {
             }
         };
         return {
-            title: [{
-                value: '住院医师',
-                label: '住院医师'
-            }, {
-                value: '主治医师',
-                label: '主治医师'
-            }, {
-                value: '副主任医师',
-                label: '副主任医师'
-            }, {
-                value: '主任医师',
-                label: '主任医师'
-            }, {
-                value: '助理医师',
-                label: '助理医师'
-            },
-            ],
-            department: [{
-                value: '心脏内科',
-                label: '心脏内科'
-            }, {
-                value: '心胸外科',
-                label: '心胸外科'
-            }, {
-                value: '妇产科',
-                label: '妇产科'
-            }, {
-                value: '骨科',
-                label: '骨科'
-            }, {
-                value: '麻醉科',
-                label: '麻醉科'
-            },
-            ],
+            title: [],
+            department:[],
             userInfo: {
                 name: '',
                 userName:'',
@@ -311,6 +279,42 @@ export default {
         }
     },
     methods: {
+        getTitle(){
+            this.title=[]
+            var param={typeCode:'title'}
+            requestTitle(param).then(res => {
+                console.log(res)
+                let {msg, code,} = res
+                if (code !== '200') {
+                    this.$message.error(msg);
+                } else if(code === '200'){
+                    for(var i=0;i<res.data.length;i++){
+                        var item={value:'',label:''}
+                        item.label=res.data[i].name
+                        item.value=res.data[i].name
+                        this.title.push(item)
+                    }
+                }
+            })
+        },
+        getDepartment(){
+            this.department=[]
+            var param={typeCode:'department'}
+            requestTitle(param).then(res => {
+                console.log(res)
+                let {msg, code,} = res
+                if (code !== '200') {
+                    this.$message.error(msg);
+                } else if(code === '200'){
+                    for(var i=0;i<res.data.length;i++){
+                        var item={value:'',label:''}
+                        item.label=res.data[i].name
+                        item.value=res.data[i].name
+                        this.department.push(item)
+                    }
+                }
+            })
+        },
         logout: function () {
             var _this = this
             this.$confirm('确认退出吗?', '提示', {
@@ -364,6 +368,7 @@ export default {
                         } else if(code==='200'){
                             this.$message.success(msg)
                            this.$router.push('/login')
+                            console.log('111')
                         }
                     })
                 } else {
@@ -372,7 +377,7 @@ export default {
                 }
             });
         },
-        editSubmit: function () {
+        editSubmit() {
             this.$refs.userForm.validate((valid) => {
                 if (valid) {
                     this.logining = true
@@ -449,6 +454,8 @@ export default {
             this.formatRoleId(user)
             this.userForm = this.userInfo
         }
+        this.getDepartment()
+        this.getTitle()
 
     }
 }

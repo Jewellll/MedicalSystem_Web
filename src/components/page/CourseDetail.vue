@@ -485,14 +485,14 @@ export default {
     },
     // 批量删除
     batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString()
+      var ids = this.sels.map(item => item.caseId)
       this.$confirm('确认删除选中记录吗？', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {ids: ids}
+        let para =  ids
         batchRemoveCase(para).then((res) => {
-          if (res.code === 200) {
+          if (res.code === '200') {
             this.listLoading = false
             // NProgress.done();
             this.$message({

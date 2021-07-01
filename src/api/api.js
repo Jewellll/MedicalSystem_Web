@@ -5,7 +5,7 @@ let base = '' // http://localhost:8443/api
 
 export const requestLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data) }
 
-export const requestPhoneLogin = params => { return axios.post(`${base}/phoneLogin`, params).then(res => res.data) }
+export const requestEmailLogin = params => { return axios.post(`${base}/loginByEmail`, params).then(res => res.data) }
 
 export const editUserInfo = params => { return axios.put(`${base}/user/updateUser`, params).then(res => res.data) }
 
@@ -177,7 +177,10 @@ export const requestMenu = params => { return http.get(`${base}/menu/getByUserId
 //发生验证码
 export const requestMss = params => { return http.get(`${base}/getMail/`+ params.mail).then(res => res.data) }
 
-export const editPwd = params => { return http.get(`${base}/updatePassword`,params).then(res => res.data) }
-export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailById/` + params.id).then(res => res.data) }
+export const editPwd = params => { return http.post(`${base}/updatePassword`,params).then(res => res.data) }
+
+// export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailById/` + params.id).then(res => res.data) }
 
 export const deleteDicBatch = params => { return http.delete(`${base}/dict/deleteDictionaryAllById`, params).then(res => res.data) }
+
+export const requestTitle = params => { return http.get(`${base}/dict/getDictionaryDetailByTypeCode/`+ params.typeCode).then(res => res.data) }

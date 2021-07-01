@@ -31,6 +31,7 @@
                 v-loading="listLoading"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
+                :header-cell-style="{background:'#F5F6FA',color:'#666E92'}"
             >
                 <el-table-column type="selection" width="50"></el-table-column>
                 <el-table-column type="index" align="center"></el-table-column>

@@ -28,8 +28,8 @@
                 登录
             </el-button>
         </el-form-item>
-<!--        <el-link :underline="false" class="forget-link" @click="forgetPassword()">忘记密码</el-link>-->
-<!--        <el-link :underline="false" class="phone-link" @click="phoneLogin()"><i class="el-icon-mobile-phone"></i>手机登录</el-link>-->
+        <el-link :underline="false" class="forget-link" @click="forgetPassword()">忘记密码</el-link>
+        <el-link :underline="false" class="phone-link" @click="phoneLogin()"><i class="el-icon-message"></i>邮箱登录</el-link>
         <el-link :underline="false" class="signup-link" @click="register()">注册账号</el-link>
     </el-form>
     </div>
@@ -126,12 +126,12 @@ export default {
                 }
             });
         },
-        // forgetPassword(){
-        //     this.$router.push({ path: "/checkphone", query: {} });
-        // },
-        // phoneLogin(){
-        //     this.$router.push({ path: "/phoneLogin", query: {} });
-        // },
+        forgetPassword(){
+            this.$router.push({ path: "/checkphone", query: {} });
+        },
+        phoneLogin(){
+            this.$router.push({ path: "/phoneLogin", query: {} });
+        },
         register(){
             this.$router.push({ path: "/register", query: {} });
         }
@@ -160,7 +160,7 @@ export default {
 
 .forget-link {
     position: relative;
-    right: 120px;
+    right: 110px;
     color: #505458;
     font-size: 12px;
 }
@@ -171,7 +171,7 @@ export default {
 }
 .signup-link{
     position: relative;
-    right: -170px;
+    right: -110px;
     color: #505458;
     font-size: 12px;
 }
