@@ -634,7 +634,7 @@ export default {
     },
     checkPost (index, row) {
       let para = {courseId: this.courseId,
-        course: this.courseInfo.courseName,
+        courseName: this.courseInfo.courseName,
         studentId: row.studentId,
         studentName: row.studentName,
         isApproved: this.isApproved}

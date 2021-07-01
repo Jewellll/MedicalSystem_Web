@@ -73,7 +73,7 @@ export default {
       let para = {studentId: JSON.parse(localStorage.getItem('user')).userId}
       this.listLoading1 = true
       findAddedCourse(para).then((res) => {
-          // console.log(res)
+          console.log(res)
         if (res.code == '200') {
           this.listLoading1 = false
           this.addedCourse = res.data
