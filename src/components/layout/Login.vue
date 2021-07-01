@@ -102,6 +102,8 @@ export default {
             const _this = this
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('user')
                     this.logining = true;
                     const loginParams = {userName: this.loginForm.username, passWord: this.loginForm.password}
                     requestLogin(loginParams).then(res => {

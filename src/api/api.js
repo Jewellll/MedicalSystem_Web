@@ -174,3 +174,5 @@ export const getCaseImage = params => { return http.get(`${base}/case/readimage/
 export const batchRemoveFile = params => { return http.delete(`${base}/sfile/deleteBatchFiles`,params).then(res => res.data) }
 
 export const removeImage = params => { return http.delete(`${base}/case/deletecaseimage/`+ params.id ).then(res => res.data) }
+//分配菜单
+export const requestMenu = params => { return http.get(`${base}/menu/getByUserId/`+ params.id ).then(res => res.data) }
