@@ -149,7 +149,7 @@ export const getCaseFile = params => { return http.get(`${base}/sfile/getFileByC
 export const removeTeacherFile = params => { return http.delete(`${base}/case/deleteCaseFileById/` + params.id).then(res => res.data) }
 
 // 字典管理
-export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionary/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
+export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionaryType/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
 export const getEditValue = params => { return http.get(`${base}/dict/getDictionaryDetailByTypeCode/` + params.typeCode).then(res => res.data) }
 
@@ -157,4 +157,6 @@ export const updateEditVal = params => { return http.put(`${base}/dict/updateDic
 
 export const queryDict = params => { return http.get(`${base}/dict/getDictionaryTypeBytypeName/` + params).then(res => res.data) }
 
-export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailByValueAndTypeCode/` + params.id).then(res => res.data) }
+export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailById/` + params.id).then(res => res.data) }
+
+export const deleteDicBatch = params => { return http.delete(`${base}/dict/deleteDictionaryAllById`, params).then(res => res.data) }
