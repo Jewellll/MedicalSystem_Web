@@ -36,9 +36,6 @@
                 <el-table-column type="index" align="center"></el-table-column>
                 <el-table-column prop="typeName" label="名称" align="center"></el-table-column>
                 <el-table-column prop="typeCode" label="编码" align="center"></el-table-column>
-                <el-table-column prop="modifier" label="字典值" align="center">
-                </el-table-column>
-
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -123,7 +120,7 @@
 
         <!-- 编辑字典 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="60%">
-            <el-form ref="editform" :model="editform" label-width="70px" >
+            <el-form  :model="editform" label-width="70px" >
                 <el-form-item label="名称">
                     <el-input v-model="editform.typeName" :disabled="true"></el-input>
                 </el-form-item>
@@ -133,7 +130,6 @@
                 <el-table :data="editValue"
                           border
                           class="dicTable"
-                          row-key="date"
                 >
                     <el-table-column type="index"></el-table-column>
                     <el-table-column prop="name" label="字典值"  align="center" width="120px">
@@ -176,16 +172,14 @@
 
 <script>
 import {
-  getDictPage,
   getEditValue,
   updateEditVal,
   delEditVal,
-  delDictVal,
   getPageDict,
-  getFinnalDict,
-  queryDict
+  queryDict, deleteDicBatch
 } from '../../api/api'
-import Sortable from 'sortablejs'
+
+import qs from 'qs'
 import axios from 'axios'
 export default {
   name: 'basetable',
@@ -210,8 +204,8 @@ export default {
         typeName: ' ',
         typeCode: ' ',
         value: -1,
-        name: ' ',
-        isDefault: 0
+        name: '',
+        isDefault: ''
       },
       editValue: [],
       addform: {
@@ -225,7 +219,7 @@ export default {
         typeCode: [{required: true, message: '请输入编码', trigger: 'blur'}]
       },
       idx: -1,
-        row:'',
+      row: '',
       id: -1
     }
   },
@@ -262,7 +256,17 @@ export default {
         show: true,
         isDefault: 0
       }
-      this.editValue.push(list)
+      if (this.editValue == null) {
+        this.editValue = [{
+          id: '',
+          name: ' ',
+          value: -1,
+          show: true,
+          isDefault: 0
+        }]
+      } else {
+        this.editValue.push(list)
+      }
     },
     addDictEdit (index, row) {
       for (let i = 0; i < this.addform.dictionaryDetails.length; i++) {
@@ -270,31 +274,6 @@ export default {
       }
       this.addform.dictionaryDetails[index].show = true
     },
-    // 移动操作
-    // 向上移动
-    // moveUp (index, row) {
-    //   let that = this
-    //   if (index > 0) {
-    //     let upDate = that.editValue[index - 1]
-    //     that.editValue.splice(index - 1, 1)
-    //     that.editValue.splice(index, 0, upDate)
-    //     // let obj = JSON.stringify(this.editValue)
-    //     // console.log(obj);
-    //   } else {
-    //     alert('已经是第一条，不可上移')
-    //   }
-    // },
-    // // 向下移动
-    // moveDown (index, row) {
-    //   let that = this
-    //   if ((index + 1) === that.editValue.length) {
-    //     alert('已经是最后一条，不可下移')
-    //   } else {
-    //     let downDate = that.editValue[index + 1]
-    //     that.editValue.splice(index + 1, 1)
-    //     that.editValue.splice(index, 0, downDate)
-    //   }
-    // },
 
     // 新增字典的删除操作
     handleDeleteAdd (index, row) {
@@ -330,21 +309,6 @@ export default {
               // this.$message.success("请刷新页面以显示数据");
             }
           }).catch()
-          // addDict(param).then(res => {
-          //   if (res.code == '102') {
-          //     alert('已提交，请勿重复提交')
-          //   } else if (res.code == '201') {
-          //     this.addform = {
-          //       typeName: '',
-          //       typeCode: '',
-          //       dictionaryDetails: [{ name: ' ', value: '0', show: false, isDefault: '0'}]
-          //
-          //     },
-          //     this.$message.success('添加成功')
-          //     this.getPageData()
-          //     // this.$message.success("请刷新页面以显示数据");
-          //   }
-          // })
           this.addVisible = false
         }
       })
@@ -353,7 +317,7 @@ export default {
     handleEdit (index, row) {
       this.editVisible = true
       this.idx = index
-        this.row = row
+      this.row = row
       this.editform = Object.assign({}, row)
       let a = {typeCode: this.editform.typeCode}
       getEditValue(a).then((res) => {
@@ -372,7 +336,7 @@ export default {
       updateEditVal(updateVal).then((res) => {
         this.getPageData()
         this.handleEdit(this.idx, this.row)
-        this.$message.success(res.data.msg)
+        this.$message.success('保存成功')
       })
     },
     // 编辑字典的删除操作
@@ -389,7 +353,6 @@ export default {
     // 删除字典项
     handleDelete (index, row) {
       if (confirm('确认删除吗？') == true) {
-        let params = {typeCode: row.typeCode}
         axios({
           method: 'delete',
           url: 'http://118.195.129.22:8081/dict/deleteDictionaryByTypeCode/' + row.typeCode,
@@ -399,10 +362,6 @@ export default {
           this.$message.success('删除成功')
           this.getPageData()
         }).catch()
-        // delDictVal(params).then((res) => {
-        //   this.$message.success('删除成功')
-        //   this.getPageData()
-        // })
       }
     },
     // 触发搜索按钮
@@ -419,18 +378,19 @@ export default {
     },
     delAllSelection () {
       const length = this.multipleSelection.length
+      console.log(this.multipleSelection)
       if (length == 0) {
         this.$message.error('请至少选中一项！')
       } else {
-        let str = ''
-        this.delList = this.delList.concat(this.multipleSelection)
         for (let i = 0; i < length; i++) {
-          str += this.multipleSelection[i].dicName + ' '
-          this.delIdList.push(this.multipleSelection[i].dicId)
+          this.delList[i] = this.multipleSelection[i].id
         }
-        this.deleteDicBatch()
-        this.$message.error(`删除了${str}`)
-        this.multipleSelection = []
+
+        deleteDicBatch({data: this.delList}).then((res) => {
+          this.$message.success('删除成功')
+          this.multipleSelection = []
+          this.getPageData()
+        })
       }
     },
     // 获取页面数据
@@ -438,17 +398,9 @@ export default {
       let para = {pageNum: this.query.page, pageSize: this.query.pageSize}
       this.listLoading = true
       getPageDict(para).then((res) => {
-        console.log(res.data)
+        console.log(res)
         this.total = res.data.pageInfo.total
         this.pageData = res.data.pageInfo.list
-        for (let i = 0; i < this.pageData.length; i++) {
-          this.valueData = this.pageData[i].dictionaryDetails
-          let data = ''
-          for (let j = 0; j < this.valueData.length; j++) {
-            data += this.valueData[j].name + ' '
-          }
-          this.pageData[i].modifier = data
-        }
         this.listLoading = false
       })
     },
@@ -462,16 +414,7 @@ export default {
     }
 
   }
-  // mounted() {
-  //   const table = document.querySelector('.el-table__body-wrapper tbody')
-  //   const self = this
-  //   Sortable.create(table, {
-  //     onEnd({ newIndex, oldIndex }) {
-  //       const targetRow = self.editValue.splice(oldIndex, 1)[0]
-  //       self.editValue.splice(newIndex, 0, targetRow)
-  //     }
-  //   })
-  // }
+
 }
 </script>
 <style scoped>

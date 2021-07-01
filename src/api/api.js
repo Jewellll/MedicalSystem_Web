@@ -151,7 +151,7 @@ export const removeTeacherFile = params => { return http.delete(`${base}/case/de
 export const removeStudentFile = params => { return http.delete(`${base}/sfile/deleteFile/`+params.fileId).then(res => res.data) }
 
 // 字典管理
-export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionary/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
+export const getPageDict = params => { return http.get(`${base}/dict/selectAllDictionaryType/` + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
 export const getEditValue = params => { return http.get(`${base}/dict/getDictionaryDetailByTypeCode/` + params.typeCode).then(res => res.data) }
 
@@ -176,3 +176,6 @@ export const batchRemoveFile = params => { return http.delete(`${base}/sfile/del
 export const removeImage = params => { return http.delete(`${base}/case/deletecaseimage/`+ params.id ).then(res => res.data) }
 //分配菜单
 export const requestMenu = params => { return http.get(`${base}/menu/getByUserId/`+ params.id ).then(res => res.data) }
+export const delEditVal = params => { return http.delete(`${base}/dict/deleteDictionaryDetailById/` + params.id).then(res => res.data) }
+
+export const deleteDicBatch = params => { return http.delete(`${base}/dict/deleteDictionaryAllById`, params).then(res => res.data) }
