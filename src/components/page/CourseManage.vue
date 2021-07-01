@@ -228,7 +228,6 @@ export default {
       var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
       this.listLoading = true
       getCourseListPage(param).then((res) => {
-        this.$message.success(res.msg)
         this.total = res.count
         this.courseList = res.data.pageInfo.list
         this.listLoading = false

@@ -172,7 +172,6 @@ export default {
       this.listLoading = true
         var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
       getCaseListPage(param).then((res) => {
-          this.$message.success(res.msg)
           console.log(res)
         this.total = res.count
         this.caseList = res.data
@@ -282,7 +281,8 @@ export default {
         let para = ids
         console.log(para)
         batchRemoveCase(para).then((res) => {
-          if (res.code == 200) {
+            console.log(res)
+          if (res.code == '200') {
             this.listLoading = false
             this.$message.success(res.msg)
             this.getCaseList()

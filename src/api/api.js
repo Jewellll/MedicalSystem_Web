@@ -7,9 +7,7 @@ export const requestLogin = params => { return axios.post(`${base}/login`, param
 
 export const requestPhoneLogin = params => { return axios.post(`${base}/phoneLogin`, params).then(res => res.data) }
 
-export const requestMss = params => { return axios.post(`${base}/sendMss`, params).then(res => res.data) }
-
-export const editUserInfo = params => { return axios.post(`${base}/editUser`, params).then(res => res.data) }
+export const editUserInfo = params => { return axios.put(`${base}/user/updateUser`, params).then(res => res.data) }
 
 export const requireRegister = params => { return axios.post(`${base}/register`, params).then(res => res.data) }
 
@@ -23,7 +21,7 @@ export const getUserListByRealName = params => { return http.get(`${base}/user/g
 
 export const getUserListByUserName = params => { return http.get(`${base}/user/getUserByUserName/` + params.username).then(res => res.data) }
 
-export const batchRemoveUser = params => { return http.delete(`${base}/user/deleteUserAllByuserId`, params).then(res => res.data) }
+export const batchRemoveUser = params => { return http.delete(`${base}/user/deleteUserAllByuserId`, {data:params}).then(res => res.data) }
 
 export const editUser = params => { return http.put(`${base}/user/updateUser`, params).then(res => res.data) }
 
@@ -115,7 +113,7 @@ export const getCaseListByCaseName = params => { return http.get(`${base}/case/f
 
 export const removeCase = params => { return http.delete(`${base}/case/deletecase/` + params.caseId).then(res => res.data) }
 
-export const batchRemoveCase = params => { return http.delete(`${base}/case/batchdeletecase`, params).then(res => res.data) }
+export const batchRemoveCase = params => { return http.delete(`${base}/case/batchdeletecase`, {data:params}).then(res => res.data) }
 
 export const getCaseDetail = params => { return http.get(`${base}/case/findCasesbycaseId/` + params.caseId).then(res => res.data) }
 
@@ -171,8 +169,12 @@ export const deleteCaseFile = params => { return http.delete(`${base}/case/delet
 
 export const getCaseImage = params => { return http.get(`${base}/case/readimage/`+ params.caseId ).then(res => res.data) }
 
-export const batchRemoveFile = params => { return http.delete(`${base}/sfile/deleteBatchFiles`,params).then(res => res.data) }
+export const batchRemoveFile = params => { return http.delete(`${base}/sfile/deleteBatchFiles`,{data:params}).then(res => res.data) }
 
 export const removeImage = params => { return http.delete(`${base}/case/deletecaseimage/`+ params.id ).then(res => res.data) }
 //分配菜单
 export const requestMenu = params => { return http.get(`${base}/menu/getByUserId/`+ params.id ).then(res => res.data) }
+//发生验证码
+export const requestMss = params => { return http.get(`${base}/getMail/`+ params.mail).then(res => res.data) }
+
+export const editPwd = params => { return http.get(`${base}/updatePassword`,params).then(res => res.data) }

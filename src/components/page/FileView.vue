@@ -100,6 +100,7 @@ export default {
             console.log(this.queryInfo.caseId)
         },
         async getUserList () {
+            this.fileList=[]
             this.listLoading=true
             var param ={caseId:this.queryInfo.caseId,pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize}
             getCaseFile(param).then((res) => {
@@ -216,10 +217,11 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.listLoading = true
-                let para =  ids
+                let para =  {fileIds:ids}
                 console.log(para)
                 batchRemoveFile(para).then((res) => {
-                    if(res.code==200) {
+                    console.log()
+                    if(res.code=='204') {
                         this.listLoading = false
                         //NProgress.done();
                         this.$message({

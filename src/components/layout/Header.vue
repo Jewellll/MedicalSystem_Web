@@ -49,7 +49,8 @@
                     <span class="sender">邮箱： {{ userInfo.email }}</span>
                 </div>
             </div>
-            <el-button style="width: 50%;margin-top: 100px" @click.native="edit = true" type="primary">修改信息</el-button>
+            <el-button size="small" style="width: 40%;margin-top: 100px;display: inline-block" @click.native="edit = true" type="primary">修改信息</el-button>
+            <el-button size="small" style="width: 40%;margin-top: 20px;display: inline-block" @click.native="editPassword = true" type="primary">修改密码</el-button>
         </el-drawer>
         <!--        编辑个人信息-->
         <el-drawer
@@ -125,15 +126,87 @@
                 </el-form-item>
             </el-form>
         </el-drawer>
+<!--        修改密码-->
+        <el-drawer
+            title="修改密码"
+            :visible.sync="editPassword"
+            :direction="direction"
+            :before-close="handleClose">
+            <el-form :model="editForm" :rules="rules1" label-width="80px" ref="editForm">
+                <el-form-item label="邮箱" prop="email">
+                    <el-col :span="14">
+                    <el-input type="text" v-model="editForm.email" auto-complete="off" placeholder="请输入邮箱"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="验证码" prop="verifyNum">
+                    <el-col :span="14">
+                    <div class="iden">
+                        <el-input type="text" v-model="editForm.verifyNum" style=""
+                                  auto-complete="off"
+                                  placeholder="请输入验证码"></el-input>
+                        <el-button :style="{background:btnColor?'#2E9AFE':'#617079',color:'#FFF',width:'50%'}"
+                                   v-on:click="sendSmsCode"
+                                   class="verify-btn" v-model="btnContent"
+                                   v-bind="{'disabled':disabled}">
+                            {{ btnContent }}
+                        </el-button>
+                    </div>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="密码"  prop="newPassword">
+                    <el-col :span="14">
+                        <el-input type="password" v-model="editForm.newPassword" placeholder="请输入密码"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="checkPassword">
+                    <el-col :span="14">
+                        <el-input type="password" v-model="editForm.checkPassword" placeholder="再次输入密码"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click.native="editPassword = false">返回</el-button>
+                    <el-button type="primary" @click.native="editSubmit">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-drawer>
     </div>
 </template>
 
 <script>
-import {editUserInfo, requestLogin} from '../../api/api'
+import {editPwd, editUserInfo, requestLogin, requestMss} from '../../api/api'
 
 export default {
     name: 'Header',
     data () {
+        var checkEmail = (rule, value, cb) => {
+            // 验证邮箱的正则表达式
+            const regEmail = /^[A-Za-z0-9]+([_.][A-Za-z0-9]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$/
+
+            if (regEmail.test(value)) {
+                // 合法的邮箱
+                return cb()
+            }
+
+            cb(new Error('请输入合法的邮箱'))
+        };
+        var validatePass = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error("请输入新密码"));
+            } else if (value.toString().length < 6 || value.toString().length > 18) {
+                callback(new Error("密码长度为6-18位"));
+            } else {
+                callback();
+            }
+        };
+        var validatePass2 = (rule, value, callback) => {
+            if (value === "") {
+                callback(new Error("请再次输入密码"));
+            } else if (value !== this.editForm.newPassword) {
+                callback(new Error("两次输入密码不一致!"));
+            } else {
+                callback();
+            }
+        };
         return {
             title: [{
                 value: '住院医师',
@@ -193,7 +266,6 @@ export default {
                 roleId: -1
             },
             rules: {
-
                 name: [
                     {required: true, message: '请输入姓名', trigger: 'blur'}
                 ],
@@ -213,9 +285,27 @@ export default {
                     {required: true, message: '请输入手机号', trigger: 'blur'}
                 ]
             },
+            editForm:{
+                verifyNum:"",
+                email:"",
+                newPassword:"",
+                checkPassword:"",
+            },
+            rules1:{
+                verifyNum: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+                email: [{ required: true, message: "请输入邮箱", trigger: "blur" },
+                    { validator: checkEmail, trigger: 'blur' }],
+                newPassword: [{ required: true, message: "请输入密码", trigger: "blur" },{ validator: validatePass, trigger: "blur" }],
+                checkPassword: [{ required: true, message: "请再次输入密码", trigger: "blur" },{ validator: validatePass2, trigger: "blur" }],
+            },
+            btnContent: '获取验证码', //获取验证码按钮内文字
+            time: 0, //发送验证码间隔时间
+            disabled: false, //按钮状态
+            btnColor: true,
             role:'',
             sex: '',
             edit: false,    //修改个人信息
+            editPassword:false,
             view: false,     //展示个人信息
             direction: 'rtl',
         }
@@ -233,19 +323,71 @@ export default {
 
             })
         },
+        // 获取验证码
+        sendSmsCode () {
+            this.time = 60
+            this.btnColor = false
+            this.timer()
+            const phoneParams={mail: this.editForm.email}
+            requestMss(phoneParams).then(res => {
+                let {msg, code} = res;
+                if (code === '200') {
+                    this.$message.success(msg)
+                } else if (code === '400') {
+                    this.$message.error(msg);
+                }
+            });
+        },
+        timer () {
+            if (this.time > 0) {
+                this.time--
+                this.btnContent = this.time + 's后重新获取'
+                this.disabled = true
+                var timer = setTimeout(this.timer, 1000)
+            } else if (this.time == 0) {
+                this.btnContent = '获取验证码'
+                clearTimeout(timer)
+                this.disabled = false
+                this.btnColor = true
+            }
+        },
+        // 修改密码
+        verificationCode () {
+            this.$refs.editForm.validate((valid) => {
+                if (valid) {
+                    const regParams = {code:this.editForm.verifyNum,email:this.editForm.email,password:this.editForm.newPassword}
+                    console.log(regParams)
+                    editPwd(regParams).then(res => {
+                        let {msg, code} = res
+                        if (code !== '200') {
+                            this.$message.error(msg);
+                        } else if(code==='200'){
+                            this.$message.success(msg)
+                           this.$router.push('/login')
+                        }
+                    })
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
         editSubmit: function () {
-            this.$refs.userInfo.validate((valid) => {
+            this.$refs.userForm.validate((valid) => {
                 if (valid) {
                     this.logining = true
                     const editParams =this.userForm
                     editUserInfo(editParams).then(data => {
+                        console.log(data)
                         this.logining = false
                         let {msg, code, user, token} = data
-                        if (code !== 200) {
+                        if (code !== '200') {
                             this.$message.error('修改失败')
-                        } else {
-                            this.$message('修改成功')
-                            this.userInfo=this.userForm
+                        } else if(code==='200'){
+                            this.$message.success('修改成功')
+                            console.log( this.userForm)
+                            this.$store.commit('login', this.userForm);
+                            this.formatSex(this.userForm)
                             this.edit=false
                         }
                     })
@@ -256,9 +398,9 @@ export default {
             })
         },
         formatSex: function (user) {
-            if (user.sex === 1) {
+            if (user.sex == 1) {
                 this.sex = '男'
-            } else if (user.sex === 0) {
+            } else if (user.sex == 0) {
                 this.sex = '女'
             } else {
                 this.sex = '未知'
@@ -312,6 +454,11 @@ export default {
 }
 </script>
 <style scoped>
+.iden {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
 .item_bock {
     display: flex;
     align-items: center;

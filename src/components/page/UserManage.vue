@@ -18,9 +18,9 @@
                             <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
                     </el-col>
-                    <el-col :span="2">
-                        <el-button type="primary" @click="addFormVisible=true">添加用户</el-button>
-                    </el-col>
+<!--                    <el-col :span="2">-->
+<!--                        <el-button type="primary" @click="addFormVisible=true">添加用户</el-button>-->
+<!--                    </el-col>-->
                     <el-col :span="2">
                         <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
                     </el-col>
@@ -45,8 +45,6 @@
                 <el-table-column prop="department" label="科室">
                 </el-table-column>
                 <el-table-column prop="title" label="职称" >
-                </el-table-column>
-                <el-table-column prop="passWord" label="密码" >
                 </el-table-column>
                 <el-table-column prop="roleId" label="角色" :formatter="formatRole">
                 </el-table-column>
@@ -133,11 +131,6 @@
                         </el-select>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="密码" prop="passWord">
-                    <el-col :span="14">
-                        <el-input v-model="addForm.passWord"></el-input>
-                    </el-col>
-                </el-form-item>
             </el-form>
             <!-- 底部区域 -->
             <span slot="footer" class="dialog-footer">
@@ -199,11 +192,6 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="密码" prop="passWord">
-                    <el-col :span="14">
-                        <el-input v-model="editForm.passWord"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -309,7 +297,6 @@ export default {
         phone: '',
         department: '',
         sex: '0',
-        passWord: '',
           title:'',
           email:''
       },
@@ -349,7 +336,6 @@ export default {
           phone: '',
           department: '',
           sex: '0',
-          passWord: '',
           title:'',
           email:''
       },
@@ -398,7 +384,6 @@ export default {
         getUserListPage(param).then((res) => {
             console.log(res)
             if(res.code==='200') {
-                this.$message.success(res.msg)
                 this.total = res.data.pageInfo.total
                 this.userList = res.data.pageInfo.list
                 this.listLoading = false
@@ -532,7 +517,8 @@ export default {
         let para = ids
         console.log(para)
         batchRemoveUser(para).then((res) => {
-          if (res.data.code == 200) {
+            console.log(res)
+          if (res.code == '200') {
             this.listLoading = false
             // NProgress.done();
             this.$message({

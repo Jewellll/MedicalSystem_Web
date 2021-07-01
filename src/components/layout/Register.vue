@@ -194,7 +194,7 @@ export default {
                         if (code !== '101') {
                             this.$message.error(msg);
                         } else if(code === '101'){
-                            this.$message(msg)
+                            this.$message.success(msg)
                             var path = this.$route.query.redirect
                             this.$router.push( "/login");
                         }

@@ -116,7 +116,7 @@ export default {
                 console.log(res)
                 if (res.code === '200') {
                     this.items = res.data
-                    this.$store.commit('setMenus', this.items)
+                    // this.$store.commit('setMenus', this.items)
                     console.log(this.item)
                 }
             })
