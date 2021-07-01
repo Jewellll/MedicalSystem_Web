@@ -21,11 +21,14 @@
                         </el-scrollbar>
                     </div>
                 </div>
+                <el-badge :value="auditValue" style="margin-top:20px;float: left;">
+                    <el-button size="small" @click="auditVisible = true;">学生审核列表</el-button>
+                </el-badge>
             </div>
         </div>
 
         <div class="table" style="margin-top: 40px">
-            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
+            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em;margin-top: 80px;">
                 课程案例
             </div>
             <hr>
@@ -196,6 +199,37 @@
                     <el-button type="primary" @click.native="handlChangeStudent" >提交</el-button>
                 </div>
             </el-dialog>
+<!--            学生审核页面-->
+            <el-dialog width="40%" title="学生相关" :visible.sync="auditVisible">
+                <span style="text-align: center;font-size: 20px">待审核学生</span>
+                <el-table width="60%"
+                          :data="unauditStudents"
+                          border>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column label="学生" prop="studentName" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="primary"  size="mini" @click="isApproved = 2;checkPost(scope.$index, scope.row)">同意</el-button>
+                            <el-button type="danger"  size="mini" @click="isApproved = 3;checkPost(scope.$index, scope.row)">拒绝</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <br><br>
+                <span style="text-align: center;font-size: 20px">已加入课程学生</span>
+                <el-table width="60%"
+                          :data="auditStudents"
+                          border>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column label="学生" prop="studentName" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="danger"  size="mini" @click="moveStudent(scope.$index, scope.row)">移出课程</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+            </el-dialog>
+
             <div class="submit">
                 <el-button type="primary" @click="back">返  回</el-button>
             </div>
@@ -205,10 +239,10 @@
 
 <script>
 import {
-  batchRemoveCase, changeTeam,
+  batchRemoveCase, changeTeam, checkPostAPI,
   createTeam, delStudent,
-  getCaseListByCourse, getCourseDetailPage, getCourseStudents,
-  getTeamListByCourse, getTeamStudent, removeCase, removeTeam
+  getCaseListByCourse, getCourseDetailPage, getCourseStudents, getStudentInCourse, getStudentNotInCourse,
+  getTeamListByCourse, getTeamStudent, moveStudentFromCourse, removeCase, removeTeam
 
 } from '../../api/api'
 import dicList from './Dictionary'
@@ -248,7 +282,7 @@ export default {
         studentId: ''
       },
       changeTeamRules: {
-          teamId_change: [{required: true, message: '请输入新的团队编号', trigger: 'blur'}]
+        teamId_change: [{required: true, message: '请输入新的团队编号', trigger: 'blur'}]
       },
       courseId: '',
       courseName: '',
@@ -275,7 +309,12 @@ export default {
         teamId: '',
         members: [],
         newMembers: []
-      }
+      },
+      auditVisible: false,
+      auditValue: 0,
+      auditStudents: [],
+      unauditStudents: [],
+      isApproved: 0
     }
   },
   created () {
@@ -283,6 +322,8 @@ export default {
     this.getCourseDetail()
     this.getCaseList()
     this.getTeamList()
+    this.studentInCourse()
+    this.studentNotInCourse()
   },
   methods: {
     getParams () {
@@ -399,7 +440,7 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-              this.getCaseList()
+            this.getCaseList()
           }
         })
       }).catch(() => {
@@ -480,7 +521,7 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-              this.getCaseList()
+            this.getCaseList()
           }
         })
       }).catch(() => {
@@ -567,13 +608,41 @@ export default {
       getTeamStudent(para).then((res) => {
         this.editTeam.members = res.data
       })
-      // for (let i = 0; i < para.length - 1; i++) {
-      //   let temp = JSON.stringify(para[i])
-      //   temp = temp.substring(1, temp.length - 1)
-      //   this.editTeam.members.push({
-      //     studentName: temp
-      //   })
-      // }
+    },
+    // 审核管理
+    studentInCourse () {
+      getStudentInCourse({courseId: this.courseId}).then((res) => {
+        this.auditStudents = res.data
+      })
+    },
+    studentNotInCourse () {
+      getStudentNotInCourse({courseId: this.courseId}).then((res) => {
+        console.log(res)
+        this.unauditStudents = res.data
+        this.auditValue = res.count
+      })
+    },
+    moveStudent (index, row) {
+      this.$confirm('确认移出吗？').then(() => {
+        let para = {courseId: this.courseId, studentId: row.studentId}
+        moveStudentFromCourse(para).then((res) => {
+          this.studentInCourse()
+          this.studentNotInCourse()
+          this.$message.success('操作成功！')
+        })
+      })
+    },
+    checkPost (index, row) {
+      let para = {courseId: this.courseId,
+        course: this.courseInfo.courseName,
+        studentId: row.studentId,
+        studentName: row.studentName,
+        isApproved: this.isApproved}
+      checkPostAPI(para).then((res) => {
+        this.studentNotInCourse()
+        this.studentInCourse()
+        this.$message.success('操作成功')
+      })
     }
   }
 }
@@ -591,7 +660,7 @@ export default {
     border-radius: 5px;
 }
 .table{
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .submit{
