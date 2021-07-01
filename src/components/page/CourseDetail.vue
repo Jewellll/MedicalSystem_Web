@@ -21,19 +21,22 @@
                         </el-scrollbar>
                     </div>
                 </div>
+                <el-badge :value="auditValue" style="margin-top:20px;float: left;">
+                    <el-button size="small" @click="auditVisible = true;">学生审核列表</el-button>
+                </el-badge>
             </div>
         </div>
 
         <div class="table" style="margin-top: 40px">
-            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em">
+            <div style="font-size: 1.5em; text-align: left;margin-left: 0.2em;margin-top: 80px;">
                 课程案例
             </div>
             <hr>
             <div class="toolbar">
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-input placeholder="请输入案例名" v-model="queryInfo.queryCase" clearable @clear="getUserByUserName">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserByUserName"></el-button>
+                        <el-input placeholder="请输入案例名" v-model="queryInfo.query" clearable @clear="getCourseDetail">
+                            <el-button slot="append" icon="el-icon-search" @click="getCourseDetail()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -45,17 +48,16 @@
                 </el-row>
             </div>
             <el-table :data="caseList" :stripe="true" :border="true" v-loading="listLoading" :header-cell-style="{background:'#F5F6FA',color:'#666E92'}" @selection-change="selsChange">
-                <el-table-column type="selection" width="30px"></el-table-column>
-                <el-table-column type="index" width="40px" label="序号"></el-table-column>
-                <el-table-column prop="caseName" width="300px" label="案例名称"></el-table-column>
-                <el-table-column prop="teacherName" width="300px" label="创建教师" ></el-table-column>
+                <el-table-column type="selection" width="40"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
+                <el-table-column prop="caseName" label="案例名称"></el-table-column>
+                <el-table-column prop="teacherName" label="创建教师" ></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
                         <el-button type="primary"  size="mini" @click="handleEdit(scope.$index, scope.row)">编辑案例</el-button>
                         <el-button type="primary"  size="mini" @click="caseView(scope.$index, scope.row)">案例详情</el-button>
                         <el-button type="primary"  size="mini" @click="fileView(scope.$index, scope.row)">查看提交文件</el-button>
-                        <el-button type="primary"  size="mini" @click="imageView(scope.$index, scope.row)">查看提交图片</el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger"  size="mini" @click="handleDelCase(scope.$index, scope.row)">删除案例</el-button>
                     </template>
@@ -197,6 +199,37 @@
                     <el-button type="primary" @click.native="handlChangeStudent" >提交</el-button>
                 </div>
             </el-dialog>
+<!--            学生审核页面-->
+            <el-dialog width="40%" title="学生相关" :visible.sync="auditVisible">
+                <span style="text-align: center;font-size: 20px">待审核学生</span>
+                <el-table width="60%"
+                          :data="unauditStudents"
+                          border>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column label="学生" prop="studentName" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="primary"  size="mini" @click="isApproved = 2;checkPost(scope.$index, scope.row)">同意</el-button>
+                            <el-button type="danger"  size="mini" @click="isApproved = 3;checkPost(scope.$index, scope.row)">拒绝</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <br><br>
+                <span style="text-align: center;font-size: 20px">已加入课程学生</span>
+                <el-table width="60%"
+                          :data="auditStudents"
+                          border>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column label="学生" prop="studentName" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="danger"  size="mini" @click="moveStudent(scope.$index, scope.row)">移出课程</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+            </el-dialog>
+
             <div class="submit">
                 <el-button type="primary" @click="back">返  回</el-button>
             </div>
@@ -206,10 +239,10 @@
 
 <script>
 import {
-    batchRemoveCase, changeTeam,
-    createTeam, delStudent, getCaseListByCaseName,
-    getCaseListByCourse, getCourseDetailPage, getCourseStudents,
-    getTeamListByCourse, getTeamStudent, removeCase, removeTeam
+  batchRemoveCase, changeTeam, checkPostAPI,
+  createTeam, delStudent,
+  getCaseListByCourse, getCourseDetailPage, getCourseStudents, getStudentInCourse, getStudentNotInCourse,
+  getTeamListByCourse, getTeamStudent, moveStudentFromCourse, removeCase, removeTeam
 
 } from '../../api/api'
 import dicList from './Dictionary'
@@ -249,7 +282,7 @@ export default {
         studentId: ''
       },
       changeTeamRules: {
-          teamId_change: [{required: true, message: '请输入新的团队编号', trigger: 'blur'}]
+        teamId_change: [{required: true, message: '请输入新的团队编号', trigger: 'blur'}]
       },
       courseId: '',
       courseName: '',
@@ -276,7 +309,12 @@ export default {
         teamId: '',
         members: [],
         newMembers: []
-      }
+      },
+      auditVisible: false,
+      auditValue: 0,
+      auditStudents: [],
+      unauditStudents: [],
+      isApproved: 0
     }
   },
   created () {
@@ -284,6 +322,8 @@ export default {
     this.getCourseDetail()
     this.getCaseList()
     this.getTeamList()
+    this.studentInCourse()
+    this.studentNotInCourse()
   },
   methods: {
     getParams () {
@@ -297,20 +337,6 @@ export default {
         this.courseInfo.desc = res.data.courseDesc
       })
     },
-      //查找
-      getUserByUserName(){
-          this.listLoading = true
-          var param = {caseName: this.queryInfo.queryCase, pageNum: this.queryInfo.pagenum_case, pageSize: this.queryInfo.pagesize_case}
-          getCaseListByCaseName(param).then((res) => {
-              if(res.code==='200') {
-                  console.log(res)
-                  this.$message.success(res.msg)
-                  this.total_case = res.count
-                  this.caseList=res.data
-                  this.listLoading = false
-              }
-          })
-      },
     getCaseList () {
       let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_case, pageSize: this.queryInfo.pagesize_case}
       this.listLoading = true
@@ -399,10 +425,6 @@ export default {
       let para = Object.assign({}, row)
       this.$router.push({ path: '/fileView', query: {caseId: para.caseId, caseName: para.caseName} })
     },
-      imageView: function (index, row) {
-          let para = Object.assign({}, row)
-          this.$router.push({ path: '/imageView', query: {caseId: para.caseId, caseName: para.caseName} })
-      },
     // 删除
     handleDelCase: function (index, row) {
       this.$confirm('确认删除该案例吗?', '提示', {
@@ -418,7 +440,7 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-              this.getCaseList()
+            this.getCaseList()
           }
         })
       }).catch(() => {
@@ -499,7 +521,7 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-              this.getCaseList()
+            this.getCaseList()
           }
         })
       }).catch(() => {
@@ -586,13 +608,41 @@ export default {
       getTeamStudent(para).then((res) => {
         this.editTeam.members = res.data
       })
-      // for (let i = 0; i < para.length - 1; i++) {
-      //   let temp = JSON.stringify(para[i])
-      //   temp = temp.substring(1, temp.length - 1)
-      //   this.editTeam.members.push({
-      //     studentName: temp
-      //   })
-      // }
+    },
+    // 审核管理
+    studentInCourse () {
+      getStudentInCourse({courseId: this.courseId}).then((res) => {
+        this.auditStudents = res.data
+      })
+    },
+    studentNotInCourse () {
+      getStudentNotInCourse({courseId: this.courseId}).then((res) => {
+        console.log(res)
+        this.unauditStudents = res.data
+        this.auditValue = res.count
+      })
+    },
+    moveStudent (index, row) {
+      this.$confirm('确认移出吗？').then(() => {
+        let para = {courseId: this.courseId, studentId: row.studentId}
+        moveStudentFromCourse(para).then((res) => {
+          this.studentInCourse()
+          this.studentNotInCourse()
+          this.$message.success('操作成功！')
+        })
+      })
+    },
+    checkPost (index, row) {
+      let para = {courseId: this.courseId,
+        course: this.courseInfo.courseName,
+        studentId: row.studentId,
+        studentName: row.studentName,
+        isApproved: this.isApproved}
+      checkPostAPI(para).then((res) => {
+        this.studentNotInCourse()
+        this.studentInCourse()
+        this.$message.success('操作成功')
+      })
     }
   }
 }
@@ -610,7 +660,7 @@ export default {
     border-radius: 5px;
 }
 .table{
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .submit{
