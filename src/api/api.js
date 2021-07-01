@@ -92,6 +92,14 @@ export const removeCourse = params => { return http.post(`${base}/course/deleteC
 
 export const batchRemoveCourse = params => { return http.get(`${base}/course/batchremove`, params).then(res => res.data) }
 
+export const getStudentInCourse = params => { return http.get(`${base}/course/findCourseStudentByCourseId/` + params.courseId).then(res => res.data) }
+
+export const getStudentNotInCourse = params => { return http.get(`${base}/course/findARByCourseId/` + params.courseId).then(res => res.data) }
+
+export const moveStudentFromCourse = params => { return http.post(`${base}/course/deleteCourseStudent`, params).then(res => res.data) }
+
+export const checkPostAPI = params => { return http.post(`${base}/course/teacherCheckAR`, params).then(res => res.data) }
+
 // 字典管理
 export const getDicListPage = params => { return http.get(`${base}/dictionaries/listpage`, params).then(res => res.data) }
 
