@@ -38,7 +38,7 @@
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="courseName" label="未加入课程" align="center"></el-table-column>
             <el-table-column prop="creatTeacher" label="创建老师" width="200px" align="center"></el-table-column>
-            <el-table-column prop="courseState" label="课程状态" width="200px"  align="center"></el-table-column>
+            <el-table-column prop="courseState" label="课程状态" :formatter="formatState" width="200px"  align="center"></el-table-column>
             <el-table-column label="操作" width="250px" align="center">
                 <template slot-scope="scope">
                     <el-button type="primary"  size="mini" @click="handleDetail(scope.$index, scope.row)">查看详情</el-button>
@@ -69,11 +69,13 @@ export default {
     this.otherCourses()
   },
   methods: {
+    formatState (row, column) {
+      return row.courseState == 0 ? '已结课' : '进行中'
+    },
     addedCourses () {
       let para = {studentId: JSON.parse(localStorage.getItem('user')).userId}
       this.listLoading1 = true
       findAddedCourse(para).then((res) => {
-          // console.log(res)
         if (res.code == '200') {
           this.listLoading1 = false
           this.addedCourse = res.data
