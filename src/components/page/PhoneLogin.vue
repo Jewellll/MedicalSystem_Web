@@ -99,18 +99,18 @@ export default {
         // 验证验证码
         verificationCode () {
             this.$refs.phoneForm.validate((valid) => {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user')
                 if (valid) {
                     const params = {mail:this.phoneForm.email,code:this.phoneForm.verifyNum}
                     requestEmailLogin(params).then(res => {
                         let {msg, code, user, token} = res
-                        if (code == '300') {
-                            this.$message.error(msg)
-                        } else if(code =='200'){
+                     if(code =='200'){
                             this.$store.commit('login', res.data);
                             this.$store.commit('login2', token);
                             this.$router.push({ path: '/home' });
                             this.$message.success(msg);
-                        }else if(code == '400'){
+                        }else{
                             this.$message.error(msg)
                         }
                     })

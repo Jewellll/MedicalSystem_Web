@@ -7,6 +7,7 @@
     <div class="container" style="overflow: hidden;">
         <transition name="fade" mode="out-in">
             <router-view></router-view>
+
         </transition>
     </div>
     <Footer></Footer>

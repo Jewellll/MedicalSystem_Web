@@ -155,7 +155,7 @@ export default {
           this.teamInfo = res.data
         } else if (res.code == '201') {
           this.teamLoading = false
-          alert('您尚未组队')
+            this.$message.warning('您尚未组队')
         }
       })
     },

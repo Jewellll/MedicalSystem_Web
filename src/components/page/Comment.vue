@@ -20,7 +20,10 @@
                 <el-button size="small" class="btn" type="primary" @click="userSubmit">确定</el-button>
             </div>
         </div>
-
+        <template v-if="comments.length==0">
+            <div>暂无评论</div>
+        </template>
+        <template v-else>
         <div class="comment" v-for="item in comments" :key="item.id">
             <div class="info">
                 <img class="avatar" :src="item.fromAvatar" width="36" height="36" alt=""/>
@@ -72,6 +75,7 @@
                 </transition>
             </div>
         </div>
+        </template>
     </div>
 </template>
 

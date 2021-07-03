@@ -32,12 +32,17 @@
                 <h1 style="position: relative;left: -25%">病例图片</h1>
                 <div class="demo-image__lazy">
                     <el-scrollbar>
+                        <template v-if="urls.length==0">
+                            <div>暂无图片</div>
+                        </template>
+                        <template v-else>
                         <el-image
                             v-for="url in urls" :key="url" lazy
                             style="width: 250px; height: 250px;margin-right: 5px"
                             :src="url"
                             :preview-src-list="srcList">
                         </el-image>
+                        </template>
                     </el-scrollbar>
                 </div>
             </div>
@@ -179,12 +184,10 @@ export default {
             console.log(this.caseId)
         },
         async getUserList () {
-            this.listLoading = true
             const param={caseId:this.caseId}
             getReplyCaseDetail(param).then((res) => {
                 console.log(res)
                 this.case= res.data
-                this.listLoading = false
             })
         },
         async getFileList () {
@@ -195,7 +198,6 @@ export default {
             getCaseDetailFile(param).then((res) => {
                 if(res.code==='200') {
                     console.log(res)
-                    this.$message.success(res.msg)
                     for (var i = 0; i < res.data.length; i++) {
                         var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
                         const name = res.data[i].fileUrl.substring(res.data[i].fileUrl.lastIndexOf('/') + 1)
@@ -208,7 +210,6 @@ export default {
                 }else if(res.code==='303'){
                     console.log(res)
                     this.listLoading = false
-                    this.$message.warning(res.msg)
                 }
             })
         },
@@ -227,12 +228,10 @@ export default {
         },
         //评论
         async getComments () {
-            // var param= {caseId:this.caseId}s
-            var param= {caseId:1}
+            var param= {caseId:this.caseId}
             getCommentList(param).then((res) => {
                 console.log(res)
                 this.commentData = res.data
-                this.$message.success(res.msg)
             })
         },
         //下载

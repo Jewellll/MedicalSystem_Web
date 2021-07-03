@@ -32,12 +32,17 @@
                 <h1 style="position: relative;left: -25%">病例图片</h1>
                 <div class="demo-image__lazy">
                     <el-scrollbar>
+                        <template v-if="urls.length==0">
+                            <div>暂无图片</div>
+                        </template>
+                        <template v-else>
                         <el-image
                             v-for="url in urls" :key="url" lazy
                             style="width: 250px; height: 250px;margin-right: 5px"
                             :src="url"
                             :preview-src-list="srcList">
                         </el-image>
+                        </template>
                     </el-scrollbar>
                 </div>
             </div>
@@ -146,28 +151,28 @@ export default {
             listLoading:false,
             fileList1:[],
             urls: [
-                require('../../assets/img/CaseImg/Case02-1.png'),
-                require('../../assets/img/CaseImg/Case02-2.png'),
-                require('../../assets/img/CaseImg/Case02-3.png'),
-                require('../../assets/img/CaseImg/Case02-4.png'),
-                require('../../assets/img/CaseImg/Case02-5.png'),
-                require('../../assets/img/CaseImg/Case02-6.png'),
-                require('../../assets/img/CaseImg/Case02-7.png'),
-                require('../../assets/img/CaseImg/Case02-8.png'),
-                require('../../assets/img/CaseImg/Case02-9.png'),
-                require('../../assets/img/CaseImg/Case02-10.png')
+                // require('../../assets/img/CaseImg/Case02-1.png'),
+                // require('../../assets/img/CaseImg/Case02-2.png'),
+                // require('../../assets/img/CaseImg/Case02-3.png'),
+                // require('../../assets/img/CaseImg/Case02-4.png'),
+                // require('../../assets/img/CaseImg/Case02-5.png'),
+                // require('../../assets/img/CaseImg/Case02-6.png'),
+                // require('../../assets/img/CaseImg/Case02-7.png'),
+                // require('../../assets/img/CaseImg/Case02-8.png'),
+                // require('../../assets/img/CaseImg/Case02-9.png'),
+                // require('../../assets/img/CaseImg/Case02-10.png')
             ],
             srcList: [
-                require('../../assets/img/CaseImg/Case02-1.png'),
-                require('../../assets/img/CaseImg/Case02-2.png'),
-                require('../../assets/img/CaseImg/Case02-3.png'),
-                require('../../assets/img/CaseImg/Case02-4.png'),
-                require('../../assets/img/CaseImg/Case02-5.png'),
-                require('../../assets/img/CaseImg/Case02-6.png'),
-                require('../../assets/img/CaseImg/Case02-7.png'),
-                require('../../assets/img/CaseImg/Case02-8.png'),
-                require('../../assets/img/CaseImg/Case02-9.png'),
-                require('../../assets/img/CaseImg/Case02-10.png')
+                // require('../../assets/img/CaseImg/Case02-1.png'),
+                // require('../../assets/img/CaseImg/Case02-2.png'),
+                // require('../../assets/img/CaseImg/Case02-3.png'),
+                // require('../../assets/img/CaseImg/Case02-4.png'),
+                // require('../../assets/img/CaseImg/Case02-5.png'),
+                // require('../../assets/img/CaseImg/Case02-6.png'),
+                // require('../../assets/img/CaseImg/Case02-7.png'),
+                // require('../../assets/img/CaseImg/Case02-8.png'),
+                // require('../../assets/img/CaseImg/Case02-9.png'),
+                // require('../../assets/img/CaseImg/Case02-10.png')
             ],
             case:{
                 caseDesc:'',
@@ -205,10 +210,10 @@ export default {
         },
         async getFileList () {
             this.listLoading = true
-            this.caseId=1001
             const param={caseId:this.caseId}
             console.log(param)
             getCaseDetailFile(param).then((res) => {
+                if(res.code==='200') {
                 console.log(res)
                 for (var i = 0; i < res.data.length; i++) {
                     var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
@@ -219,6 +224,10 @@ export default {
                     this.fileList1.push(item)
                 }
                 this.listLoading = false
+            }else if(res.code==='303'){
+                console.log(res)
+                this.listLoading = false
+            }
             })
         },
         async getCaseImg () {
@@ -233,19 +242,14 @@ export default {
                     }
                     this.urls = img
                     this.srcList = img
-                }else{
-                    this.$message.warning('该案例无图片')
                 }
             })
         },
         //评论
         async getComments () {
-            // var param= {caseId:this.caseId}
-            const param= {caseId:1}
+            var param= {caseId:this.caseId}
             getCommentList(param).then((res) => {
-                console.log(res)
-                this.commentData = res.data
-                this.$message.success(res.msg)
+                      this.commentData = res.data
             })
         },
         // 附件

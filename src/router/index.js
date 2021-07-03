@@ -71,7 +71,6 @@ export default new Router({
           component: StudentCourseDetail,
           meta: {
             title: '学生课程详情',
-            hideclose: true,
             requireAuth: true
           }
         },

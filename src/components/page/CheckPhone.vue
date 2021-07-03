@@ -95,7 +95,7 @@ export default {
             this.time = 60
             this.btnColor = false
             this.timer()
-            const phoneParams={mail: this.editForm.email}
+            const phoneParams={mail: this.checkForm.email}
             requestMss(phoneParams).then(res => {
                 let {msg, code} = res;
                 if (code === '200') {

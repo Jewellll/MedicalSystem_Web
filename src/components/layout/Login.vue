@@ -109,14 +109,12 @@ export default {
                     requestLogin(loginParams).then(res => {
                         this.logining = false;
                         let { msg, code,token } = res;
-                        if (code == 300) {
-                            this.$message.error(msg);
-                        } else if(code=='200'){
+                         if(code=='200'){
                             _this.$store.commit('login', res.data);
                             _this.$store.commit('login2', token);
                             _this.$router.push({ path: '/home' });
                             this.$message.success(msg);
-                        }else if(code == 400){
+                        }else{
                             this.$message.error(msg);
                         }
                     } );
