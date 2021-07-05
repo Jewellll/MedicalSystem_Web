@@ -83,24 +83,19 @@
             <div class="submit layout">
                 <el-divider></el-divider>
                 <h4 style="position: relative;left: -33%">提交诊断或治疗方案</h4>
-<!--                <div class="upload1">-->
-<!--                    <el-upload-->
-<!--                        :headers="headers"-->
-<!--                        class="upload-demo"-->
-<!--                        action="http://118.195.129.22:8081/sfile/uploadFile?caseId=123&studentId=456"-->
-<!--                        :on-preview="handlePreview"-->
-<!--                        :on-remove="handleRemove"-->
-<!--                        :before-remove="beforeRemove"-->
-<!--                        multiple-->
-<!--                        :limit="3"-->
-<!--                        :on-exceed="handleExceed"-->
-<!--                        :file-list="fileList">-->
-<!--                        <el-button size="middle" type="primary">点击上传</el-button>-->
-<!--                        <div slot="tip" class="el-upload__tip" style="color:#c1c1c1">只能上传jpg/png文件，且不超过500kb <br>-->
-<!--                            支持扩展名：.rar .zip .doc .docx .pdf .jpg... <br>诊断结果以文本形式提交，治疗方案以word、pdf、ppt形式提交-->
-<!--                        </div>-->
-<!--                    </el-upload>-->
-<!--                </div>-->
+                <el-table :data="studentFileList" :stripe="true" :border="true" v-loading="listLoading"
+                          :header-cell-style="{background:'#F5F6FA',color:'#666E92'}">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="fileName" label="文件名"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <!-- 修改按钮 -->
+                            <el-button type="primary" icon="el-icon-download" size="mini" @click="download1(scope.$index, scope.row)"></el-button>
+                            <!-- 删除按钮 -->
+                            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDel(scope.$index, scope.row)"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
                 <div class="upload2">
                     <el-upload
                         drag
@@ -112,7 +107,7 @@
                         :on-success="handleSuccess"
                         :on-error="handleError"
                         :multiple="true"
-                        :limit="3"
+                        :limit=limitNum
                         :on-exceed="exceedFile"
                         :action=upload
                         :file-list="fileList">
@@ -133,7 +128,14 @@
 </template>
 <!--"http://118.195.129.22:8081/sfile/uploadFile?caseId=122206152&studentId=888888888"-->
 <script>
-import {getCaseDetail, getCaseDetailFile, getCommentList, getReplyCaseImg, getTeacherListPage} from '../../api/api'
+import {
+    getCaseDetail,
+    getCaseDetailFile,
+    getCaseFile,
+    getCommentList,
+    getReplyCaseImg, getStudentFile,
+    getTeacherListPage, removeStudentFile
+} from '../../api/api'
 // import {comments} from '../../mock/mockdata'
 import Comment from './Comment'
 import http from '../../store/http'
@@ -144,7 +146,7 @@ export default {
     data () {
         return {
             //上传
-            limitNum: 3,
+            limitNum: 5,
             headers: { Authorization: localStorage.getItem('token') },
             fileList:[],
             //附件
@@ -181,7 +183,9 @@ export default {
             caseId: '',
             commentData: [],
             upload:'',
-            userId:0
+            userId:0,
+            studentId:'',
+            studentFileList: [],
         }
     },
     created () {
@@ -191,8 +195,36 @@ export default {
         // this.commentData=comments.data
         this.getComments()
         this.getUserList ()
+        this.getStudentFileList()
     },
     methods: {
+        async getStudentFileList () {
+            this.studentFileList=[]
+            this.listLoading=true
+            this.studentId=JSON.parse(localStorage.getItem('user')).userId
+            var param ={caseId:this.caseId,studentId:this.studentId}
+            getStudentFile(param).then((res) => {
+                console.log(res)
+                if(res.code==='200') {
+                    this.total = res.data.total
+                    for (var i = 0; i < res.data.length; i++) {
+                        var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
+                        const name = res.data[i].filePath.substring(res.data[i].filePath.lastIndexOf('/') + 1)
+                        console.log(res.data[i].filePath.substring(res.data[i].filePath.lastIndexOf('/') + 1))
+                        item.fileName = name
+                        item.caseName=res.data[i].caseName
+                        item.realName=res.data[i].studentName
+                        item.studentId=res.data[i].studentId
+                        item.fileId = res.data[i].id
+                        this.studentFileList.push(item)
+                    }
+                    this.listLoading = false
+                }else if(res.code==='303'){
+                    this.$message.error(res.msg)
+                    this.listLoading = false
+                }
+            })
+        },
         getParams(){
             this.caseId=this.$route.query.caseId
             this.userId=JSON.parse(localStorage.getItem('user')).userId
@@ -252,6 +284,46 @@ export default {
                       this.commentData = res.data
             })
         },
+        //删除
+        handleDel: function (index, row) {
+            this.$confirm('确认删除该记录吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                this.listLoading = true
+                console.log(row)
+                let para = {fileId: row.fileId}
+                removeStudentFile(para).then((res) => {
+                    console.log(res)
+                    if(res.code==='200') {
+                        this.listLoading = false
+                        //NProgress.done();
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                        this.getStudentFileList()
+                    }else{
+                        this.listLoading = false
+                        this.$message({
+                            message: res.msg,
+                            type: 'error'
+                        })
+                    }
+                })
+            }).catch(() => {
+
+            })
+        },
+        //下载
+        download1: function (index, row) {
+            const param = Object.assign({}, row)
+            console.log(param.fileId)
+            const params= {fileId:param.fileId}
+            console.log(params)
+            const url="/sfile/downloadFile/"+params.fileId
+            const options = {fileId:param.fileId}
+            this.exportExcel(url,options,param.fileName)
+        },
         // 附件
         download: function (index, row) {
             var param = Object.assign({}, row)
@@ -303,6 +375,7 @@ export default {
                 title: '成功',
                 message: `文件上传成功`
             });
+            this.getStudentFileList()
         },
         // 文件上传失败时的钩子
         handleError(err, file, fileList) {

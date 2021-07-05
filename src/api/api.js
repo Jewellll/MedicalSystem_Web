@@ -147,7 +147,7 @@ export const editCse = params => { return http.put(`${base}/case/updatecase`, pa
 export const addCase = params => { return http.post(`${base}/case/insertcase`, params).then(res => res.data) }
 
 // 文件
-
+export const getStudentFile = params => { return http.get(`${base}/sfile/getFileById/` + params.caseId + '/' + params.studentId).then(res => res.data) }
 export const getCaseDetailFile = params => { return http.get(`${base}/case/getFileByCaseId/` + params.caseId).then(res => res.data) }
 
 export const downloadFile = params => { return http.post(`${base}/sfile/downloadFile/` + params.fileId).then(res => res.data) }

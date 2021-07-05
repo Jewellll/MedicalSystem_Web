@@ -112,7 +112,7 @@ export default {
                         const name = res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1)
                         console.log(res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1))
                         item.fileName = name
-                        item.submitTime=res.data.list[i].uploadTime
+                        item.submitTime=res.data.list[i].creatTime
                         item.caseName=res.data.list[i].caseName
                         item.realName=res.data.list[i].studentName
                         item.studentId=res.data.list[i].studentId
@@ -195,7 +195,7 @@ export default {
                         this.listLoading = false
                         //NProgress.done();
                         this.$message({
-                            message: res.data.msg,
+                            message: res.msg,
                             type: 'success'
                         })
                         this.getUserList()
