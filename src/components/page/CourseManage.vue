@@ -14,8 +14,8 @@
             <div class="toolbar">
                 <el-row :gutter="20">
                     <el-col :span="4">
-                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
+                        <el-input placeholder="请输入课程名" v-model="queryInfo.courseName" clearable @clear="getCourseList">
+                            <el-button slot="append" icon="el-icon-search" @click="searchCourse"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -139,9 +139,9 @@
 
 <script>
 import {
-  addCourse, addCourseStudents, addCourseTeachers,
+  addCourse, addCourseStudents, addCourseTeachers, batchRemoveCourse,
   batchRemoveTeacher, findStudents, findTeachers,
-  getCourseListPage, removeCourse
+  getCourseListPage, removeCourse, searchByCourse
 } from '../../api/api'
 
 export default {
@@ -187,7 +187,7 @@ export default {
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
-        query: '',
+        courseName: '',
         // 当前的页码数
         pagenum: 1,
         // 每页显示多少条数据
@@ -222,8 +222,23 @@ export default {
   },
   created () {
     this.getCourseList()
+    // this.$watch('queryInfo.courseName', (newVal, oldVal) => {
+    //   if (newVal == '') {
+    //     this.getCourseList()
+    //   }
+    // })
   },
   methods: {
+    // 查询课程
+    searchCourse () {
+      searchByCourse(this.queryInfo).then((res) => {
+        if (res.code !== '200') {
+          this.$message.error('没有这门课')
+        }
+        this.total = res.count
+        this.courseList = res.data
+      })
+    },
     async getCourseList () {
       var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
       this.listLoading = true
@@ -356,7 +371,7 @@ export default {
     // 课程详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)
-      this.$router.push({ path: '/courseDetail', query: {courseId: para.courseId,courseName:para.courseName} })
+      this.$router.push({ path: '/courseDetail', query: {courseId: para.courseId, courseName: para.courseName} })
     },
     // 删除
     handleDel: function (index, row) {
@@ -387,21 +402,23 @@ export default {
     },
     // 批量删除
     batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString()
       this.$confirm('确认删除选中记录吗？', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para = {ids: ids}
-        batchRemoveTeacher(para).then((res) => {
-          if (res.data.code == 200) {
+        let para = []
+        for (let i = 0; i < this.sels.length; i++) {
+          para[i] = this.sels[i].courseId
+        }
+        batchRemoveCourse(para).then((res) => {
+          if (res.code == '200') {
             this.listLoading = false
             // NProgress.done();
             this.$message({
               message: '删除成功',
               type: 'success'
             })
-            this.getUserList()
+            this.getCourseList()
           }
         })
       }).catch(() => {

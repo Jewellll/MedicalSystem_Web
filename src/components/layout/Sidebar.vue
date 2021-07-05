@@ -113,7 +113,6 @@ export default {
             let id = JSON.parse(localStorage.getItem('user')).id
             const param = {id:id}
             requestMenu(param).then(res => {
-                console.log(res)
                 if (res.code === '200') {
                     this.items = res.data
                     // this.$store.commit('setMenus', this.items)
