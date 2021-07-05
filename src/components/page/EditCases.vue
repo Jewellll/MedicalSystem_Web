@@ -50,6 +50,7 @@
                 <br>
                 <div style="text-align: left;font-size: 14px;margin-top: 5px">附件:</div>
                 <el-upload
+                    :headers="headers"
                     class="upload-demo"
                     drag
                     :action=upload

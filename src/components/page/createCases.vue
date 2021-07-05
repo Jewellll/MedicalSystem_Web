@@ -31,6 +31,7 @@
                 <div class="right">
                     <div style="text-align: left;font-size: 14px;margin-top: 5px"> 案例图片：</div>
                     <el-upload
+                        :headers="headers"
                         class="upload-demo"
                         :action=upload1
                         :limit="3"
@@ -49,6 +50,7 @@
                     <br>
                     <div style="text-align: left;font-size: 14px;margin-top: 5px">附件:</div>
                     <el-upload
+                        :headers="headers"
                         class="upload-demo"
                         drag
                         :action=upload
@@ -91,6 +93,7 @@ export default {
     name: 'createCases',
     data () {
         return {
+            headers: { Authorization: localStorage.getItem('token') },
             caseForm: {
                 caseName: '',
                 caseDesc: '',
@@ -125,7 +128,7 @@ export default {
                 console.log(res)
                 this.caseForm.caseId=res.data.caseId
                 this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseForm.caseId
-                this.upload1='http://118.195.129.22:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId
+                this.upload1='http://118.195.129.22:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId+'&description='
             })
         },
         getParams(){

@@ -6,8 +6,9 @@
 <!--    <strong class="title">{{$route.meta.title}}</strong>-->
     <div class="container" style="overflow: hidden;">
         <transition name="fade" mode="out-in">
+            <keep-alive>
             <router-view></router-view>
-
+            </keep-alive>
         </transition>
     </div>
     <Footer></Footer>
