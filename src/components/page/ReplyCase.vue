@@ -102,7 +102,7 @@
             <el-divider></el-divider>
             <div class="comment layout">
                 <div class="comment-box">
-                <Comment :comments="commentData" :getComments="getComments"></Comment>
+                <Comment :comments="commentData" :caseId="caseId" :getComments="getComments"></Comment>
                 </div>
             </div>
         </div>

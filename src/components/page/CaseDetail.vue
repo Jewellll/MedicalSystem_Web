@@ -51,7 +51,7 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                <Comment :comments=" commentData" :getComments="getComments"></Comment>
+                <Comment :comments=" commentData" :caseId="caseId" :getComments="getComments"></Comment>
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>

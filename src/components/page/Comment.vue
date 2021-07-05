@@ -92,10 +92,10 @@ export default {
             type: Function,
             default: null
         },
-        // caseId:{
-        //     type:Number,
-        //     required: true
-        // }
+        caseId:{
+            type:Number,
+            required: true
+        }
     },
     components: {},
     data () {
@@ -119,8 +119,7 @@ export default {
         userSubmit (item) {
             var user =JSON.parse(localStorage.getItem('user'))
             const param = {
-                caseId: 1,
-                // caseId: this.caseId,
+                caseId: this.caseId,
                 content: this.userComment,
                 fromId: user.userId,
                 fromName: user.realName
