@@ -309,7 +309,7 @@ export default {
         for (let i = 0; i < res.data.length; i++) {
           this.originStudents.push({
             key: res.data[i].userId,
-            label: res.data[i].userName
+            label: res.data[i].realName
           })
         }
         // console.log(this.originStudents)
