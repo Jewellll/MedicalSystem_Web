@@ -240,7 +240,7 @@
 <script>
 import {
   batchRemoveCase, changeTeam, checkPostAPI,
-  createTeam, delStudent,
+  createTeam, delStudent, editTeamId,
   getCaseListByCourse, getCourseDetailPage, getCourseStudents, getStudentInCourse, getStudentNotInCourse,
   getTeamListByCourse, getTeamStudent, moveStudentFromCourse, removeCase, removeTeam
 
@@ -512,7 +512,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        let para =  ids
+        let para = ids
         batchRemoveCase(para).then((res) => {
           if (res.code === '200') {
             this.listLoading = false
@@ -599,7 +599,17 @@ export default {
       })
     },
     editSubmit () {
-      this.editTeamVisible = false
+      let id = []
+      for (let i = 0; i < this.editTeam.members.length; i++) {
+        id.push({
+          studentId: this.editTeam.members[i].studentId
+        })
+      }
+      let para = {courseId: this.courseId, teamId: this.editTeam.teamId, courseStudents: id}
+      editTeamId(para).then((res) => {
+        this.editTeamVisible = false
+        this.getTeamList()
+      })
     },
     handleTeam (index, row) {
       this.editTeamVisible = true
