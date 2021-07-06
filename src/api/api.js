@@ -19,7 +19,7 @@ export const removeUser = params => { return http.delete(`${base}/user/deleteUse
 
 export const getUserListByRealName = params => { return http.get(`${base}/user/getUserByRealName`, params).then(res => res.data) }
 
-export const getUserListByUserName = params => { return http.get(`${base}/user/getUserByUserName/` + params.username).then(res => res.data) }
+export const getUserListByUserName = params => { return http.get(`${base}/user/getUserByRealName/` + params.realName).then(res => res.data) }
 
 export const batchRemoveUser = params => { return http.delete(`${base}/user/deleteUserAllByuserId`, {data: params}).then(res => res.data) }
 

@@ -31,9 +31,9 @@
                 <el-table-column prop="caseId" label="案例号" width="100px"></el-table-column>
                 <el-table-column prop="caseName" label="案例名" width="120px"></el-table-column>
                 <el-table-column prop="courseName" label="课程名" width="120px"></el-table-column>
-                <el-table-column prop="teacherId" label="创建老师" width="200px"></el-table-column>
-                <el-table-column prop="createTime" label="创建时间"width="170px"></el-table-column>
-                <el-table-column prop="desc" label="案例是否发布" width="50px"></el-table-column>
+                <el-table-column prop="teacherName" label="创建老师" width="200px"></el-table-column>
+                <el-table-column prop="creatTime" label="创建时间"width="170px"></el-table-column>
+<!--                <el-table-column prop="desc" label="案例是否发布" width="50px"></el-table-column>-->
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
@@ -184,11 +184,16 @@ export default {
           var param = {caseName: this.queryInfo.query,pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize}
           getCaseListByCaseName(param).then((res) => {
               if(res.code==='200') {
-                  console.log(res)
-                  this.$message.success(res.msg)
-                  this.total = res.count
-                  this.caseList=res.data
-                  this.listLoading = false
+                  if(res.data.length==0){
+                      this.$message.warning('没有相应搜索结果')
+                      this.getCaseList()
+                  }else {
+                      console.log(res)
+                      this.$message.success(res.msg)
+                      this.total = res.count
+                      this.caseList = res.data
+                      this.listLoading = false
+                  }
               }
           })
       },

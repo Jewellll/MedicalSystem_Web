@@ -288,10 +288,11 @@ export default {
           let param = this.addform
           axios({
             method: 'post',
-            url: 'http://118.195.129.22:8081/dict/insertDictionary',
+            url: 'http://172.17.169.0:8081/dict/insertDictionary',
             data: {
               typeName: this.addform.typeName,
               typeCode: this.addform.typeCode,
+
               dictionaryDetails: this.addform.dictionaryDetails
             }
           }).then((res) => {
@@ -356,7 +357,7 @@ export default {
       if (confirm('确认删除吗？') == true) {
         axios({
           method: 'delete',
-          url: 'http://118.195.129.22:8081/dict/deleteDictionaryByTypeCode/' + row.typeCode,
+          url: 'http://172.17.169.0:8081/dict/deleteDictionaryByTypeCode/' + row.typeCode,
           data: {
           }
         }).then((res) => {

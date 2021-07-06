@@ -393,7 +393,7 @@ export default {
       //查找
       getUserByUserName(){
           this.listLoading = true
-          var param = {username: this.queryInfo.query}
+          var param = {realName: this.queryInfo.query}
           getUserListByUserName(param).then((res) => {
               console.log(res)
               if(res.code==='200') {

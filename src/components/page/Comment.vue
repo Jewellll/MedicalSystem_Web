@@ -119,7 +119,7 @@ export default {
         userSubmit (item) {
             var user =JSON.parse(localStorage.getItem('user'))
             const param = {
-                caseId: this.caseId,
+                caseId: Number(this.caseId),
                 content: this.userComment,
                 fromId: user.userId,
                 fromName: user.realName
@@ -141,7 +141,7 @@ export default {
         commitComment (item) {
             var user =JSON.parse(localStorage.getItem('user'))
             const param = {
-                cseId: this.caseId,
+                caseId: Number(this.caseId),
                 parentId: item.id,
                 content: this.inputComment,
                 fromId: user.userId,
