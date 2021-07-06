@@ -49,9 +49,9 @@
             <hr>
             <div class="toolbar">
                 <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-input placeholder="请输入案例名" v-model="queryInfo.query" clearable @clear="getCourseDetail">
-                            <el-button slot="append" icon="el-icon-search" @click="getCourseDetail()"></el-button>
+                    <el-col :span="4">
+                        <el-input placeholder="请输入案例名" v-model="queryInfo.query" clearable @clear="getUserByUserName()">
+                            <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
                     </el-col>
                 </el-row>
@@ -86,9 +86,9 @@
 
 <script>
 import {
-  batchRemoveCase,
-  getCaseListByCourse, getCourseDetailPage,
-  getTeamMembers
+    batchRemoveCase, getCaseListByCaseName,
+    getCaseListByCourse, getCourseDetailPage,
+    getTeamMembers
 } from '../../api/api'
 import dicList from './Dictionary'
 
@@ -159,6 +159,24 @@ export default {
         }
       })
     },
+      getUserByUserName(){
+          this.listLoading = true
+          var param = {caseName: this.queryInfo.query,pageNum:this.queryInfo.pagenum,pageSize:this.queryInfo.pagesize}
+          getCaseListByCaseName(param).then((res) => {
+              if(res.code==='200') {
+                  if(res.data.length==0){
+                      this.$message.warning('没有相应搜索结果')
+                      this.getCaseList()
+                  }else {
+                      console.log(res)
+                      this.$message.success(res.msg)
+                      this.total = res.count
+                      this.caseList = res.data
+                      this.listLoading = false
+                  }
+              }
+          })
+      },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
       //   console.log(newSize)

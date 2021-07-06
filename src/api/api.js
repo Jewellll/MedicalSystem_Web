@@ -135,7 +135,7 @@ export const getReplyCaseImg = params => { return http.get(`${base}/case/readima
 // 评论
 
 export const getCommentList = params => { return http.get(`${base}/comment/getComments/` + params.caseId).then(res => res.data) }
-
+export const deleteComment = params => { return http.delete(`${base}/comment/deleteComment/` + params.id).then(res => res.data) }
 export const requestComment = params => { return http.post(`${base}/comment/addComment`, params).then(res => res.data) }
 
 // 编辑添加案例

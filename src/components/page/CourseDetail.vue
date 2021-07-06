@@ -34,9 +34,9 @@
             <hr>
             <div class="toolbar">
                 <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-input placeholder="请输入案例名" v-model="queryInfo.query" clearable @clear="getCourseDetail">
-                            <el-button slot="append" icon="el-icon-search" @click="getCourseDetail()"></el-button>
+                    <el-col :span="4">
+                        <el-input placeholder="请输入案例名" v-model="queryInfo.queryCase" clearable @clear="getUserByUserName()">
+                            <el-button slot="append" icon="el-icon-search" @click="getUserByUserName()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -239,10 +239,10 @@
 
 <script>
 import {
-  batchRemoveCase, changeTeam, checkPostAPI,
-  createTeam, delStudent, editTeamId,
-  getCaseListByCourse, getCourseDetailPage, getCourseStudents, getStudentInCourse, getStudentNotInCourse,
-  getTeamListByCourse, getTeamStudent, moveStudentFromCourse, removeCase, removeTeam
+    batchRemoveCase, changeTeam, checkPostAPI,
+    createTeam, delStudent, editTeamId, getCaseListByCaseName,
+    getCaseListByCourse, getCourseDetailPage, getCourseStudents, getStudentInCourse, getStudentNotInCourse,
+    getTeamListByCourse, getTeamStudent, moveStudentFromCourse, removeCase, removeTeam
 
 } from '../../api/api'
 import dicList from './Dictionary'
@@ -346,6 +346,24 @@ export default {
         this.total_case = res.count
       })
     },
+      getUserByUserName(){
+          this.listLoading = true
+          var param = {caseName: this.queryInfo.queryCase,pageNum:this.queryInfo.pagenum_case,pageSize:this.queryInfo.pagesize_case}
+          getCaseListByCaseName(param).then((res) => {
+              if(res.code==='200') {
+                  if(res.data.length==0){
+                      this.$message.warning('没有相应搜索结果')
+                      this.getCaseList()
+                  }else {
+                      console.log(res)
+                      this.$message.success(res.msg)
+                      this.total = res.count
+                      this.caseList = res.data
+                      this.listLoading = false
+                  }
+              }
+          })
+      },
     getTeamList () {
       let para = {courseId: this.courseId, pageNum: this.queryInfo.pagenum_team, pageSize: this.queryInfo.pagesize_team}
       this.teamListLoading = true

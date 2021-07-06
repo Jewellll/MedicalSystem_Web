@@ -51,7 +51,7 @@
         <div class="inter layout">
             <el-divider></el-divider>
             <div class="comment layout">
-                <Comment :comments=" commentData" :caseId="caseId" :getComments="getComments"></Comment>
+                <Comment  @func="getPage" :total="total" :comments="commentData" :caseId="caseId" :getComments="getComments"></Comment>
             </div>
             <div class="file1 layout">
                 <h2 style="position: relative;left: -40%">附件</h2>
@@ -153,28 +153,10 @@ export default {
             listLoading:false,
             fileList1:[],
             urls: [
-                // require('../../assets/img/CaseImg/Case02-1.png'),
-                // require('../../assets/img/CaseImg/Case02-2.png'),
-                // require('../../assets/img/CaseImg/Case02-3.png'),
-                // require('../../assets/img/CaseImg/Case02-4.png'),
-                // require('../../assets/img/CaseImg/Case02-5.png'),
-                // require('../../assets/img/CaseImg/Case02-6.png'),
-                // require('../../assets/img/CaseImg/Case02-7.png'),
-                // require('../../assets/img/CaseImg/Case02-8.png'),
-                // require('../../assets/img/CaseImg/Case02-9.png'),
-                // require('../../assets/img/CaseImg/Case02-10.png')
+
             ],
             srcList: [
-                // require('../../assets/img/CaseImg/Case02-1.png'),
-                // require('../../assets/img/CaseImg/Case02-2.png'),
-                // require('../../assets/img/CaseImg/Case02-3.png'),
-                // require('../../assets/img/CaseImg/Case02-4.png'),
-                // require('../../assets/img/CaseImg/Case02-5.png'),
-                // require('../../assets/img/CaseImg/Case02-6.png'),
-                // require('../../assets/img/CaseImg/Case02-7.png'),
-                // require('../../assets/img/CaseImg/Case02-8.png'),
-                // require('../../assets/img/CaseImg/Case02-9.png'),
-                // require('../../assets/img/CaseImg/Case02-10.png')
+
             ],
             case:{
                 caseDesc:'',
@@ -186,6 +168,9 @@ export default {
             userId:0,
             studentId:'',
             studentFileList: [],
+            pagenum:0,
+            pagesize:0,
+            total:0
         }
     },
     created () {
@@ -281,9 +266,15 @@ export default {
         async getComments () {
             var param= {caseId:this.caseId}
             getCommentList(param).then((res) => {
-                console.log(res)
-                      this.commentData = res.data
+                console.log(this.pagenum)
+                this.total=Number(res.data.length)
+                      this.commentData = res.data.slice((this.pagenum-1)*this.pagesize,this.pagenum*this.pagesize)
+                console.log(this.commentData)
             })
+        },
+        getPage(data){
+            this.pagenum=data.pagenum
+            this.pagesize=data.pagesize
         },
         //删除
         handleDel: function (index, row) {

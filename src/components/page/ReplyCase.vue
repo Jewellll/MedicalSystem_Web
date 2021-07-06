@@ -102,7 +102,7 @@
             <el-divider></el-divider>
             <div class="comment layout">
                 <div class="comment-box">
-                <Comment :comments="commentData" :caseId="caseId" :getComments="getComments"></Comment>
+                <Comment @func="getPage" :total="total" :comments="commentData" :caseId="caseId" :getComments="getComments"></Comment>
                 </div>
             </div>
         </div>
@@ -167,6 +167,9 @@ export default {
             commentData: [],
             caseId: '',
             upload:'',
+            pagenum:0,
+            pagesize:0,
+            total:0
         }
     },
     created () {
@@ -231,8 +234,14 @@ export default {
             var param= {caseId:this.caseId}
             getCommentList(param).then((res) => {
                 console.log(res)
-                this.commentData = res.data
+                this.total=Number(res.data.length)
+                this.commentData = res.data.slice((this.pagenum-1)*this.pagesize,this.pagenum*this.pagesize)
             })
+        },
+        getPage(data){
+            console.log(11)
+            this.pagenum=data.pagenum
+            this.pagesize=data.pagesize
         },
         //下载
         download: function (index, row) {
