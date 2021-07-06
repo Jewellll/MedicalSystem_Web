@@ -113,7 +113,7 @@
             </div>
             <!--            创建团队页面-->
             <el-dialog width="60%" title="创建团队" :visible.sync="addTeamVisible" >
-                <el-form label-width="100px"  :model="addForm" :rules="addFormRules">
+                <el-form label-width="100px" ref="addForm"  :model="addForm" :rules="addFormRules">
                     <el-form-item label="团队编号" prop="teamId">
                         <el-input v-model="addForm.teamId"></el-input>
                     </el-form-item>
@@ -548,21 +548,25 @@ export default {
     // 点击按钮创建团队
     addTeamSubmit () {
       // courseId从课程详情页面获取
-      let para = {courseId: this.courseId, teamId: this.addForm.teamId, courseStudents: []}
-      for (let i = 0; i < this.addForm.members.length; i++) {
-        para.courseStudents.push({
-          studentId: this.addForm.members[i]
-        })
-      }
-      createTeam(para).then((res) => {
-        if (res.code == '200') {
-          this.$message.success('创建成功')
-          this.addForm.students = []
-          this.addForm.teamId = ''
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          let para = {courseId: this.courseId, teamId: this.addForm.teamId, courseStudents: []}
+          for (let i = 0; i < this.addForm.members.length; i++) {
+            para.courseStudents.push({
+              studentId: this.addForm.members[i]
+            })
+          }
+          createTeam(para).then((res) => {
+            if (res.code == '200') {
+              this.$message.success('创建成功')
+              this.addForm.students = []
+              this.addForm.teamId = ''
+            }
+            this.getTeamList()
+          })
+          this.addTeamVisible = false
         }
-        this.getTeamList()
       })
-      this.addTeamVisible = false
     },
     // 团队中添加学生
     addStudent () {

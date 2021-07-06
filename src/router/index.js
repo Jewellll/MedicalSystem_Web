@@ -61,7 +61,6 @@ export default new Router({
           component: studentHome,
           meta: {
             title: '学生首页',
-            hideclose: true,
             requireAuth: true
           }
         },

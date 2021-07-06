@@ -303,6 +303,7 @@ export default {
     },
     // 添加学生
     addStudent (index, row) {
+      this.originStudents = []
       this.newStudents.courseId = row.courseId
       this.newStudents.courseName = row.courseName
       findStudents().then((res) => {
@@ -335,6 +336,7 @@ export default {
       this.addStudentVisible = false
     },
     addTeachers (index, row) {
+      this.originTeachers = []
       this.newTeachers.courseId = row.courseId
       this.newTeachers.courseName = row.courseName
       findTeachers().then((res) => {
@@ -355,7 +357,6 @@ export default {
           teacherId: this.newTeachers.courseTeachers[i]
         })
       }
-      console.log(para)
       this.addLoading = true
       addCourseTeachers(para).then((res) => {
         console.log(res.code)
