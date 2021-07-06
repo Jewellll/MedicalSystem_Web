@@ -127,7 +127,11 @@
         noChecked: '${total}',
         hasChecked: '${checked}/${total}'
       }"
-                :data="originTeachers">
+                :data="originTeachers"
+                @right-check-change="handleChange"
+            >
+            <span slot-scope="{option}">{{option.label}}</span>
+            <el-button class="transfer-footer" slot="right-footer" size="small" @click="moveTeachers">移除老师</el-button>
             </el-transfer>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addTeacherVisible = false">取 消</el-button>
@@ -141,7 +145,7 @@
 import {
   addCourse, addCourseStudents, addCourseTeachers, batchRemoveCourse,
   batchRemoveTeacher, findStudents, findTeachers,
-  getCourseListPage, removeCourse, searchByCourse
+  getCourseListPage, moveTeacher, removeCourse, searchByCourse
 } from '../../api/api'
 
 export default {
@@ -173,6 +177,7 @@ export default {
     return {
       originStudents: [],
       originTeachers: [],
+      moveteachers: [],
       newStudents: {
         courseId: '',
         courseName: '',
@@ -222,11 +227,11 @@ export default {
   },
   created () {
     this.getCourseList()
-    // this.$watch('queryInfo.courseName', (newVal, oldVal) => {
-    //   if (newVal == '') {
-    //     this.getCourseList()
-    //   }
-    // })
+    this.$watch('queryInfo.courseName', (newVal, oldVal) => {
+      if (newVal == '') {
+        this.getCourseList()
+      }
+    })
   },
   methods: {
     // 查询课程
@@ -368,7 +373,40 @@ export default {
       })
       this.addTeacherVisible = false
     },
-
+    //
+    handleChange (value) {
+      // value是一个存放key值的数组
+      this.moveteachers = value
+    },
+    // 移除老师
+    moveTeachers () {
+      this.$confirm('确认移除这些老师吗？', '提示').then(() => {
+        let temp = []
+        for (let i = 0; i < this.moveteachers.length; i++) {
+          temp.push({
+            teacherId: this.moveteachers[i]
+          })
+        }
+        let para = {courseId: this.newTeachers.courseId, courseTeachers: temp}
+        let data1 = this.newTeachers.courseTeachers
+        let data2 = this.moveteachers
+        console.log(data2)
+        moveTeacher(para).then((res) => {
+          for (let i = 0; i < data2.length; i++) {
+            for (let j = 0; j < data1.length; j++) {
+              if (data1[j] === data2[i]) {
+               // console.log(data1[j])
+                data1.splice(j, 1)
+              }
+            }
+          }
+         // console.log(data1)
+          this.newTeachers.courseTeachers = data1
+          this.$message.success(res.msg)
+          this.getCourseList()
+        })
+      })
+    },
     // 课程详情
     handleEdit: function (index, row) {
       let para = Object.assign({}, row)

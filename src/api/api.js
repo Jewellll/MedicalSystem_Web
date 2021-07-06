@@ -78,6 +78,8 @@ export const removeTeam = params => { return http.post(`${base}/team/deleteTeamB
 
 export const getTeamMembers = params => { return http.get(`${base}/team/findTeamStudent/` + params.courseId + '/' + params.studentId).then(res => res.data) }
 
+export const moveTeacher = params => {return http.post(`${base}/course/deleteCourseTeacher`, params).then(res => res.data)}
+
 export const getCaseListByCourse = params => { return http.get(`${base}/case/findCasesbycourseId/` + params.courseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
 
 export const getTeamListByCourse = params => { return http.get(`${base}/team/findInTeamStudentByCourseId/` + params.courseId + '/' + params.pageNum + '/' + params.pageSize).then(res => res.data) }
