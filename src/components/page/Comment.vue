@@ -141,8 +141,7 @@ export default {
         commitComment (item) {
             var user =JSON.parse(localStorage.getItem('user'))
             const param = {
-                caseId: 1,
-                // aseId: this.caseId,
+                cseId: this.caseId,
                 parentId: item.id,
                 content: this.inputComment,
                 fromId: user.userId,
