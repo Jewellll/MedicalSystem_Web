@@ -180,7 +180,7 @@ export default {
     methods: {
         getParams(){
             this.caseId=this.$route.query.caseId
-            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseId
+            this.upload='http://172.17.169.0:8081/case/uploadFiletoCases?caseId='+this.caseId
             console.log(this.caseId)
         },
         async getUserList () {
@@ -326,7 +326,7 @@ export default {
         // 预览下载文件
         handlePreview (file) {
             console.log(file)
-            var url='http://118.195.129.22:8081/sfile/downloadFile?fileId'+ file.id
+            var url='http://172.17.169.0:8081/sfile/downloadFile?fileId'+ file.id
             var link = document.createElement('a');
             try {
                 link.href  = url;} catch (error) {
@@ -393,7 +393,7 @@ export default {
 /*思考*/
 .think p{
     position: relative;
-    left: 10%;
+    left: 7%;
     width: 80%;
     text-align: justify;
     text-indent: 2em;

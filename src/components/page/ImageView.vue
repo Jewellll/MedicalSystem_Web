@@ -13,11 +13,11 @@
             <!-- 搜索与添加区域 -->
             <div class="toolbar">
                 <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
-                        </el-input>
-                    </el-col>
+<!--                    <el-col :span="8">-->
+<!--                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">-->
+<!--                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>-->
+<!--                        </el-input>-->
+<!--                    </el-col>-->
 <!--                    <el-col :span="2">-->
 <!--                        <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>-->
 <!--                    </el-col>-->
@@ -28,7 +28,7 @@
                 <el-table-column type="selection" width="55">
                 </el-table-column>
                 <el-table-column type="index"></el-table-column>
-                <el-table-column prop="caseId" label="学生姓名"></el-table-column>
+                <el-table-column prop="caseId" label="案例号"></el-table-column>
                 <el-table-column prop="imageName" label="文件名"></el-table-column>
                 <el-table-column prop="creatTime" label="提交时间"></el-table-column>
                 <el-table-column label="操作" align="center">

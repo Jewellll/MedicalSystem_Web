@@ -150,7 +150,7 @@ export const addCase = params => { return http.post(`${base}/case/insertcase`, p
 export const getStudentFile = params => { return http.get(`${base}/sfile/getFileById/` + params.caseId + '/' + params.studentId).then(res => res.data) }
 export const getCaseDetailFile = params => { return http.get(`${base}/case/getFileByCaseId/` + params.caseId).then(res => res.data) }
 
-export const downloadFile = params => { return http.post(`${base}/sfile/downloadFile/` + params.fileId).then(res => res.data) }
+export const getFileByRealName = params => { return http.get(`${base}/sfile/getFileByName` ,params).then(res => res.data) }
 
 export const downloadCaseFile = params => { return http.post(`${base}/case/downloadFileFromCasesbyid/` + params.id).then(res => res.data) }
 

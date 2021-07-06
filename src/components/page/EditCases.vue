@@ -45,7 +45,7 @@
                     :file-list="fileList1"
                     list-type="picture">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                    <div slot="tip" class="el-upload__tip"></div>
                 </el-upload>
                 <br>
                 <div style="text-align: left;font-size: 14px;margin-top: 5px">附件:</div>
@@ -119,8 +119,8 @@ export default {
         },
         getParams(){
             this.caseForm.caseId=this.$route.query.caseId
-            this.upload='http://118.195.129.22:8081/case/uploadFiletoCases?caseId='+this.caseForm.caseId
-            this.upload1='http://118.195.129.22:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId+'&description='
+            this.upload='http://172.17.169.0:8081/case/uploadFiletoCases?caseId='+this.caseForm.caseId
+            this.upload1='http://172.17.169.0:8081/case/uploadimgetocase?caseId='+this.caseForm.caseId+'&description='
             console.log(this.upload)
         },
         //图片

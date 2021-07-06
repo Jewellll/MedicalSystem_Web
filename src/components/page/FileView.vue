@@ -13,9 +13,9 @@
             <!-- 搜索与添加区域 -->
             <div class="toolbar">
                 <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
-                            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
+                    <el-col :span="4">
+                        <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getFileByName()">
+                            <el-button slot="append" icon="el-icon-search" @click="getFileByName()"></el-button>
                         </el-input>
                     </el-col>
                     <el-col :span="2">
@@ -61,7 +61,7 @@
 import {
     batchRemoveFile,
     batchRemoveTeacher,
-    editTeacher, getCaseFile, removeStudentFile,
+    editTeacher, getCaseFile, getFileByRealName, removeStudentFile,
     removeTeacher
 } from '../../api/api'
 import axios from 'axios'
@@ -98,6 +98,33 @@ export default {
             console.log(this.$route.query.caseId)
             this.queryInfo.caseId=this.$route.query.caseId
             console.log(this.queryInfo.caseId)
+        },
+        getFileByName(){
+            this.fileList=[]
+            this.listLoading=true
+            var param ={realName:this.queryInfo.query}
+            getFileByRealName(param).then((res) => {
+                console.log(res)
+                if(res.code==='200') {
+                    this.total = res.data.total
+                    for (var i = 0; i < res.data.list.length; i++) {
+                        var item = {fileId: 0, fileName: '', realName: '', caseName: '', creatTime: ''}
+                        const name = res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1)
+                        console.log(res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1))
+                        item.fileName = name
+                        item.submitTime=res.data.list[i].creatTime
+                        item.caseName=res.data.list[i].caseName
+                        item.realName=res.data.list[i].studentName
+                        item.studentId=res.data.list[i].studentId
+                        item.fileId = res.data.list[i].id
+                        this.fileList.push(item)
+                    }
+                    this.listLoading = false
+                }else if(res.code==='303'){
+                    this.$message.error(res.msg)
+                    this.listLoading = false
+                }
+            })
         },
         async getUserList () {
             this.fileList=[]

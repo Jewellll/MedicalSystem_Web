@@ -46,8 +46,8 @@
                 <el-input type="password" v-model="regForm.checkPassword" placeholder="请输入6 - 18位密码，区分大小写"></el-input>
             </el-form-item>
             <el-form-item label="角色" prop="roleId">
-                <el-radio v-model="regForm.roleId" label="1">教师</el-radio>
-                <el-radio v-model="regForm.roleId" label="2">学生</el-radio>
+                <el-radio v-model="regForm.roleId" :label="1">教师</el-radio>
+                <el-radio v-model="regForm.roleId" :label="2">学生</el-radio>
             </el-form-item>
             <el-form-item label-width="0px">
                 <el-button type="primary" style="width: 100%;border: none"
@@ -162,7 +162,7 @@ export default {
                 email:"",
                 passWord:"",
                 checkPassword:"",
-                roleId:'0'
+                roleId:2
             },
             rules: {
                 userName: [{ required: true, message: "请输入用户名", trigger: "blur" },

@@ -4,14 +4,13 @@
         <div class="user">
             <div class="input-user">
                 <div class="avatar-user">
-                    <img class="avatar" src="../../assets/img/img4.jpg" width="36" height="36" alt=""/>
+                    <img class="avatar" :src=userAvatar width="36" height="36" alt=""/>
                 </div>
                 <div class="input">
                     <el-input class="gray-bg-input"
                               v-model="userComment"
                               type="textarea"
                               :rows="1"
-                              autofocus
                               placeholder="写下你的评论">
                     </el-input>
                 </div>
@@ -29,7 +28,7 @@
                 <img class="avatar" :src="item.fromAvatar" width="36" height="36" alt=""/>
                 <div class="right">
                     <div class="name">{{ item.fromName }}</div>
-                    <div class="date">{{ item.date }}</div>
+                    <div class="date">{{ item.createTime }}</div>
                 </div>
             </div>
             <div class="content"><p>{{ item.content }}</p></div>
@@ -47,7 +46,7 @@
                         <span>{{ reply.content }}</span>
                     </div>
                     <div class="reply-bottom">
-                        <span>{{ reply.date }}</span>
+                        <span>{{ reply.creatTime }}</span>
                         <span class="reply-text" @click="showCommentInput(item, reply)">
               <i class="iconfont icon-comment"></i>
               <span>回复</span>
@@ -102,13 +101,18 @@ export default {
         return {
             inputComment: '',
             showItemId: '',
-            userComment: ''
+            userComment: '',
+            userAvatar:''
         }
     },
     computed: {},
     created () {
+        this.getAvatar()
     },
     methods: {
+        getAvatar(){
+          this.userAvatar=JSON.parse(localStorage.getItem('user')).avatar
+        },
         /**
          * 点击取消按钮
          */

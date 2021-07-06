@@ -292,7 +292,6 @@ export default {
             data: {
               typeName: this.addform.typeName,
               typeCode: this.addform.typeCode,
-
               dictionaryDetails: this.addform.dictionaryDetails
             }
           }).then((res) => {

@@ -376,7 +376,7 @@ export default {
       return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知'
     },
       formatRole: function (row, column) {
-          return row.roleId == 1 ? '教师' : row.sex == 2 ? '学生' : '管理员'
+          return row.roleId == 1 ? '教师' : row.roleId == 2 ? '学生' : '管理员'
       },
     async getUserList () {
         var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }

@@ -230,7 +230,7 @@ export default {
             this.userId=JSON.parse(localStorage.getItem('user')).userId
             console.log(this.caseId)
             console.log(this.userId)
-            this.upload='http://118.195.129.22:8081/sfile/uploadFile?caseId='+this.caseId+'&studentId='+this.userId
+            this.upload='http://172.17.169.0:8081/sfile/uploadFile?caseId='+this.caseId+'&studentId='+this.userId
         },
         async getUserList () {
             const param={caseId:this.caseId}
@@ -281,6 +281,7 @@ export default {
         async getComments () {
             var param= {caseId:this.caseId}
             getCommentList(param).then((res) => {
+                console.log(res)
                       this.commentData = res.data
             })
         },
@@ -450,7 +451,7 @@ export default {
 /*思考*/
 .think p {
     position: relative;
-    left: 10%;
+    left: 7%;
     width: 80%;
     text-align: justify;
     text-indent: 2em;
