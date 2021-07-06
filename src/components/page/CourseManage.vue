@@ -227,11 +227,11 @@ export default {
   },
   created () {
     this.getCourseList()
-    // this.$watch('queryInfo.courseName', (newVal, oldVal) => {
-    //   if (newVal == '') {
-    //     this.getCourseList()
-    //   }
-    // })
+    this.$watch('queryInfo.courseName', (newVal, oldVal) => {
+      if (newVal == '') {
+        this.getCourseList()
+      }
+    })
   },
   methods: {
     // 查询课程
