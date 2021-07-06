@@ -137,8 +137,7 @@ export default {
             showItemId: '',
             userComment: '',
             userAvatar: '',
-            userId: '',
-            total:0
+            userId: ''
         }
     },
     computed: {},
