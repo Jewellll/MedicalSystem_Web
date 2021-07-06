@@ -54,7 +54,7 @@
                         </div>
                         <div class="reply-bottom">
                             <span>{{ reply.creatTime }}</span>
-                            <template v-if="item.fromId==userId">
+                            <template v-if="reply.fromId==userId">
                                 <div class="delete" style="margin-left: 10px;cursor: pointer" @click="delComment(reply)">删除</div>
                             </template>
                             <span class="reply-text" @click="showCommentInput(item, reply)">
