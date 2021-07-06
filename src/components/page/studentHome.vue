@@ -19,7 +19,7 @@
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="courseName" label="已加入课程" align="center"></el-table-column>
             <el-table-column prop="creatTeacher" label="创建老师" align="center"></el-table-column>
-            <el-table-column prop="courseState" label="课程状态" align="center"></el-table-column>
+            <el-table-column prop="courseState" label="课程状态" :formatter="formatState" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button type="primary"  size="mini" @click="handleDetail(scope.$index, scope.row)">查看详情</el-button>
