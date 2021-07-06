@@ -303,6 +303,7 @@ export default {
     },
     // 添加学生
     addStudent (index, row) {
+        this.originStudents = []
       this.newStudents.courseId = row.courseId
       this.newStudents.courseName = row.courseName
       findStudents().then((res) => {
