@@ -363,7 +363,6 @@ export default {
             this.addLoading = true
             let para = Object.assign({}, this.addForm)
             para.teacherId = JSON.parse(localStorage.getItem('user')).userId
-            console.log(para)
             addCourse(para).then((res) => {
               // eslint-disable-next-line eqeqeq
               if (res.code == 200) {
