@@ -94,21 +94,54 @@
             :visible.sync="addStudentVisible"
             width="100%"
              >
+            <div style="width: 100%;height: 300px;clear: both">
             <!-- 内容的主体区域 -->
-            <el-transfer
-                style="text-align: left; display: inline-block"
-                v-model="newStudents.courseStudents"
-                filterable
-                :titles="['Source', 'Target']"
-                :format="{
-        noChecked: '${total}',
-        hasChecked: '${checked}/${total}'
-      }"
-                :data="originStudents">
-            </el-transfer>
+            <div style="width: 40%;display:inline-block;">
+                <span style="font-size: large">可加入学生</span>
+                <el-table
+                    :data="originStudents"
+                    height="250"
+                    width="50%"
+                    @selection-change="handleSelectionStudent"
+                    border>
+                    <el-table-column type="selection" width="50px"></el-table-column>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="realName" label="学生姓名"  align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="primary"  size="mini" @click="handleAddStudent(scope.$index, scope.row)">添加</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div style="text-align: left;margin-top: 10px">
+                    <el-button type="danger" @click="batchAddStudent">批量添加</el-button>
+                </div>
+            </div>
+            <div style="width: 40%;display: inline-block;float:right;margin-right: 10%">
+                <span style="font-size: large">已加入学生</span>
+                <el-table
+                    :data="newStudents"
+                    width="50%"
+                    height="250"
+                    @selection-change="deleteBatchStudent"
+                    border>
+                    <el-table-column type="selection" width="50px"></el-table-column>
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="studentName" label="学生姓名" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="danger"  size="mini" @click="moveStudent(scope.$index, scope.row)">移出课程</el-button>                        </template>
+                    </el-table-column>
+                </el-table>
+                <div style="text-align: left;margin-top: 10px">
+                    <el-button type="danger" @click="batchDelStudents">批量删除</el-button>
+                </div>
+            </div>
+            </div>
+
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addStudentVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="handleAddStudent">确 定</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="addStudentVisible = false">确 定</el-button>
             </span>
         </el-dialog>
 <!--        添加老师-->
@@ -118,24 +151,54 @@
             width="100%"
              >
             <!-- 内容的主体区域 -->
-            <el-transfer
-                style="text-align: left; display: inline-block"
-                v-model="newTeachers.courseTeachers"
-                filterable
-                :titles="['Source', 'Target']"
-                :format="{
-        noChecked: '${total}',
-        hasChecked: '${checked}/${total}'
-      }"
-                :data="originTeachers"
-                @right-check-change="handleChange"
-            >
-            <span slot-scope="{option}">{{option.label}}</span>
-            <el-button class="transfer-footer" slot="right-footer" size="small" @click="moveTeachers">移除老师</el-button>
-            </el-transfer>
+            <div style="width: 100%;height: 300px;clear: both">
+                <!-- 内容的主体区域 -->
+                <div style="width: 40%;display:inline-block;">
+                    <span style="font-size: large">可加入老师</span>
+                    <el-table
+                        :data="originTeachers"
+                        height="250"
+                        width="50%"
+                        @selection-change="handleSelectionTeacher"
+                        border>
+                        <el-table-column type="selection" width="50px"></el-table-column>
+                        <el-table-column type="index"></el-table-column>
+                        <el-table-column prop="realName" label="老师姓名"  align="center"></el-table-column>
+                        <el-table-column label="操作" align="center">
+                            <template slot-scope="scope">
+                                <el-button type="primary"  size="mini" @click="handleAddTeacher(scope.$index, scope.row)">添加</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div style="text-align: left;margin-top: 10px">
+                        <el-button type="danger" @click="batchAddTeacher">批量添加</el-button>
+                    </div>
+                </div>
+                <div style="width: 40%;display: inline-block;float:right;margin-right: 10%">
+                    <span style="font-size: large">已加入老师</span>
+                    <el-table
+                        :data="newTeachers"
+                        width="50%"
+                        height="250"
+                        @selection-change="handleChange"
+                        border>
+                        <el-table-column type="selection" width="50px"></el-table-column>
+                        <el-table-column type="index"></el-table-column>
+                        <el-table-column prop="teacherName" label="老师姓名" align="center"></el-table-column>
+                        <el-table-column label="操作" align="center">
+                            <template slot-scope="scope">
+                                <el-button type="danger"  size="mini" @click="moveTeachers(scope.$index, scope.row)">移出课程</el-button>                        </template>
+                        </el-table-column>
+                    </el-table>
+                    <div style="text-align: left;margin-top: 10px">
+                        <el-button type="danger" @click="batchDelTeachers">批量删除</el-button>
+                    </div>
+                </div>
+            </div>
+
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addTeacherVisible = false">取 消</el-button>
-                <el-button type="primary" :loading="addLoading" @click.native="handleAddTeacher">确 定</el-button>
+                <el-button type="primary" :loading="addLoading" @click.native="addTeacherVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -143,9 +206,21 @@
 
 <script>
 import {
-  addCourse, addCourseStudents, addCourseTeachers, batchRemoveCourse,
-  batchRemoveTeacher, findStudents, findTeachers,
-  getCourseListPage, moveTeacher, removeCourse, searchByCourse
+  addCourse,
+  addCourseStudents,
+  addCourseTeachers,
+  batchRemoveCourse,
+  batchRemoveTeacher,
+  deleteBatchStu,
+  findStudents,
+  findTeachers,
+  getCourseListPage,
+  getCourseTeachers,
+  getStudentInCourse,
+  moveStudentFromCourse,
+  moveTeacher,
+  removeCourse,
+  searchByCourse
 } from '../../api/api'
 
 export default {
@@ -175,20 +250,16 @@ export default {
     }
 
     return {
+      courseId: 0,
+      courseName: '',
+      studentSels: [],
+      studentDelSels: [],
+      teacherSels: [],
+      teacherDelSels: [],
       originStudents: [],
       originTeachers: [],
-      moveteachers: [],
-      newStudents: {
-        courseId: '',
-        courseName: '',
-        courseStudents: []
-      },
-      newTeachers: {
-        courseId: '',
-        teacherId: '',
-        courseName: '',
-        courseTeachers: []
-      },
+      newStudents: [],
+      newTeachers: [],
       // 获取用户列表的参数对象
       queryInfo: {
         // 查询参数
@@ -309,101 +380,204 @@ export default {
     },
     // 添加学生
     addStudent (index, row) {
-      this.originStudents = []
-      this.newStudents.courseId = row.courseId
-      this.newStudents.courseName = row.courseName
-      findStudents().then((res) => {
-        for (let i = 0; i < res.data.length; i++) {
-          this.originStudents.push({
-            key: res.data[i].userId,
-            label: res.data[i].realName
-          })
-        }
-        // console.log(this.originStudents)
-      })
+      this.courseId = row.courseId
+      this.courseName = row.courseName
       this.addStudentVisible = true
+      findStudents(row).then((res) => {
+        this.originStudents = res.data
+      })
+      getStudentInCourse(row).then((res) => {
+        this.newStudents = res.data
+      })
+    },
+    // 移除学生
+    moveStudent (index, row) {
+      this.$confirm('确认移出吗？').then(() => {
+        let para = {courseId: row.courseId, studentId: row.studentId}
+        moveStudentFromCourse(para).then((res) => {
+          this.$message.success('操作成功！')
+          getStudentInCourse(row).then((res) => {
+            this.newStudents = res.data
+          })
+          findStudents(row).then((res) => {
+            this.originStudents = res.data
+          })
+        })
+      })
     },
     // 点击按钮添加学生
-    handleAddStudent () {
-      let para = {courseId: this.newStudents.courseId, courseName: this.newStudents.courseName, courseStudents: []}
-      for (let i = 0; i < this.newStudents.courseStudents.length; i++) {
-        para.courseStudents.push({
-          studentId: this.newStudents.courseStudents[i]
-        })
-      }
+    handleAddStudent (index, row) {
+      console.log(row)
+      let para = {courseId: this.courseId, courseName: this.courseName, courseStudents: [{studentId: row.userId, studentName: row.realName}]}
       this.addLoading = true
+      console.log(para)
       addCourseStudents(para).then((res) => {
         if (res.code == '200') {
-          this.addLoading = false
-          this.originStudents = []
+          getStudentInCourse({courseId: this.courseId}).then((res) => {
+            this.newStudents = res.data
+          })
+          findStudents({courseId: this.courseId}).then((res) => {
+            this.originStudents = res.data
+          })
+          this.$message.success('添加成功')
           this.getCourseList()
+          this.addLoading = false
         }
       })
-      this.addStudentVisible = false
     },
-    addTeachers (index, row) {
-      this.originTeachers = []
-      this.newTeachers.courseId = row.courseId
-      this.newTeachers.courseName = row.courseName
-      findTeachers().then((res) => {
-        for (let i = 0; i < res.data.length; i++) {
-          this.originTeachers.push({
-            key: res.data[i].userId,
-            label: res.data[i].userName
+    handleSelectionStudent (val) {
+      this.studentSels = val
+    },
+    deleteBatchStudent (val) {
+      this.studentDelSels = val
+    },
+    // 批量添加学生
+    batchAddStudent () {
+      let para = {courseId: this.courseId, courseName: this.courseName, courseStudents: []}
+      for (let i = 0; i < this.studentSels.length; i++) {
+        para.courseStudents.push({
+          studentId: this.studentSels[i].userId,
+          studentName: this.studentSels[i].realName
+        })
+      }
+      addCourseStudents(para).then((res) => {
+        if (res.code == '200') {
+          getStudentInCourse({courseId: this.courseId}).then((res) => {
+            this.newStudents = res.data
           })
+          findStudents({courseId: this.courseId}).then((res) => {
+            this.originStudents = res.data
+          })
+          this.$message.success('添加成功')
+          this.getCourseList()
+          this.addLoading = false
         }
+      })
+    },
+    // 批量删除学生
+    batchDelStudents () {
+      let para = {courseId: this.courseId, courseStudents: []}
+      for (let i = 0; i < this.studentDelSels.length; i++) {
+        para.courseStudents.push({
+          studentId: this.studentDelSels[i].studentId
+        })
+      }
+      this.$confirm('确认移除吗？').then(() => {
+        deleteBatchStu(para).then((res) => {
+          if (res.code == '200') {
+            this.$message.success('移除成功')
+            getStudentInCourse({courseId: this.courseId}).then((res) => {
+              this.newStudents = res.data
+            })
+            findStudents({courseId: this.courseId}).then((res) => {
+              this.originStudents = res.data
+            })
+          }
+        })
+      })
+    },
+    // 添加老师
+    addTeachers (index, row) {
+      this.courseId = row.courseId
+      this.courseName = row.courseName
+      findTeachers(row).then((res) => {
+        this.originTeachers = res.data
+      })
+      getCourseTeachers(row).then((res) => {
+        this.newTeachers = res.data
       })
       this.addTeacherVisible = true
     },
     // 点击按钮添加老师
-    handleAddTeacher () {
-      let para = {courseId: this.newTeachers.courseId, teacherId: JSON.parse(localStorage.getItem('user')).userId, courseName: this.newTeachers.courseName, courseTeachers: []}
-      for (let i = 0; i < this.newTeachers.courseTeachers.length; i++) {
-        para.courseTeachers.push({
-          teacherId: this.newTeachers.courseTeachers[i]
-        })
-      }
+    handleAddTeacher (index, row) {
+      let para = {courseId: this.courseId,
+        teacherId: JSON.parse(localStorage.getItem('user')).userId,
+        courseName: this.courseName,
+        courseTeachers: [{teacherId: row.userId, teacherName: row.realName}]}
       this.addLoading = true
       addCourseTeachers(para).then((res) => {
-        console.log(res.code)
         if (res.code == '200') {
           this.addLoading = false
-          this.originTeachers = []
+          findTeachers({courseId: this.courseId}).then((res) => {
+            this.originTeachers = res.data
+          })
+          getCourseTeachers({courseId: this.courseId}).then((res) => {
+            this.newTeachers = res.data
+          })
+          this.$message.success('添加成功')
           this.getCourseList()
         }
       })
-      this.addTeacherVisible = false
+    },
+    //
+    handleSelectionTeacher (val) {
+      this.teacherSels = val
+    },
+    // 批量添加老师
+    batchAddTeacher () {
+      this.$confirm('确认添加吗？').then(() => {
+        let para = {courseId: this.courseId,
+          courseName: this.courseName,
+          teacherId: JSON.parse(localStorage.getItem('user')).userId,
+          courseTeachers: []}
+        for (let i = 0; i < this.teacherSels.length; i++) {
+          para.courseTeachers.push({
+            teacherId: this.teacherSels[i].userId,
+            teacherName: this.teacherSels[i].realName
+          })
+        }
+        addCourseTeachers(para).then((res) => {
+          if (res.code == '200') {
+            this.$message.success('添加成功')
+            findTeachers({courseId: this.courseId}).then((res) => {
+              this.originTeachers = res.data
+            })
+            getCourseTeachers({courseId: this.courseId}).then((res) => {
+              this.newTeachers = res.data
+            })
+            this.getCourseList()
+          }
+        })
+      })
+    },
+    // 移除老师
+    moveTeachers (index, row) {
+      this.$confirm('确认移除吗？', '提示').then(() => {
+        let para = {courseId: this.courseId, courseTeachers: [{teacherId: row.teacherId}]}
+        moveTeacher(para).then((res) => {
+          this.$message.success(res.msg)
+          findTeachers({courseId: this.courseId}).then((res) => {
+            this.originTeachers = res.data
+          })
+          getCourseTeachers({courseId: this.courseId}).then((res) => {
+            this.newTeachers = res.data
+          })
+          this.getCourseList()
+        })
+      })
     },
     //
     handleChange (value) {
       // value是一个存放key值的数组
-      this.moveteachers = value
+      this.teacherDelSels = value
     },
-    // 移除老师
-    moveTeachers () {
+    // 批量删除老师
+    batchDelTeachers () {
       this.$confirm('确认移除这些老师吗？', '提示').then(() => {
-        let temp = []
-        for (let i = 0; i < this.moveteachers.length; i++) {
-          temp.push({
-            teacherId: this.moveteachers[i]
+        let para = {courseId: this.courseId, courseTeachers: []}
+        for (let i = 0; i < this.teacherDelSels.length; i++) {
+          para.courseTeachers.push({
+            teacherId: this.teacherDelSels[i].teacherId
           })
         }
-        let para = {courseId: this.newTeachers.courseId, courseTeachers: temp}
-        let data1 = this.newTeachers.courseTeachers
-        let data2 = this.moveteachers
-        console.log(data2)
         moveTeacher(para).then((res) => {
-          for (let i = 0; i < data2.length; i++) {
-            for (let j = 0; j < data1.length; j++) {
-              if (data1[j] === data2[i]) {
-               // console.log(data1[j])
-                data1.splice(j, 1)
-              }
-            }
-          }
-         // console.log(data1)
-          this.newTeachers.courseTeachers = data1
           this.$message.success(res.msg)
+          findTeachers({courseId: this.courseId}).then((res) => {
+            this.originTeachers = res.data
+          })
+          getCourseTeachers({courseId: this.courseId}).then((res) => {
+            this.newTeachers = res.data
+          })
           this.getCourseList()
         })
       })
