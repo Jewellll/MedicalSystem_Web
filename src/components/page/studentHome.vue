@@ -41,7 +41,6 @@
             <el-table-column prop="courseState" label="课程状态" :formatter="formatState" width="200px"  align="center"></el-table-column>
             <el-table-column label="操作" width="250px" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary"  size="mini" @click="handleDetail(scope.$index, scope.row)">查看详情</el-button>
                     <el-button type="primary"  size="mini" @click="handleAdd(scope.$index, scope.row)">加入课程</el-button>
                 </template>
             </el-table-column>
