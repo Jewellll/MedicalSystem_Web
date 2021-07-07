@@ -139,12 +139,16 @@ export default {
                         const name = res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1)
                         console.log(res.data.list[i].filePath.substring(res.data.list[i].filePath.lastIndexOf('/') + 1))
                         item.fileName = name
-                        item.submitTime=res.data.list[i].creatTime
+                        item.submitTime=res.data.list[i].uploadTime
                         item.caseName=res.data.list[i].caseName
                         item.realName=res.data.list[i].studentName
                         item.studentId=res.data.list[i].studentId
                         item.fileId = res.data.list[i].id
                         this.fileList.push(item)
+                    }
+                    for(var i=0;i<this.fileList.length;i++){
+                        this.fileList[i].submitTime= this.fileList[i].submitTime.substr(0,10)+' '+this.fileList[i].submitTime.substr(11,5)
+
                     }
                     this.listLoading = false
                 }else if(res.code==='303'){

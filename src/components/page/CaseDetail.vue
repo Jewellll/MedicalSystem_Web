@@ -266,10 +266,17 @@ export default {
         async getComments () {
             var param= {caseId:this.caseId}
             getCommentList(param).then((res) => {
-                console.log(this.pagenum)
                 this.total=Number(res.data.length)
                       this.commentData = res.data.slice((this.pagenum-1)*this.pagesize,this.pagenum*this.pagesize)
                 console.log(this.commentData)
+                for(var i=0;i<this.commentData.length;i++){
+                    this.commentData[i].createTime= this.commentData[i].createTime.substr(0,10)+' '+this.commentData[i].createTime.substr(11,5)
+                    if(this.commentData[i].reply.length>0){
+                        for(var j=0;j<this.commentData[i].reply.length;j++){
+                            this.commentData[i].reply[j].creatTime= this.commentData[i].reply[j].creatTime.substr(0,10)+' '+this.commentData[i].reply[j].creatTime.substr(11,5)
+                        }
+                    }
+                }
             })
         },
         getPage(data){
@@ -367,7 +374,7 @@ export default {
                 title: '成功',
                 message: `文件上传成功`
             });
-            this.getStudentFileList()
+            location.reload()
         },
         // 文件上传失败时的钩子
         handleError(err, file, fileList) {

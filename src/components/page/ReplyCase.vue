@@ -76,12 +76,12 @@
                         :on-success="handleSuccess"
                         :on-error="handleError"
                         :multiple="true"
-                        :limit="3"
+                        :limit="5"
                         :on-exceed="exceedFile"
                         :file-list="fileList">
                         <el-button size="middle" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip" style="color:#c1c1c1">
-                            支持扩展名：.rar .zip .doc .docx .pdf .jpg... <br>诊断结果以文本形式提交，治疗方案以word、pdf、ppt形式提交
+                            支持扩展名：.rar .zip .doc .docx .pdf .jpg...
                         </div>
                     </el-upload>
                 </div>
@@ -132,32 +132,12 @@ export default {
     data () {
         return {
             headers: { Authorization: localStorage.getItem('token') },
-            limitNum: 3,
+            limitNum: 5,
             fileList: [],
             fileList1:[],
             urls: [
-                // require('../../assets/img/CaseImg/Case02-1.png'),
-                // require('../../assets/img/CaseImg/Case02-2.png'),
-                // require('../../assets/img/CaseImg/Case02-3.png'),
-                // require('../../assets/img/CaseImg/Case02-4.png'),
-                // require('../../assets/img/CaseImg/Case02-5.png'),
-                // require('../../assets/img/CaseImg/Case02-6.png'),
-                // require('../../assets/img/CaseImg/Case02-7.png'),
-                // require('../../assets/img/CaseImg/Case02-8.png'),
-                // require('../../assets/img/CaseImg/Case02-9.png'),
-                // require('../../assets/img/CaseImg/Case02-10.png')
             ],
             srcList: [
-                // require('../../assets/img/CaseImg/Case02-1.png'),
-                // require('../../assets/img/CaseImg/Case02-2.png'),
-                // require('../../assets/img/CaseImg/Case02-3.png'),
-                // require('../../assets/img/CaseImg/Case02-4.png'),
-                // require('../../assets/img/CaseImg/Case02-5.png'),
-                // require('../../assets/img/CaseImg/Case02-6.png'),
-                // require('../../assets/img/CaseImg/Case02-7.png'),
-                // require('../../assets/img/CaseImg/Case02-8.png'),
-                // require('../../assets/img/CaseImg/Case02-9.png'),
-                // require('../../assets/img/CaseImg/Case02-10.png')
             ],
             case:{
                 caseDesc:'',
@@ -236,6 +216,16 @@ export default {
                 console.log(res)
                 this.total=Number(res.data.length)
                 this.commentData = res.data.slice((this.pagenum-1)*this.pagesize,this.pagenum*this.pagesize)
+                console.log(this.commentData)
+                for(var i=0;i<this.commentData.length;i++){
+                    this.commentData[i].createTime= this.commentData[i].createTime.substr(0,10)+' '+this.commentData[i].createTime.substr(11,5)
+                    if(this.commentData[i].reply.length>0){
+                        for(var j=0;j<this.commentData[i].reply.length;j++){
+                            this.commentData[i].reply[j].creatTime= this.commentData[i].reply[j].creatTime.substr(0,10)+' '+this.commentData[i].reply[j].creatTime.substr(11,5)
+                        }
+                    }
+                }
+                console.log(this.commentData)
             })
         },
         getPage(data){
@@ -316,7 +306,7 @@ export default {
         },
         // 文件上传成功时的钩子
         handleSuccess(res, file, fileList) {
-            this.getFileList()
+            location.reload()
             this.$notify.success({
                 title: '成功',
                 message: `文件上传成功`

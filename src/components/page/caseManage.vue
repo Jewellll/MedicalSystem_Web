@@ -175,6 +175,9 @@ export default {
           console.log(res)
         this.total = res.count
         this.caseList = res.data
+          for(var i=0;i<this.caseList.length;i++){
+              this.caseList[i].creatTime= this.caseList[i].creatTime.substr(0,10)+' '+this.caseList[i].creatTime.substr(11,5)
+          }
         this.listLoading = false
       })
     },

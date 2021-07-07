@@ -249,6 +249,7 @@ export default {
       this.listLoading = true
       getCourseListPage(param).then((res) => {
         this.total = res.count
+          console.log(res.data)
         this.courseList = res.data.pageInfo.list
         this.listLoading = false
       })
