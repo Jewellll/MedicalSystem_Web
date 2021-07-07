@@ -4,7 +4,7 @@
         <div class="crumb">
             <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size: 5px">
                 <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>案例管理</el-breadcrumb-item>
+                <el-breadcrumb-item>课程管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -36,7 +36,7 @@
                 <el-table-column prop="creatTeacher" label="创建老师" width="100px"></el-table-column>
                 <el-table-column prop="teacherNumbers" label="教学老师" width="150px"></el-table-column>
                 <el-table-column prop="creatTime" label="创建时间" width="200px"></el-table-column>
-                <el-table-column prop="desc" label="课程状态" width="100px"></el-table-column>
+                <el-table-column prop="courseState" label="课程状态" :formatter="formatState" width="100px"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <!-- 修改按钮 -->
@@ -305,6 +305,9 @@ export default {
     })
   },
   methods: {
+    formatState (row, column) {
+      return row.courseState == 0 ? '已结课' : '进行中'
+    },
     // 查询课程
     searchCourse () {
       searchByCourse(this.queryInfo).then((res) => {
@@ -319,8 +322,7 @@ export default {
       var param = {pageNum: this.queryInfo.pagenum, pageSize: this.queryInfo.pagesize }
       this.listLoading = true
       getCourseListPage(param).then((res) => {
-        this.total = res.count
-          console.log(res.data)
+        this.total = res.data.pageInfo.total
         this.courseList = res.data.pageInfo.list
         this.listLoading = false
       })
