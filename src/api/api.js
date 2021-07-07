@@ -58,9 +58,11 @@ export const addCourseTeachers = params => { return http.post(`${base}/course/in
 
 export const addCourseStudents = params => { return http.post(`${base}/course/insertCourseStudent`, params).then(res => res.data) }
 
-export const findStudents = params => { return http.get(`${base}/user/findAllStudent`).then(res => res.data) }
+export const deleteBatchStu = params => {return http.post(`${base}/course/deleteMultipleCourseStudent`,params).then(res => res.data)}
 
-export const findTeachers = params => { return http.get(`${base}/user/findAllTeacher`).then(res => res.data) }
+export const findStudents = params => { return http.get(`${base}/user/findAllStudentNotInCourse/` + params.courseId).then(res => res.data) }
+
+export const findTeachers = params => { return http.get(`${base}/user/findAllTeacherNotInCourse/` + params.courseId).then(res => res.data) }
 
 export const findAddedCourse = params => { return http.get(`${base}/course/findCourseBySId/` + params.studentId).then(res => res.data) }
 
@@ -71,6 +73,8 @@ export const addCoursePost = params => { return http.post(`${base}/course/insert
 export const getCourseDetailPage = params => { return http.get(`${base}/course/findCourseByCourseId/` + params.courseId).then(res => res.data) }
 
 export const getCourseStudents = params => { return http.get(`${base}/team/findNotTeamStudentByCourseId/` + params.courseId) }
+
+export const getCourseTeachers = params => {return http.get(`${base}/course/findCourseTeacherByCourseId/` + params.courseId).then(res => res.data)}
 
 export const createTeam = params => { return http.post(`${base}/course/setStudentGroup`, params).then(res => res.data) }
 
